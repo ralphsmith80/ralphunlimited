@@ -1,0 +1,15 @@
+- name: Apps
+  slug: apps
+  count: 2
+- name: Development
+  slug: development
+  count: 2
+- name: DIY
+  slug: diy
+  count: 2
+- name: Games
+  slug: games-cat
+  count: 4
+- name: Random
+  slug: random
+  count: 2

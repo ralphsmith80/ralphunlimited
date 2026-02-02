@@ -1,0 +1,29 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "bun run build",
+  "installCommand": "bun install",
+  "framework": "astro",
+  "redirects": [
+    {
+      "source": "/feed/",
+      "destination": "/rss.xml",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/retrocruiser/(.*)",
+      "destination": "/games/retro-cruiser/$1",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/games/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

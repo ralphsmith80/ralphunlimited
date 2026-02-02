@@ -1,0 +1,54 @@
+- id: 1999
+  author: Elias Sierra
+  date: 2018-11-29T02:06:23
+  content: |-
+    This is pretty cool,
+    Nice job!
+  parent: null
+- id: 1609
+  author: admin
+  date: 2016-06-02T03:04:53
+  content: >-
+    Thanks! I ran across the basic game idea on some  how to build a game  web
+    page. Wish I could find the link. Anyway, that lead me to this page where
+    you can download most of the graphics I used.
+
+    I ve done my own rudimentary graphics in the past. It can be very time
+    consuming and I was mostly interested in just playing with Phaser.
+  parent: 1323
+- id: 1323
+  author: Jim
+  date: 2016-02-09T15:06:00
+  content: Nicely done. Where did you get the artwork?
+  parent: null
+- id: 1120
+  author: Zack Proser
+  date: 2015-07-24T15:38:37
+  content: Awesome work! It is retro indeed. Brings me back.
+  parent: null
+- id: 1029
+  author: admin
+  date: 2015-05-25T16:34:46
+  content: >-
+    @edraxeddy
+
+    I typically make my projects available on Github, but I m not ready to make
+    this available to the public yet. Maybe someday in the future though. If you
+    a have specific question feel free to post it and I ll help you out if I
+    know the answer.
+
+    For a basic Phaser game like this one you can get pretty far just going off
+    one of their examples. That s exactly how I started.
+  parent: 1024
+- id: 1024
+  author: Eduard
+  date: 2015-05-15T11:03:08
+  content: >-
+    Hello, I am new in phaser and it is a little hard for me to begin right away
+    to develop a game, and i really like your game can you please send me the
+    source code of the game so i can play with it and learn more.
+
+    Thanks,
+
+    Have a grat day!
+  parent: null

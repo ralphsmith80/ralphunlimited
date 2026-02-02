@@ -1,0 +1,79 @@
+---
+import { SITE_TITLE, SOCIAL } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+---
+
+<header>
+	<nav>
+		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<div class="internal-links">
+			<HeaderLink href="/">Home</HeaderLink>
+			<HeaderLink href="/blog/">Blog</HeaderLink>
+			<HeaderLink href="/games/retro-cruiser/">Games</HeaderLink>
+			<HeaderLink href="/rss.xml">RSS</HeaderLink>
+		</div>
+		<div class="social-links">
+			{SOCIAL.facebook && (
+				<a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer">
+					<span class="sr-only">Facebook</span>
+					<svg viewBox="0 0 24 24" aria-hidden="true" width="24" height="24">
+						<path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+					</svg>
+				</a>
+			)}
+			{SOCIAL.twitter && (
+				<a href={`https://twitter.com/${SOCIAL.twitter}`} target="_blank" rel="noopener noreferrer">
+					<span class="sr-only">X (Twitter)</span>
+					<svg viewBox="0 0 24 24" aria-hidden="true" width="24" height="24">
+						<path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+					</svg>
+				</a>
+			)}
+		</div>
+	</nav>
+</header>
+<style>
+	header {
+		margin: 0;
+		padding: 0 1em;
+		background: white;
+		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+	}
+	h2 {
+		margin: 0;
+		font-size: 1em;
+	}
+
+	h2 a,
+	h2 a.active {
+		text-decoration: none;
+	}
+	nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+	nav a {
+		padding: 1em 0.5em;
+		color: var(--black);
+		border-bottom: 4px solid transparent;
+		text-decoration: none;
+	}
+	nav a.active {
+		text-decoration: none;
+		border-bottom-color: var(--accent);
+	}
+	.social-links,
+	.social-links a {
+		display: flex;
+		gap: 0.5rem;
+	}
+	.social-links a {
+		padding: 0.5rem;
+	}
+	@media (max-width: 720px) {
+		.social-links {
+			display: none;
+		}
+	}
+</style>

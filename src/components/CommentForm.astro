@@ -1,0 +1,205 @@
+---
+interface Props {
+  postSlug: string;
+}
+
+const { postSlug } = Astro.props;
+---
+
+<div class="comment-form-container">
+  <h3>Leave a Comment</h3>
+  <form 
+    id="comment-form" 
+    action="/api/comment" 
+    method="POST"
+    class="comment-form"
+  >
+    <input type="hidden" name="postSlug" value={postSlug} />
+    
+    <!-- Honeypot field - hidden from users, bots will fill it -->
+    <div class="hp-field" aria-hidden="true">
+      <label for="website">Website</label>
+      <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" />
+    </div>
+    
+    <div class="form-group">
+      <label for="name">Name *</label>
+      <input type="text" name="name" id="name" required />
+    </div>
+    
+    <div class="form-group">
+      <label for="email">Email (not published)</label>
+      <input type="email" name="email" id="email" />
+    </div>
+    
+    <div class="form-group">
+      <label for="content">Comment *</label>
+      <textarea name="content" id="content" rows="5" required></textarea>
+    </div>
+    
+    <button type="submit" class="submit-btn">Submit Comment</button>
+    
+    <p class="moderation-notice">
+      Comments are moderated and may take a moment to appear.
+    </p>
+  </form>
+  
+  <div id="form-status" class="form-status" style="display: none;"></div>
+</div>
+
+<script>
+  const form = document.getElementById('comment-form') as HTMLFormElement;
+  const status = document.getElementById('form-status')!;
+  
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    // Check honeypot
+    if (data.website) {
+      status.textContent = 'Thank you for your submission!';
+      status.className = 'form-status success';
+      status.style.display = 'block';
+      form.reset();
+      return;
+    }
+    
+    try {
+      const response = await fetch('/api/comment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      
+      if (response.ok) {
+        status.textContent = 'Comment submitted! It will appear after moderation.';
+        status.className = 'form-status success';
+        form.reset();
+      } else {
+        const error = await response.json();
+        status.textContent = error.message || 'Failed to submit comment. Please try again.';
+        status.className = 'form-status error';
+      }
+    } catch (err) {
+      status.textContent = 'Failed to submit comment. Please try again.';
+      status.className = 'form-status error';
+    }
+    
+    status.style.display = 'block';
+  });
+</script>
+
+<style>
+  .comment-form-container {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+  }
+
+  .comment-form-container h3 {
+    margin-bottom: 1.5rem;
+  }
+
+  .comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 600px;
+  }
+
+  /* Honeypot - hide from users */
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group label {
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+  }
+
+  .submit-btn {
+    align-self: flex-start;
+    padding: 0.75rem 1.5rem;
+    background: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .submit-btn:hover {
+    background: #0052a3;
+  }
+
+  .moderation-notice {
+    font-size: 0.75rem;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+
+  .form-status {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+  }
+
+  .form-status.success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  .form-status.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .comment-form-container {
+      border-top-color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      background: #1a1a1a;
+      border-color: #333;
+      color: #fff;
+    }
+
+    .moderation-notice {
+      color: #999;
+    }
+  }
+</style>

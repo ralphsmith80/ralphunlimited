@@ -1,0 +1,119 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	
+	// Get all unique categories
+	const categories = new Set<string>();
+	posts.forEach(post => {
+		post.data.categories?.forEach(cat => categories.add(cat));
+	});
+	
+	return Array.from(categories).map(category => ({
+		params: { category },
+		props: { category },
+	}));
+}
+
+interface Props {
+	category: string;
+}
+
+const { category } = Astro.props;
+
+// Get all posts in this category
+const allPosts = await getCollection('blog');
+const posts = allPosts
+	.filter(post => post.data.categories?.includes(category))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const categoryTitle = category.charAt(0).toUpperCase() + category.slice(1);
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={`${categoryTitle} - ${SITE_TITLE}`} description={`Posts in ${categoryTitle} category`} />
+		<style>
+			main {
+				width: 960px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 3rem 1rem;
+			}
+			.category-header {
+				margin-bottom: 2rem;
+			}
+			.category-header h1 {
+				margin: 0;
+				font-size: 2.5rem;
+			}
+			.category-header p {
+				color: rgb(var(--gray));
+				margin: 0.5rem 0 0;
+			}
+			ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+			li {
+				padding: 1.5rem 0;
+				border-bottom: 1px solid rgb(var(--gray-light));
+			}
+			li:last-child {
+				border-bottom: none;
+			}
+			a {
+				color: inherit;
+				text-decoration: none;
+			}
+			a:hover h4 {
+				color: rgb(var(--accent));
+			}
+			h4 {
+				margin: 0 0 0.5rem;
+				font-size: 1.25rem;
+				transition: color 0.2s;
+			}
+			.date {
+				color: rgb(var(--gray));
+				font-size: 0.875rem;
+			}
+			.description {
+				color: rgb(var(--gray-dark));
+				margin: 0.5rem 0 0;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="category-header">
+				<h1>{categoryTitle}</h1>
+				<p>{posts.length} post{posts.length !== 1 ? 's' : ''}</p>
+			</div>
+			<ul>
+				{posts.map((post) => (
+					<li>
+						<a href={`/blog/${post.data.slug || post.id}/`}>
+							<h4>{post.data.title}</h4>
+							<p class="date">
+								<FormattedDate date={post.data.pubDate} />
+							</p>
+							{post.data.description && (
+								<p class="description">{post.data.description}</p>
+							)}
+						</a>
+					</li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>
