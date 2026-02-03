@@ -5,7 +5,7 @@ description: "I still enjoy making games and I was very interested in playing
   demo is below. If "
 pubDate: 2014-12-06T19:42:28.000Z
 slug: retro-cruiser
-heroImage: /images/retro-cruiser-hero.png
+heroImage: ../../assets/images/retro-cruiser-hero.png
 categories:
   - development
 ---
