@@ -28,7 +28,17 @@ const currentYear = new Date().getFullYear();
         © {currentYear} {SITE_TITLE}
       </p>
       <a href="https://paypal.me/ralphsmith80" class="support-link" target="_blank" rel="noopener noreferrer">
-        ⚗️ Fuel the workshop
+        <svg class="support-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" width="16" height="16">
+          <style>
+            @keyframes flameOuter { 0%, 100% { transform: scaleY(1) scaleX(1); } 50% { transform: scaleY(1.03) scaleX(0.98); } }
+            @keyframes flameInner { 0%, 100% { transform: scaleY(1) translateY(0); } 50% { transform: scaleY(1.05) translateY(-0.5px); } }
+            .flame-outer { animation: flameOuter 0.4s ease-in-out infinite; transform-origin: center bottom; }
+            .flame-inner { animation: flameInner 0.3s ease-in-out infinite; transform-origin: center bottom; }
+          </style>
+          <path class="flame-outer" d="M16 28c-6 0-10-4-10-9 0-4 3-7 5-10 1 3 3 4 5 4-1-4 0-9 0-11 2 3 5 6 5 9 2 0 3-1 4-3 1 3 1 5 1 7 0 7-4 13-10 13z" fill="currentColor"/>
+          <path class="flame-inner" d="M16 28c-3 0-5-2-5-5 0-2 1-4 2-6 0 2 1 3 3 3 0-2 0-5 0-6 1 1 2 3 2 5 1 0 2-1 2-2 0 1 1 3 1 4 0 4-2 7-5 7z" fill="var(--bg-primary)"/>
+        </svg>
+        Fuel the workshop
       </a>
       <p class="built-with">
         Crafted with <a href="https://astro.build">Astro</a>
@@ -123,6 +133,9 @@ const currentYear = new Date().getFullYear();
   }
 
   .support-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     font-family: var(--font-display);
     font-size: 0.8rem;
     color: var(--accent-primary);
@@ -133,10 +146,19 @@ const currentYear = new Date().getFullYear();
     transition: var(--transition-fast);
   }
 
+  .support-icon {
+    width: 16px;
+    height: 16px;
+  }
+
   .support-link:hover {
     background: var(--accent-primary);
     color: var(--bg-primary);
     border-color: var(--accent-primary);
+  }
+
+  .support-link:hover .flame-inner {
+    fill: var(--accent-primary);
   }
 
   @media (max-width: 500px) {
