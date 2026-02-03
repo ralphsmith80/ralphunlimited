@@ -1,0 +1,56 @@
+---
+interface Props {
+  href: string;
+  filename?: string;
+}
+
+const { href, filename } = Astro.props;
+const displayName = filename || href.split('/').pop();
+---
+
+<a href={href} class="download-btn" download>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="7 10 12 15 17 10"/>
+    <line x1="12" y1="15" x2="12" y2="3"/>
+  </svg>
+  <span>Download {displayName}</span>
+</a>
+
+<style>
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--accent-tertiary);
+    border-radius: var(--radius-md);
+    color: var(--accent-primary);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: var(--transition-base);
+  }
+
+  .download-btn:hover {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    border-color: var(--accent-primary);
+  }
+
+  .download-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .download-btn:hover svg {
+    animation: bounce 0.4s ease;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+  }
+</style>
