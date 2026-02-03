@@ -11,7 +11,7 @@ interface Props {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 // Default OG image
-const defaultImage = '/images/uploads/2025/03/hero.webp';
+const defaultImage = '/images/lab_hero_2.webp';
 const { title, description, image = defaultImage } = Astro.props;
 const ogImageUrl = image.startsWith('http') ? image : new URL(image, Astro.site);
 ---
