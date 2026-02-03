@@ -1,0 +1,237 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`About — ${SITE_TITLE}`} description="Software engineer, game developer, and founder of Quant Alchemy. Building tools that help traders automate and optimize." />
+	</head>
+	<body>
+		<Header />
+		<main class="about-main">
+			<article class="about-content">
+				<header class="about-header">
+					<h1>Hey, I'm Ralph</h1>
+					<p class="about-tagline">Software engineer, maker, and founder of <a href="https://quantalchemy.io/" target="_blank" rel="noopener">Quant Alchemy</a></p>
+				</header>
+
+				<section class="about-section">
+					<h2>The Short Version</h2>
+					<p>
+						I've been building software for over 20 years — everything from game engines and web platforms 
+						to algorithmic trading tools. These days I run <a href="https://quantalchemy.io/" target="_blank" rel="noopener">Quant Alchemy</a>, 
+						where we help traders automate their strategies and make sense of the markets.
+					</p>
+					<p>
+						When I'm not coding, you'll find me training MMA, camping with my family in Colorado, 
+						or tinkering with whatever project has caught my attention.
+					</p>
+				</section>
+
+				<section class="about-section">
+					<h2>What I've Built</h2>
+					
+					<div class="project-card">
+						<h3>🎮 Game Development</h3>
+						<p>
+							Built a cross-platform 2D game engine from scratch (Mac, Windows, Linux, iOS). 
+							Published "Space Challenge" on the App Store. Still make games for fun — 
+							<a href="/games/retro-cruiser/index.html">Retro Cruiser</a> is playable right here.
+						</p>
+					</div>
+
+					<div class="project-card">
+						<h3>📈 Quant Alchemy</h3>
+						<p>
+							My current focus. We build intelligent tools for algorithmic traders — 
+							TradingView indicators, strategy optimizers, and educational content. 
+							Over 4,000 traders have joined our community.
+						</p>
+						<ul class="project-links">
+							<li><a href="https://quantalchemy.io/" target="_blank" rel="noopener">Quant Alchemy</a> — Main platform</li>
+							<li><a href="https://www.krown.quantalchemy.io/" target="_blank" rel="noopener">Krown</a> — Premium courses & indicators</li>
+							<li><a href="https://www.quant-companion.quantalchemy.io/" target="_blank" rel="noopener">Quant Companion</a> — Trading tools</li>
+						</ul>
+					</div>
+
+					<div class="project-card">
+						<h3>🌐 Web & Enterprise</h3>
+						<p>
+							Deep experience with React, Node.js, and full-stack development. 
+							Co-led development of enterprise SaaS applications. I care about clean code 
+							and systems that actually work.
+						</p>
+					</div>
+				</section>
+
+				<section class="about-section">
+					<h2>Tech I Use</h2>
+					<div class="tech-grid">
+						<span class="tech-tag">JavaScript</span>
+						<span class="tech-tag">TypeScript</span>
+						<span class="tech-tag">React</span>
+						<span class="tech-tag">Next.js</span>
+						<span class="tech-tag">Node.js</span>
+						<span class="tech-tag">Python</span>
+						<span class="tech-tag">Pine Script</span>
+						<span class="tech-tag">TradingView</span>
+					</div>
+				</section>
+
+				<section class="about-section">
+					<h2>Beyond the Keyboard</h2>
+					<p>
+						I live in Fort Collins, Colorado with my wife (married 10 years), two kids, 
+						a Bluetick Coonhound, and an ancient Maine Coon cat. I train MMA 4-5 days a week — 
+						mostly kickboxing — and hit the gym when I can.
+					</p>
+					<p>
+						Summer means camping and backpacking. Fall means elk hunting. 
+						Faith and family come first; everything else fits around that.
+					</p>
+				</section>
+
+				<section class="about-section">
+					<h2>Connect</h2>
+					<ul class="connect-list">
+						<li><a href="https://x.com/ralphinator80" target="_blank" rel="noopener">𝕏 @ralphinator80</a> — Personal</li>
+						<li><a href="https://x.com/QuantAlchemyX" target="_blank" rel="noopener">𝕏 @QuantAlchemyX</a> — Quant Alchemy</li>
+						<li><a href="https://github.com/ralphsmith80" target="_blank" rel="noopener">GitHub</a></li>
+						<li><a href="https://www.linkedin.com/in/ralphsmith80/" target="_blank" rel="noopener">LinkedIn</a></li>
+						<li><a href="https://www.youtube.com/@quant-alchemy" target="_blank" rel="noopener">YouTube</a></li>
+					</ul>
+				</section>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.about-main {
+		max-width: 720px;
+		margin: 0 auto;
+		padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+	}
+
+	.about-header {
+		margin-bottom: var(--space-xl);
+		padding-bottom: var(--space-xl);
+		border-bottom: var(--border-subtle);
+	}
+
+	.about-header h1 {
+		font-size: clamp(2rem, 5vw, 2.75rem);
+		margin-bottom: var(--space-sm);
+	}
+
+	.about-tagline {
+		font-size: 1.2rem;
+		color: var(--text-secondary);
+	}
+
+	.about-tagline a {
+		color: var(--accent-primary);
+		text-decoration: none;
+	}
+
+	.about-tagline a:hover {
+		text-decoration: underline;
+	}
+
+	.about-section {
+		margin-bottom: var(--space-xl);
+	}
+
+	.about-section h2 {
+		font-family: var(--font-display);
+		font-size: 1.35rem;
+		color: var(--accent-primary);
+		margin-bottom: var(--space-md);
+	}
+
+	.about-section p {
+		color: var(--text-secondary);
+		margin-bottom: var(--space-md);
+		line-height: 1.8;
+	}
+
+	.about-section a {
+		color: var(--accent-primary);
+		text-decoration: none;
+	}
+
+	.about-section a:hover {
+		text-decoration: underline;
+	}
+
+	.project-card {
+		background: var(--bg-card);
+		border: var(--border-subtle);
+		border-radius: var(--radius-md);
+		padding: var(--space-lg);
+		margin-bottom: var(--space-md);
+	}
+
+	.project-card h3 {
+		font-family: var(--font-display);
+		font-size: 1.1rem;
+		margin-bottom: var(--space-sm);
+	}
+
+	.project-card p {
+		margin-bottom: var(--space-sm);
+	}
+
+	.project-links {
+		list-style: none;
+		padding: 0;
+		margin: var(--space-sm) 0 0 0;
+	}
+
+	.project-links li {
+		font-size: 0.95rem;
+		margin-bottom: var(--space-xs);
+		color: var(--text-muted);
+	}
+
+	.tech-grid {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-sm);
+	}
+
+	.tech-tag {
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
+		padding: 0.4rem 0.8rem;
+		background: rgba(212, 165, 116, 0.1);
+		border: 1px solid rgba(212, 165, 116, 0.2);
+		border-radius: var(--radius-sm);
+		color: var(--accent-secondary);
+	}
+
+	.connect-list {
+		list-style: none;
+		padding: 0;
+	}
+
+	.connect-list li {
+		margin-bottom: var(--space-sm);
+		color: var(--text-secondary);
+	}
+
+	.connect-list a {
+		color: var(--accent-primary);
+	}
+
+	@media (max-width: 640px) {
+		.about-main {
+			padding: var(--space-lg) var(--space-md);
+		}
+	}
+</style>
