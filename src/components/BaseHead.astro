@@ -1,6 +1,4 @@
 ---
-// Import the global.css file here so that it is included on
-// all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
 import { SITE_TITLE, SITE_URL } from '../consts';
 
@@ -12,7 +10,7 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-// Default OG image - the hero/Retro Cruiser image
+// Default OG image
 const defaultImage = '/images/uploads/2025/03/hero.webp';
 const { title, description, image = defaultImage } = Astro.props;
 const ogImageUrl = image.startsWith('http') ? image : new URL(image, Astro.site);
@@ -33,7 +31,7 @@ const ogImageUrl = image.startsWith('http') ? image : new URL(image, Astro.site)
 <meta name="generator" content={Astro.generator} />
 
 <!-- Theme Color -->
-<meta name="theme-color" content="#0a0a0f" />
+<meta name="theme-color" content="#1a1614" />
 <meta name="color-scheme" content="dark" />
 
 <!-- Canonical URL -->

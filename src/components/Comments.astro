@@ -41,7 +41,6 @@ function formatDate(dateStr: string): string {
 {comments.length > 0 && (
   <div class="comments-section">
     <h3 class="comments-title">
-      <span class="title-prefix">//</span> 
       {comments.length} Comment{comments.length !== 1 ? 's' : ''}
     </h3>
     <div class="comments-list">
@@ -71,16 +70,10 @@ function formatDate(dateStr: string): string {
   }
 
   .comments-title {
-    font-size: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
     margin-bottom: var(--space-lg);
-  }
-
-  .title-prefix {
-    color: var(--accent-primary);
-    font-family: var(--font-mono);
   }
 
   .comments-list {
@@ -93,7 +86,6 @@ function formatDate(dateStr: string): string {
     padding: var(--space-lg);
     background: var(--bg-card);
     border: var(--border-subtle);
-    border-left: 3px solid var(--accent-primary);
     border-radius: var(--radius-md);
   }
 
@@ -105,16 +97,16 @@ function formatDate(dateStr: string): string {
   }
 
   .comment-avatar {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    width: 36px;
+    height: 36px;
+    background: var(--accent-tertiary);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
     color: var(--bg-primary);
   }
 
@@ -124,17 +116,20 @@ function formatDate(dateStr: string): string {
   }
 
   .comment-author {
+    font-family: var(--font-display);
     font-weight: 600;
+    font-size: 0.9rem;
     color: var(--text-primary);
   }
 
   .comment-date {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
   }
 
   .comment-content {
+    font-size: 1rem;
     color: var(--text-secondary);
     line-height: 1.6;
     white-space: pre-wrap;

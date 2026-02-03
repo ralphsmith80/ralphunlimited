@@ -6,7 +6,8 @@ export const SITE_URL = 'https://ralphunlimited.com';
 // Social links
 export const SOCIAL = {
   facebook: 'https://www.facebook.com/ralph.r.smith.3',
-  twitter: '', // Add Twitter/X handle if available
+  twitter: 'https://x.com/ralphinator80',
+  twitterQA: 'https://x.com/QuantAlchemyX',
 };
 
 // Author info
