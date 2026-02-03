@@ -1,8 +1,14 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 6);
 ---
 
 <!doctype html>
@@ -13,37 +19,456 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	<body>
 		<Header />
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+			<!-- Hero Section -->
+			<section class="hero">
+				<div class="hero-bg">
+					<div class="hero-grid"></div>
+					<div class="hero-glow"></div>
+				</div>
+				<div class="hero-content">
+					<div class="hero-badge">
+						<span class="badge-dot"></span>
+						Developer • Maker • Game Creator
+					</div>
+					<h1 class="hero-title">
+						Ralph<br/>
+						<span class="title-accent">Unlimited</span>
+					</h1>
+					<p class="hero-description">
+						A place where dreams are made. Building games, breaking things, 
+						and sharing what I learn along the way.
+					</p>
+					<div class="hero-actions">
+						<a href="/blog/" class="btn">
+							<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+							</svg>
+							Read the Blog
+						</a>
+						<a href="/games/retro-cruiser/index.html" class="btn btn-secondary">
+							<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<polygon points="5 3 19 12 5 21 5 3"/>
+							</svg>
+							Play Retro Cruiser
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<!-- Featured Posts -->
+			<section class="posts-section">
+				<div class="section-header">
+					<h2 class="section-title">
+						<span class="title-prefix">//</span> Latest Posts
+					</h2>
+					<a href="/blog/" class="view-all">
+						View All
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M5 12h14M12 5l7 7-7 7"/>
+						</svg>
+					</a>
+				</div>
+				
+				<div class="posts-grid">
+					{posts.map((post, index) => (
+						<article class="post-card" style={`animation-delay: ${index * 0.1}s`}>
+							<div class="post-meta">
+								<span class="post-date">
+									<FormattedDate date={post.data.pubDate} />
+								</span>
+								{post.data.categories?.[0] && (
+									<span class="post-category">{post.data.categories[0]}</span>
+								)}
+							</div>
+							<h3 class="post-title">
+								<a href={`/blog/${post.data.slug || post.id}/`}>
+									{post.data.title}
+								</a>
+							</h3>
+							<p class="post-excerpt">{post.data.description}</p>
+							<a href={`/blog/${post.data.slug || post.id}/`} class="post-link">
+								Read more
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M5 12h14M12 5l7 7-7 7"/>
+								</svg>
+							</a>
+						</article>
+					))}
+				</div>
+			</section>
+
+			<!-- Game CTA -->
+			<section class="game-cta">
+				<div class="game-cta-content">
+					<div class="game-badge">🎮 Featured Project</div>
+					<h2>Retro Cruiser</h2>
+					<p>
+						A space shooter built with Phaser.js. Blast asteroids, collect power-ups, 
+						and see how long you can survive. Playable right in your browser!
+					</p>
+					<a href="/games/retro-cruiser/index.html" class="btn">
+						Launch Game
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+							<polyline points="15 3 21 3 21 9"/>
+							<line x1="10" y1="14" x2="21" y2="3"/>
+						</svg>
+					</a>
+				</div>
+				<div class="game-visual">
+					<div class="game-frame">
+						<img src="/images/uploads/2025/03/hero.webp" alt="Retro Cruiser Game" />
+					</div>
+				</div>
+			</section>
 		</main>
 		<Footer />
+
+		<style>
+			/* Hero Section */
+			.hero {
+				position: relative;
+				min-height: 80vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: var(--space-2xl) var(--space-lg);
+				overflow: hidden;
+			}
+
+			.hero-bg {
+				position: absolute;
+				inset: 0;
+				z-index: 0;
+			}
+
+			.hero-grid {
+				position: absolute;
+				inset: 0;
+				background-image: 
+					linear-gradient(rgba(0, 255, 163, 0.03) 1px, transparent 1px),
+					linear-gradient(90deg, rgba(0, 255, 163, 0.03) 1px, transparent 1px);
+				background-size: 50px 50px;
+				mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+			}
+
+			.hero-glow {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				width: 800px;
+				height: 800px;
+				background: radial-gradient(
+					circle,
+					rgba(0, 255, 163, 0.1) 0%,
+					rgba(0, 212, 255, 0.05) 30%,
+					transparent 70%
+				);
+				filter: blur(60px);
+			}
+
+			.hero-content {
+				position: relative;
+				z-index: 1;
+				text-align: center;
+				max-width: 800px;
+			}
+
+			.hero-badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				font-family: var(--font-mono);
+				font-size: 0.75rem;
+				text-transform: uppercase;
+				letter-spacing: 0.15em;
+				color: var(--accent-primary);
+				padding: 0.5rem 1rem;
+				background: rgba(0, 255, 163, 0.1);
+				border: 1px solid rgba(0, 255, 163, 0.2);
+				border-radius: 999px;
+				margin-bottom: var(--space-lg);
+				animation: slide-up 0.6s ease forwards;
+			}
+
+			.badge-dot {
+				width: 6px;
+				height: 6px;
+				background: var(--accent-primary);
+				border-radius: 50%;
+				animation: glow-pulse 2s ease-in-out infinite;
+			}
+
+			.hero-title {
+				font-size: clamp(3rem, 10vw, 6rem);
+				line-height: 0.95;
+				margin-bottom: var(--space-lg);
+				animation: slide-up 0.6s ease forwards;
+				animation-delay: 0.1s;
+				opacity: 0;
+			}
+
+			.title-accent {
+				background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+
+			.hero-description {
+				font-size: 1.25rem;
+				color: var(--text-secondary);
+				max-width: 500px;
+				margin: 0 auto var(--space-xl);
+				animation: slide-up 0.6s ease forwards;
+				animation-delay: 0.2s;
+				opacity: 0;
+			}
+
+			.hero-actions {
+				display: flex;
+				gap: 1rem;
+				justify-content: center;
+				flex-wrap: wrap;
+				animation: slide-up 0.6s ease forwards;
+				animation-delay: 0.3s;
+				opacity: 0;
+			}
+
+			.btn-icon {
+				width: 18px;
+				height: 18px;
+			}
+
+			/* Posts Section */
+			.posts-section {
+				padding: var(--space-2xl) var(--space-lg);
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+
+			.section-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: var(--space-xl);
+				flex-wrap: wrap;
+				gap: 1rem;
+			}
+
+			.section-title {
+				font-size: 1.5rem;
+				margin: 0;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+
+			.title-prefix {
+				color: var(--accent-primary);
+				font-family: var(--font-mono);
+			}
+
+			.view-all {
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				font-family: var(--font-mono);
+				font-size: 0.875rem;
+				color: var(--text-muted);
+			}
+
+			.view-all svg {
+				width: 16px;
+				height: 16px;
+				transition: transform var(--transition-fast);
+			}
+
+			.view-all:hover {
+				color: var(--accent-primary);
+			}
+
+			.view-all:hover svg {
+				transform: translateX(4px);
+			}
+
+			.posts-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+				gap: var(--space-lg);
+			}
+
+			.post-card {
+				background: var(--bg-card);
+				border: var(--border-subtle);
+				border-radius: var(--radius-lg);
+				padding: var(--space-lg);
+				transition: var(--transition-base);
+				animation: slide-up 0.6s ease forwards;
+				opacity: 0;
+			}
+
+			.post-card:hover {
+				border-color: rgba(0, 255, 163, 0.3);
+				box-shadow: 
+					0 0 30px var(--glow-primary),
+					0 20px 40px rgba(0, 0, 0, 0.3);
+				transform: translateY(-4px);
+			}
+
+			.post-meta {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+				margin-bottom: var(--space-md);
+			}
+
+			.post-date {
+				font-family: var(--font-mono);
+				font-size: 0.75rem;
+				color: var(--text-muted);
+			}
+
+			.post-category {
+				font-family: var(--font-mono);
+				font-size: 0.625rem;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+				padding: 0.25rem 0.5rem;
+				background: rgba(0, 255, 163, 0.1);
+				border-radius: var(--radius-sm);
+				color: var(--accent-primary);
+			}
+
+			.post-title {
+				font-size: 1.25rem;
+				margin-bottom: var(--space-sm);
+				line-height: 1.3;
+			}
+
+			.post-title a {
+				color: var(--text-primary);
+				text-decoration: none;
+			}
+
+			.post-title a:hover {
+				color: var(--accent-primary);
+			}
+
+			.post-excerpt {
+				font-size: 0.9375rem;
+				color: var(--text-muted);
+				margin-bottom: var(--space-md);
+				display: -webkit-box;
+				-webkit-line-clamp: 3;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+
+			.post-link {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				font-family: var(--font-mono);
+				font-size: 0.8125rem;
+				color: var(--accent-primary);
+			}
+
+			.post-link svg {
+				width: 14px;
+				height: 14px;
+				transition: transform var(--transition-fast);
+			}
+
+			.post-link:hover svg {
+				transform: translateX(4px);
+			}
+
+			/* Game CTA */
+			.game-cta {
+				padding: var(--space-2xl) var(--space-lg);
+				max-width: 1200px;
+				margin: 0 auto;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: var(--space-xl);
+				align-items: center;
+			}
+
+			.game-badge {
+				font-family: var(--font-mono);
+				font-size: 0.75rem;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+				color: var(--accent-warning);
+				margin-bottom: var(--space-md);
+			}
+
+			.game-cta h2 {
+				font-size: 2.5rem;
+				margin-bottom: var(--space-md);
+			}
+
+			.game-cta p {
+				color: var(--text-secondary);
+				margin-bottom: var(--space-lg);
+			}
+
+			.game-visual {
+				display: flex;
+				justify-content: center;
+			}
+
+			.game-frame {
+				position: relative;
+				border: 2px solid var(--bg-elevated);
+				border-radius: var(--radius-lg);
+				overflow: hidden;
+				box-shadow: 
+					0 0 0 1px rgba(0, 255, 163, 0.1),
+					0 20px 60px rgba(0, 0, 0, 0.4);
+			}
+
+			.game-frame img {
+				display: block;
+				max-width: 100%;
+				height: auto;
+			}
+
+			.game-frame::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(
+					135deg,
+					rgba(0, 255, 163, 0.1) 0%,
+					transparent 50%
+				);
+				pointer-events: none;
+			}
+
+			@media (max-width: 900px) {
+				.game-cta {
+					grid-template-columns: 1fr;
+					text-align: center;
+				}
+
+				.game-visual {
+					order: -1;
+				}
+			}
+
+			@media (max-width: 640px) {
+				.hero {
+					min-height: 70vh;
+					padding: var(--space-xl) var(--space-md);
+				}
+
+				.posts-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
 	</body>
 </html>
