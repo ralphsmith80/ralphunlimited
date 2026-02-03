@@ -6,7 +6,7 @@ description: "I've finally done it!! My platform independent 2D game engine is
 pubDate: 2010-09-06T14:24:25.000Z
 slug: platform-independent-2d-game-engine
 categories:
-  - games-cat
+  - development
 ---
 
 I’ve finally done it!! My platform independent 2D game engine is finally here. I’ve tested this engine on Mac OSX, Ubuntu Linux, Windows, and here’s the really awesome part iPhone. That’s  a pretty large scope. Now you can make one game and distribute on just about any platform that supports C/C++.

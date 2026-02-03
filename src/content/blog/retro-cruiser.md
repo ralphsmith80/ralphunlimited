@@ -7,7 +7,7 @@ pubDate: 2014-12-06T19:42:28.000Z
 slug: retro-cruiser
 categories:
   - development
-  - games-cat
+  - development
 ---
 
 I still enjoy making games and I was very interested in playing with [Phaser](http://phaser.io/ "Phaser"). Here's a simple game I threw together using phaser. The embedded demo is below. If you'd rather play the game in full browser window you can do so [here](/games/retro-cruiser/index.html "Retro Cruiser!"). Enjoy!

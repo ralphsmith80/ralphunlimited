@@ -6,7 +6,7 @@ description: WHAT'S IT ALL ABOUT?! Well as you can see from the screen shots
 pubDate: 2010-05-23T20:46:00.000Z
 slug: app1
 categories:
-  - apps
+  - development
 ---
 
 **WHAT’S IT ALL ABOUT?!**

@@ -4,7 +4,7 @@ description: this is an excerpt about my ekg
 pubDate: 2010-05-26T23:30:34.000Z
 slug: ekg-monitor
 categories:
-  - apps
+  - development
 ---
 
 **WHAT’S IT ALL ABOUT?!**
