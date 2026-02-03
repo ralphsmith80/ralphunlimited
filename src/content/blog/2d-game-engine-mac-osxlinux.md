@@ -6,7 +6,7 @@ description: If you've read my earlier posts then you'll know that I previously
 pubDate: 2010-08-22T22:20:38.000Z
 slug: 2d-game-engine-mac-osxlinux
 categories:
-  - games-cat
+  - development
 ---
 
 If you’ve read my earlier posts then you’ll know that I previously developed a 2D game called [Space Challenge](http://ralphunlimited.com/?p=10). While I developed all of the game code the engine I was using was mostly developed by Mike Daley of [71squared.com](http://71squared.com). For anyone who is interested in developing an iPhone game I would recommend you check out Mike’s site. I enjoyed what I learned from Mike but I really wanted an engine that would work on multiple platforms so that I could reach a larger audience.

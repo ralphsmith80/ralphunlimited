@@ -19,105 +19,256 @@ const postUrl = `${SITE_URL}/${slug}/`;
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-			.categories {
-				display: flex;
-				gap: 0.5rem;
-				justify-content: center;
-				flex-wrap: wrap;
-				margin-top: 1rem;
-			}
-			.category-tag {
-				background: rgb(var(--gray-light));
-				color: rgb(var(--gray-dark));
-				padding: 0.25rem 0.75rem;
-				border-radius: 999px;
-				font-size: 0.75rem;
-				text-transform: uppercase;
-				letter-spacing: 0.05em;
-				text-decoration: none;
-			}
-			.category-tag:hover {
-				background: rgb(var(--accent));
-				color: white;
-			}
-		</style>
 	</head>
-
 	<body>
 		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
+		<main class="post-main">
+			<article class="post-article">
+				<!-- Post Header -->
+				<header class="post-header">
+					<div class="post-meta">
+						<time class="post-date">
 							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
+						</time>
 						{categories && categories.length > 0 && (
-							<div class="categories">
+							<div class="post-categories">
 								{categories.map((cat: string) => (
 									<a href={`/category/${cat}/`} class="category-tag">{cat}</a>
 								))}
 							</div>
 						)}
-						<hr />
 					</div>
+					<h1 class="post-title">{title}</h1>
+					{description && (
+						<p class="post-description">{description}</p>
+					)}
+					{updatedDate && (
+						<p class="post-updated">
+							Last updated: <FormattedDate date={updatedDate} />
+						</p>
+					)}
+				</header>
+
+				<!-- Hero Image -->
+				{heroImage && (
+					<div class="post-hero">
+						<Image width={1200} height={630} src={heroImage} alt="" />
+					</div>
+				)}
+
+				<!-- Post Content -->
+				<div class="post-content prose">
 					<slot />
-					
+				</div>
+
+				<!-- Post Footer -->
+				<footer class="post-footer">
 					<SocialShare title={title} url={postUrl} />
 					<Comments postSlug={slug} />
 					<CommentForm postSlug={slug} />
-				</div>
+				</footer>
 			</article>
+
+			<!-- Back to Blog -->
+			<nav class="post-nav">
+				<a href="/blog/" class="back-link">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M19 12H5M12 19l-7-7 7-7"/>
+					</svg>
+					Back to all posts
+				</a>
+			</nav>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.post-main {
+		min-height: 100vh;
+	}
+
+	.post-article {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: var(--space-xl) var(--space-lg);
+	}
+
+	/* Header */
+	.post-header {
+		text-align: center;
+		margin-bottom: var(--space-xl);
+		padding-bottom: var(--space-xl);
+		border-bottom: var(--border-subtle);
+	}
+
+	.post-meta {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--space-md);
+		margin-bottom: var(--space-lg);
+		flex-wrap: wrap;
+	}
+
+	.post-date {
+		font-family: var(--font-mono);
+		font-size: 0.875rem;
+		color: var(--text-muted);
+	}
+
+	.post-categories {
+		display: flex;
+		gap: var(--space-sm);
+	}
+
+	.category-tag {
+		font-family: var(--font-mono);
+		font-size: 0.6875rem;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		padding: 0.25rem 0.75rem;
+		background: rgba(0, 255, 163, 0.1);
+		border: 1px solid rgba(0, 255, 163, 0.2);
+		border-radius: var(--radius-sm);
+		color: var(--accent-primary);
+		text-decoration: none;
+		transition: var(--transition-fast);
+	}
+
+	.category-tag:hover {
+		background: var(--accent-primary);
+		color: var(--bg-primary);
+	}
+
+	.post-title {
+		font-size: clamp(2rem, 5vw, 3rem);
+		line-height: 1.1;
+		margin-bottom: var(--space-md);
+		background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.post-description {
+		font-size: 1.25rem;
+		color: var(--text-secondary);
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	.post-updated {
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		color: var(--text-muted);
+		margin-top: var(--space-md);
+	}
+
+	/* Hero */
+	.post-hero {
+		margin-bottom: var(--space-xl);
+		border-radius: var(--radius-lg);
+		overflow: hidden;
+		border: var(--border-subtle);
+	}
+
+	.post-hero img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	/* Content */
+	.post-content {
+		font-size: 1.125rem;
+		line-height: 1.8;
+	}
+
+	.post-content :global(h2) {
+		font-size: 1.75rem;
+		margin-top: var(--space-xl);
+		margin-bottom: var(--space-md);
+		padding-top: var(--space-md);
+		border-top: var(--border-subtle);
+		color: var(--text-primary);
+	}
+
+	.post-content :global(h3) {
+		font-size: 1.375rem;
+		margin-top: var(--space-lg);
+		margin-bottom: var(--space-sm);
+		color: var(--accent-primary);
+	}
+
+	.post-content :global(p) {
+		margin-bottom: var(--space-md);
+		color: var(--text-secondary);
+	}
+
+	.post-content :global(strong) {
+		color: var(--text-primary);
+		font-weight: 600;
+	}
+
+	.post-content :global(ul),
+	.post-content :global(ol) {
+		margin-bottom: var(--space-md);
+		padding-left: var(--space-lg);
+	}
+
+	.post-content :global(li) {
+		margin-bottom: var(--space-sm);
+		color: var(--text-secondary);
+	}
+
+	.post-content :global(iframe) {
+		margin: var(--space-lg) 0;
+		max-width: 100%;
+	}
+
+	/* Footer */
+	.post-footer {
+		margin-top: var(--space-xl);
+		padding-top: var(--space-xl);
+		border-top: var(--border-subtle);
+	}
+
+	/* Nav */
+	.post-nav {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 0 var(--space-lg) var(--space-xl);
+	}
+
+	.back-link {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--space-sm);
+		font-family: var(--font-mono);
+		font-size: 0.875rem;
+		color: var(--text-muted);
+		text-decoration: none;
+		transition: var(--transition-fast);
+	}
+
+	.back-link svg {
+		width: 18px;
+		height: 18px;
+		transition: transform var(--transition-fast);
+	}
+
+	.back-link:hover {
+		color: var(--accent-primary);
+	}
+
+	.back-link:hover svg {
+		transform: translateX(-4px);
+	}
+
+	@media (max-width: 640px) {
+		.post-article {
+			padding: var(--space-lg) var(--space-md);
+		}
+	}
+</style>

@@ -6,7 +6,7 @@ description: "WHAT'S IT ALL ABOUT?! This is where the fun starts. Game
 pubDate: 2010-05-23T20:47:19.000Z
 slug: game1
 categories:
-  - games-cat
+  - development
 ---
 
 **WHAT’S IT ALL ABOUT?!**
