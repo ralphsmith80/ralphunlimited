@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Classic Alchemy Symbol (Philosopher's Stone / Transmutation) -->
+  <!-- Outer circle -->
+  <circle cx="16" cy="16" r="13" stroke="#d4a574" stroke-width="2" fill="none"/>
+  <!-- Inner triangle pointing up (fire/spirit) -->
+  <polygon points="16,5 26,23 6,23" stroke="#d4a574" stroke-width="2" fill="none"/>
+  <!-- Central diamond (perfection) -->
+  <polygon points="16,10 20,16 16,22 12,16" fill="#d4a574"/>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Round Potion Bottle -->
+  <rect x="12" y="2" width="8" height="4" rx="1" stroke="#d4a574" stroke-width="2"/>
+  <path d="M13 6v3c-4 2-6 6-6 10 0 5 4 9 9 9s9-4 9-9c0-4-2-8-6-10V6" stroke="#d4a574" stroke-width="2" fill="none"/>
+  <!-- Liquid level -->
+  <path d="M8.5 20c1.5-1 3.5 0 5 0s3-1 4.5 0 3 1 5.5 0c0 4.5-3.5 8-7.5 8s-7.5-3.5-7.5-8z" fill="#d4a574" opacity="0.5"/>
+  <!-- Sparkle -->
+  <circle cx="12" cy="22" r="1" fill="#d4a574"/>
+</svg>

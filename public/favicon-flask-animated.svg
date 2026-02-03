@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <style>
+    @keyframes liquidWave {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.7; }
+    }
+    @keyframes bubbleRise1 {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-8px); opacity: 0; }
+    }
+    @keyframes bubbleRise2 {
+      0% { transform: translateY(0); opacity: 0.8; }
+      100% { transform: translateY(-6px); opacity: 0; }
+    }
+    @keyframes bubbleRise3 {
+      0% { transform: translateY(0); opacity: 0.9; }
+      100% { transform: translateY(-7px); opacity: 0; }
+    }
+    @keyframes bubblePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+    .liquid { animation: liquidWave 3s ease-in-out infinite; }
+    .bubble-static1 { animation: bubblePulse 2s ease-in-out infinite; }
+    .bubble-static2 { animation: bubblePulse 2.5s ease-in-out infinite 0.5s; }
+    .bubble-rise1 { animation: bubbleRise1 2.5s ease-out infinite; }
+    .bubble-rise2 { animation: bubbleRise2 3s ease-out infinite 0.8s; }
+    .bubble-rise3 { animation: bubbleRise3 2.8s ease-out infinite 1.5s; }
+  </style>
+  
+  <!-- Simple Alchemist Flask -->
+  <path d="M12 4h8v6l6 14a3 3 0 0 1-2.8 4H8.8a3 3 0 0 1-2.8-4l6-14V4z" stroke="#d4a574" stroke-width="2" fill="none"/>
+  <path d="M12 4h8" stroke="#d4a574" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Liquid inside -->
+  <path class="liquid" d="M8.5 22l5.5-3 4 2 5.5-1a3 3 0 0 1-2.7 4H8.8a3 3 0 0 1-2.3-4z" fill="#d4a574" opacity="0.6"/>
+  
+  <!-- Static bubbles with pulse -->
+  <circle class="bubble-static1" cx="12" cy="24" r="1.5" fill="#d4a574"/>
+  <circle class="bubble-static2" cx="17" cy="22" r="1" fill="#d4a574"/>
+  
+  <!-- Rising bubbles -->
+  <circle class="bubble-rise1" cx="14" cy="25" r="0.6" fill="#d4a574" opacity="0.8"/>
+  <circle class="bubble-rise2" cx="18" cy="24" r="0.5" fill="#d4a574" opacity="0.7"/>
+  <circle class="bubble-rise3" cx="11" cy="23" r="0.4" fill="#d4a574" opacity="0.6"/>
+</svg>
