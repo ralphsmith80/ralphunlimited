@@ -47,4 +47,4 @@ This is a C# application that uses an SQL database. This system will only run on
 Recipe 1.3/Recipe 1.3/bin/Release/Recipe 1.3.exe
 
 Have FUN!!
-**Download:** [⬇️ Cook Book (ZIP)](/images/uploads/2010/05/CookBook.zip)
+[Download Cook Book](/images/uploads/2010/05/CookBook.zip)
