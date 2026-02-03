@@ -23,4 +23,4 @@ I'm offering my game engine here for free. By downloading this engine you acknow
 
 Enjoy!!!!
 
-**Download:** [⬇️ Game Engine (ZIP)](/images/uploads/2010/08/Game_Engine.zip)
+[Download Game Engine](/images/uploads/2010/08/Game_Engine.zip)

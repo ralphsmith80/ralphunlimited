@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <style>
+    @keyframes liquidSlosh {
+      0%, 100% { d: path("M8.5 20c1.5-1 3.5 0 5 0s3-1 4.5 0 3 1 5.5 0c0 4.5-3.5 8-7.5 8s-7.5-3.5-7.5-8z"); }
+      50% { d: path("M8.5 20c2 0.5 3 -0.5 5 -0.5s3.5 0.5 4.5 -0.5 2.5 0 5.5 0.5c0 4.5-3.5 8-7.5 8s-7.5-3.5-7.5-8z"); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.7; }
+    }
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+    @keyframes bubble {
+      0% { transform: translateY(0); opacity: 0.8; }
+      100% { transform: translateY(-6px); opacity: 0; }
+    }
+    .liquid { animation: glowPulse 3s ease-in-out infinite; }
+    .sparkle { animation: sparkle 1.5s ease-in-out infinite; }
+    .bubble1 { animation: bubble 2s ease-out infinite; }
+    .bubble2 { animation: bubble 2.5s ease-out infinite 0.8s; }
+    .bubble3 { animation: bubble 2.2s ease-out infinite 1.4s; }
+  </style>
+  
+  <!-- Round Potion Bottle -->
+  <rect x="12" y="2" width="8" height="4" rx="1" stroke="#d4a574" stroke-width="2"/>
+  <path d="M13 6v3c-4 2-6 6-6 10 0 5 4 9 9 9s9-4 9-9c0-4-2-8-6-10V6" stroke="#d4a574" stroke-width="2" fill="none"/>
+  
+  <!-- Liquid level with glow -->
+  <path class="liquid" d="M8.5 20c1.5-1 3.5 0 5 0s3-1 4.5 0 3 1 5.5 0c0 4.5-3.5 8-7.5 8s-7.5-3.5-7.5-8z" fill="#d4a574" opacity="0.5"/>
+  
+  <!-- Rising bubbles -->
+  <circle class="bubble1" cx="12" cy="24" r="0.8" fill="#d4a574"/>
+  <circle class="bubble2" cx="16" cy="25" r="0.6" fill="#d4a574"/>
+  <circle class="bubble3" cx="19" cy="24" r="0.7" fill="#d4a574"/>
+  
+  <!-- Sparkle -->
+  <circle class="sparkle" cx="12" cy="22" r="1" fill="#d4a574"/>
+</svg>

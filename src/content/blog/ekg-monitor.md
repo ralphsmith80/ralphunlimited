@@ -48,4 +48,4 @@ Have FUN!!
 **REFRENCES**
 
 Check out [this page](http://www.eng.utah.edu/~jnguyen/ecg/ecg_index.html) for making a home made EKG
-**Download:** [⬇️ EKG Monitor (ZIP)](/images/uploads/2010/05/EKGMonitor.zip)
+[Download EKG Monitor](/images/uploads/2010/05/EKGMonitor.zip)

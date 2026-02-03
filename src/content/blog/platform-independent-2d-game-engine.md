@@ -43,4 +43,4 @@ Special thanks to [Mike Daley](http://www.71squared.com/) and [Jonathan Harbour]
 
 Enjoy!!!!
 
-**Download**: [⬇️ Game Engine (ZIP)](/images/uploads/2010/08/Game_Engine.zip)
+[Download Game Engine](/images/uploads/2010/08/Game_Engine.zip)

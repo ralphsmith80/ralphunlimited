@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Simple Alchemist Flask -->
+  <path d="M12 4h8v6l6 14a3 3 0 0 1-2.8 4H8.8a3 3 0 0 1-2.8-4l6-14V4z" stroke="#d4a574" stroke-width="2" fill="none"/>
+  <path d="M12 4h8" stroke="#d4a574" stroke-width="2" stroke-linecap="round"/>
+  <!-- Liquid inside -->
+  <path d="M8.5 22l5.5-3 4 2 5.5-1a3 3 0 0 1-2.7 4H8.8a3 3 0 0 1-2.3-4z" fill="#d4a574" opacity="0.6"/>
+  <!-- Bubbles -->
+  <circle cx="12" cy="24" r="1.5" fill="#d4a574"/>
+  <circle cx="17" cy="22" r="1" fill="#d4a574"/>
+</svg>
