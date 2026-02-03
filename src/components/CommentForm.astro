@@ -7,9 +7,7 @@ const { postSlug } = Astro.props;
 ---
 
 <div class="comment-form-container">
-  <h3 class="form-title">
-    <span class="title-prefix">//</span> Leave a Comment
-  </h3>
+  <h3 class="form-title">Leave a Comment</h3>
   <form 
     id="comment-form" 
     action="/api/comment" 
@@ -18,7 +16,7 @@ const { postSlug } = Astro.props;
   >
     <input type="hidden" name="postSlug" value={postSlug} />
     
-    <!-- Honeypot field - hidden from users, bots will fill it -->
+    <!-- Honeypot field -->
     <div class="hp-field" aria-hidden="true">
       <label for="website">Website</label>
       <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" />
@@ -42,10 +40,7 @@ const { postSlug } = Astro.props;
     </div>
     
     <div class="form-footer">
-      <button type="submit" class="submit-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-        </svg>
+      <button type="submit" class="btn">
         Submit Comment
       </button>
       <p class="moderation-notice">
@@ -89,11 +84,11 @@ const { postSlug } = Astro.props;
         form.reset();
       } else {
         const error = await response.json();
-        status.textContent = error.message || 'Failed to submit comment. Please try again.';
+        status.textContent = error.message || 'Failed to submit. Please try again.';
         status.className = 'form-status error';
       }
     } catch (err) {
-      status.textContent = 'Failed to submit comment. Please try again.';
+      status.textContent = 'Failed to submit. Please try again.';
       status.className = 'form-status error';
     }
     
@@ -109,16 +104,10 @@ const { postSlug } = Astro.props;
   }
 
   .form-title {
-    font-size: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
     margin-bottom: var(--space-lg);
-  }
-
-  .title-prefix {
-    color: var(--accent-primary);
-    font-family: var(--font-mono);
   }
 
   .comment-form {
@@ -127,7 +116,6 @@ const { postSlug } = Astro.props;
     gap: var(--space-md);
   }
 
-  /* Honeypot - hide from users */
   .hp-field {
     position: absolute;
     left: -9999px;
@@ -149,27 +137,25 @@ const { postSlug } = Astro.props;
   }
 
   .form-group label {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 500;
     color: var(--text-secondary);
   }
 
   .required {
-    color: var(--accent-tertiary);
+    color: var(--accent-primary);
   }
 
   .optional {
     color: var(--text-muted);
-    font-size: 0.625rem;
-    text-transform: none;
-    letter-spacing: 0;
+    font-size: 0.75rem;
+    font-weight: 400;
   }
 
   .form-group input,
   .form-group textarea {
-    padding: var(--space-md);
+    padding: 0.75rem 1rem;
     font-family: var(--font-body);
     font-size: 1rem;
     background: var(--bg-card);
@@ -187,8 +173,7 @@ const { postSlug } = Astro.props;
   .form-group input:focus,
   .form-group textarea:focus {
     outline: none;
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px var(--glow-primary);
+    border-color: var(--accent-tertiary);
   }
 
   .form-group textarea {
@@ -203,37 +188,8 @@ const { postSlug } = Astro.props;
     flex-wrap: wrap;
   }
 
-  .submit-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-sm) var(--space-lg);
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: var(--accent-primary);
-    color: var(--bg-primary);
-    border: 2px solid var(--accent-primary);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: var(--transition-fast);
-  }
-
-  .submit-btn svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .submit-btn:hover {
-    background: transparent;
-    color: var(--accent-primary);
-    box-shadow: 0 0 20px var(--glow-primary);
-  }
-
   .moderation-notice {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     margin: 0;
   }
@@ -242,20 +198,19 @@ const { postSlug } = Astro.props;
     margin-top: var(--space-md);
     padding: var(--space-md);
     border-radius: var(--radius-md);
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
   }
 
   .form-status.success {
-    background: rgba(0, 255, 163, 0.1);
-    border: 1px solid rgba(0, 255, 163, 0.3);
+    background: rgba(212, 165, 116, 0.1);
+    border: 1px solid rgba(212, 165, 116, 0.25);
     color: var(--accent-primary);
   }
 
   .form-status.error {
-    background: rgba(255, 107, 157, 0.1);
-    border: 1px solid rgba(255, 107, 157, 0.3);
-    color: var(--accent-tertiary);
+    background: rgba(180, 100, 100, 0.1);
+    border: 1px solid rgba(180, 100, 100, 0.25);
+    color: #c88;
   }
 
   @media (max-width: 640px) {

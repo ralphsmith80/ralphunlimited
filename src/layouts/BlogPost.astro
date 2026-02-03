@@ -44,7 +44,7 @@ const postUrl = `${SITE_URL}/${slug}/`;
 					)}
 					{updatedDate && (
 						<p class="post-updated">
-							Last updated: <FormattedDate date={updatedDate} />
+							Updated <FormattedDate date={updatedDate} />
 						</p>
 					)}
 				</header>
@@ -72,10 +72,7 @@ const postUrl = `${SITE_URL}/${slug}/`;
 			<!-- Back to Blog -->
 			<nav class="post-nav">
 				<a href="/blog/" class="back-link">
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-						<path d="M19 12H5M12 19l-7-7 7-7"/>
-					</svg>
-					Back to all posts
+					← Back to Journal
 				</a>
 			</nav>
 		</main>
@@ -89,14 +86,13 @@ const postUrl = `${SITE_URL}/${slug}/`;
 	}
 
 	.post-article {
-		max-width: 800px;
+		max-width: 720px;
 		margin: 0 auto;
 		padding: var(--space-xl) var(--space-lg);
 	}
 
 	/* Header */
 	.post-header {
-		text-align: center;
 		margin-bottom: var(--space-xl);
 		padding-bottom: var(--space-xl);
 		border-bottom: var(--border-subtle);
@@ -105,15 +101,14 @@ const postUrl = `${SITE_URL}/${slug}/`;
 	.post-meta {
 		display: flex;
 		align-items: center;
-		justify-content: center;
 		gap: var(--space-md);
-		margin-bottom: var(--space-lg);
+		margin-bottom: var(--space-md);
 		flex-wrap: wrap;
 	}
 
 	.post-date {
 		font-family: var(--font-mono);
-		font-size: 0.875rem;
+		font-size: 0.85rem;
 		color: var(--text-muted);
 	}
 
@@ -124,14 +119,13 @@ const postUrl = `${SITE_URL}/${slug}/`;
 
 	.category-tag {
 		font-family: var(--font-mono);
-		font-size: 0.6875rem;
+		font-size: 0.7rem;
 		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		padding: 0.25rem 0.75rem;
-		background: rgba(0, 255, 163, 0.1);
-		border: 1px solid rgba(0, 255, 163, 0.2);
+		letter-spacing: 0.08em;
+		padding: 0.2rem 0.6rem;
+		background: rgba(212, 165, 116, 0.1);
 		border-radius: var(--radius-sm);
-		color: var(--accent-primary);
+		color: var(--accent-secondary);
 		text-decoration: none;
 		transition: var(--transition-fast);
 	}
@@ -142,25 +136,20 @@ const postUrl = `${SITE_URL}/${slug}/`;
 	}
 
 	.post-title {
-		font-size: clamp(2rem, 5vw, 3rem);
-		line-height: 1.1;
+		font-size: clamp(1.75rem, 4vw, 2.5rem);
+		line-height: 1.2;
 		margin-bottom: var(--space-md);
-		background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
 	}
 
 	.post-description {
-		font-size: 1.25rem;
+		font-size: 1.15rem;
 		color: var(--text-secondary);
-		max-width: 600px;
-		margin: 0 auto;
+		line-height: 1.7;
 	}
 
 	.post-updated {
 		font-family: var(--font-mono);
-		font-size: 0.75rem;
+		font-size: 0.8rem;
 		color: var(--text-muted);
 		margin-top: var(--space-md);
 	}
@@ -181,21 +170,21 @@ const postUrl = `${SITE_URL}/${slug}/`;
 
 	/* Content */
 	.post-content {
-		font-size: 1.125rem;
-		line-height: 1.8;
+		font-size: 1.1rem;
+		line-height: 1.85;
 	}
 
 	.post-content :global(h2) {
-		font-size: 1.75rem;
+		font-family: var(--font-display);
+		font-size: 1.5rem;
 		margin-top: var(--space-xl);
 		margin-bottom: var(--space-md);
-		padding-top: var(--space-md);
-		border-top: var(--border-subtle);
 		color: var(--text-primary);
 	}
 
 	.post-content :global(h3) {
-		font-size: 1.375rem;
+		font-family: var(--font-display);
+		font-size: 1.25rem;
 		margin-top: var(--space-lg);
 		margin-bottom: var(--space-sm);
 		color: var(--accent-primary);
@@ -236,34 +225,21 @@ const postUrl = `${SITE_URL}/${slug}/`;
 
 	/* Nav */
 	.post-nav {
-		max-width: 800px;
+		max-width: 720px;
 		margin: 0 auto;
 		padding: 0 var(--space-lg) var(--space-xl);
 	}
 
 	.back-link {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--space-sm);
-		font-family: var(--font-mono);
-		font-size: 0.875rem;
+		font-family: var(--font-display);
+		font-size: 0.9rem;
 		color: var(--text-muted);
 		text-decoration: none;
 		transition: var(--transition-fast);
 	}
 
-	.back-link svg {
-		width: 18px;
-		height: 18px;
-		transition: transform var(--transition-fast);
-	}
-
 	.back-link:hover {
 		color: var(--accent-primary);
-	}
-
-	.back-link:hover svg {
-		transform: translateX(-4px);
 	}
 
 	@media (max-width: 640px) {
