@@ -6,9 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "sync:pull": "git fetch quantalchemy && git pull quantalchemy ${TARGET_BRANCH:-main}",
-    "sync:status": "git log --oneline --graph --left-right --decorate origin/${TARGET_BRANCH:-main}...quantalchemy/${TARGET_BRANCH:-main}"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
