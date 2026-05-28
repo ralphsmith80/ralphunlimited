@@ -4,6 +4,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import retroCruiserHero from '../assets/images/retro-cruiser-hero.png';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
 const posts = (await getCollection('blog'))
@@ -90,9 +91,9 @@ const posts = (await getCollection('blog'))
 						Launch Game →
 					</a>
 				</div>
-				<div class="game-image">
-					<img src="/images/lab_hero_2.webp" alt="Retro Cruiser Game" />
-				</div>
+				<a href="/games/retro-cruiser/index.html" class="game-image" aria-label="Launch Retro Cruiser">
+					<img src={retroCruiserHero.src} alt="Retro Cruiser Game" />
+				</a>
 			</section>
 		</main>
 		<Footer />
@@ -300,11 +301,16 @@ const posts = (await getCollection('blog'))
 				justify-content: center;
 			}
 
+			.game-image:hover {
+				transform: translateY(-2px);
+			}
+
 			.game-image img {
 				max-width: 100%;
 				border-radius: var(--radius-lg);
 				border: var(--border-subtle);
 				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+				transition: var(--transition-base);
 			}
 
 			@media (max-width: 800px) {
