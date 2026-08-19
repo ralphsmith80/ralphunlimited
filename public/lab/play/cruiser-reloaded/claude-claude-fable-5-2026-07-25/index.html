@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Cruiser Reloaded</title>
+    <style>
+      @font-face {
+        font-family: 'PressStart2P';
+        src: url('./assets/fonts/PressStart2P.ttf') format('truetype');
+        font-display: block;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #05060f;
+        overflow: hidden;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'PressStart2P', monospace;
+      }
+      canvas {
+        display: block;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+        outline: none;
+      }
+      #boot {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #4c6fff;
+        font-size: 12px;
+        letter-spacing: 2px;
+        pointer-events: none;
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/index-CWGzdooJ.js"></script>
+  </head>
+  <body>
+    <div id="boot">LOADING…</div>
+    <canvas id="game" tabindex="0"></canvas>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+Cruiser Reloaded assets
+=======================
+
+Every image, sound, and the pixel font in this folder is derived from the
+original Retro Cruiser asset pack (benchmarks/cruiser-reloaded/source/assets).
+
+Transforms (mechanical, no third-party art):
+  - BMP / GIF  -> PNG, with black keyed to alpha
+  - title.gif  -> cropped to drop the burned-in "TYRIAN" wordmark, resized
+  - onlyship-4x.png rotated 90deg so the fighter faces the scroll
+  - HSL modulate copies of drones / mine / sparrow for readable tiers
+  - audio copied as-is (ogg / wav / mp3 the original already shipped)
+
+No new raster art or recorded audio was authored.
+Procedural stars, shock rings, HUD chrome, and particles are drawn at runtime.
+
+Ship sprites in the original set are Tyrian-derived (Daniel Cook / public
+domain release). PressStart2P is by CodeMan38 (OFL).

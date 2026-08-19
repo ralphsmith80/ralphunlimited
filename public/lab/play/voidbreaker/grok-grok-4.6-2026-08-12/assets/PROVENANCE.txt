@@ -1,0 +1,19 @@
+Voidbreaker assets
+==================
+
+Raster and audio in this folder come from the 2010 asteroid demo
+(benchmarks/voidbreaker/source/Game_Engine/Resources).
+
+Mechanical transforms only:
+  - TGA -> PNG / JPEG
+  - asteroid sheet hue-shifted teal for crystal rocks
+  - ship sheet hue-shifted for Reaper / Bulwark / Riftwalker frames
+  - ship alpha extracted to a white flash silhouette
+  - music.ogg re-encoded to Ogg Vorbis
+  - fire / boom / explode WAVs copied as-is
+
+Unused originals (fonts, GameAtlas pack, BMP duplicate, panel) were left behind.
+
+Seekers, mines, hunter saucers, the rift swirl, scrap chips, HUD chrome,
+and extra SFX (UI, dash, overheat, rift, combo) are drawn or synthesized
+at runtime. No third-party art pack was added.

@@ -1,0 +1,152 @@
+---
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { benchmarks, bandColour, runLabel, type LabBenchmark, type LabRun } from '../../../lib/lab';
+import '../../../styles/lab.css';
+
+export function getStaticPaths() {
+	return benchmarks.flatMap((benchmark) =>
+		benchmark.runs.map((run) => ({
+			params: { benchmark: benchmark.id, run: run.slug },
+			props: { benchmark, run },
+		})),
+	);
+}
+
+const { benchmark, run } = Astro.props as { benchmark: LabBenchmark; run: LabRun };
+const megabytes = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+const hero = run.shots[1] ?? run.shots[0] ?? null;
+// The hero already shows one frame; the strip below shows the rest.
+const otherShots = run.shots.filter((shot) => shot !== hero);
+const description = `${runLabel(run)} scored ${run.total}/100 on ${benchmark.name.split(' — ')[0]}.`;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`${runLabel(run)} — ${benchmark.name.split(' — ')[0]}`} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main class="lab-main">
+			<div class="lab-header" style="padding-bottom:var(--space-md)">
+				<p class="crumb">
+					<a href="/lab/">The Lab</a> / <a href={`/lab/${benchmark.id}/`}>{benchmark.id}</a> /
+					{run.slug}
+				</p>
+				<h1 style="font-size:2.2rem">{runLabel(run)}</h1>
+				<p class="lab-lede" style="font-size:1rem">
+					Run on {run.ranAt.slice(0, 10)} via the {run.agent} CLI{
+						run.reasoning ? ` at ${run.reasoning} reasoning` : ''
+					}. One shot, unattended.
+				</p>
+			</div>
+
+			{
+				!run.gatePassed && (
+					<div class="note">
+						<p>
+							This candidate never got past the build gate — it failed at{' '}
+							<code>{run.gateFailedAt}</code>, so there is nothing to play and no score to give.
+						</p>
+					</div>
+				)
+			}
+
+			<div class="rundetail">
+				<div>
+					{
+						run.playable ? (
+							<a class="playframe" href={run.playable}>
+								{hero && <img src={`/lab/${hero}`} alt={`${runLabel(run)} gameplay`} />}
+								<span class="ply">▶</span>
+							</a>
+						) : (
+							<div class="playframe">
+								<span class="ply">—</span>
+							</div>
+						)
+					}
+					<div style="display:flex;gap:.6rem;margin-top:.85rem;flex-wrap:wrap">
+						{run.playable && <a class="btn btn-sm" href={run.playable}>Play fullscreen →</a>}
+						<a class="btn btn-secondary btn-sm" href={`/lab/${benchmark.id}/`}>All runs</a>
+					</div>
+					{
+						otherShots.length > 0 && (
+							<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-top:1.25rem">
+								{otherShots.map((shot) => (
+									<img
+										src={`/lab/${shot}`}
+										alt="Probe frame"
+										style="border:var(--border-subtle);border-radius:var(--radius-sm)"
+										loading="lazy"
+									/>
+								))}
+							</div>
+						)
+					}
+				</div>
+
+				<aside class="scorepanel">
+					<div class="head">
+						<div>
+							<div class="n" style={`color:${bandColour(run.band)}`}>
+								{run.total}<span> / 100</span>
+							</div>
+							<div
+								style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.09em;color:var(--text-muted);text-transform:uppercase;margin-top:.3rem"
+							>
+								{benchmark.rubricId} · {run.band}
+							</div>
+						</div>
+					</div>
+
+					{
+						run.criteria.map((criterion) => (
+							<div class="crit">
+								<div class="cl">
+									<span>
+										{criterion.label} <em>×{criterion.weight}</em>
+									</span>
+									<b>{criterion.score} / 5</b>
+								</div>
+								<div class="cb">
+									<i
+										style={`width:${(criterion.score / 5) * 100}%;background:${bandColour(run.band)}`}
+									/>
+								</div>
+								<div class="sig">{criterion.rationale}</div>
+							</div>
+						))
+					}
+
+					{
+						run.observations.length > 0 && (
+							<div class="obs">
+								<h4>Measured, not scored</h4>
+								{run.observations.map((observation) => (
+									<p>
+										{observation.label}: {String(observation.value)}
+										{observation.detail ? ` — ${observation.detail}` : ''}
+									</p>
+								))}
+								<p style="margin-top:.5rem;opacity:.8">
+									These varied between repeat runs of the same build, so they are published as
+									observations rather than points.
+								</p>
+							</div>
+						)
+					}
+
+					<div class="obs">
+						<h4>Build</h4>
+						<p>{megabytes(run.buildBytes)} of static output</p>
+						<p>scorer {benchmark.scorerVersion}</p>
+					</div>
+				</aside>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
