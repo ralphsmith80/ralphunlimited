@@ -1,0 +1,86 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { benchmarks, bandColour, runLabel, type LabBenchmark } from '../../lib/lab';
+import '../../styles/lab.css';
+
+export function getStaticPaths() {
+	return benchmarks.map((benchmark) => ({
+		params: { benchmark: benchmark.id },
+		props: { benchmark },
+	}));
+}
+
+const { benchmark } = Astro.props as { benchmark: LabBenchmark };
+const playable = benchmark.runs.filter((run) => run.playable).length;
+const best = benchmark.runs[0];
+const megabytes = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`${benchmark.name} — The Lab`} description={benchmark.summary} />
+	</head>
+	<body>
+		<Header />
+		<main class="lab-main">
+			<div class="lab-header">
+				<p class="crumb"><a href="/lab/">The Lab</a> / {benchmark.id}</p>
+				<h1>{benchmark.name.split(' — ')[0]}</h1>
+				<p class="lab-lede">{benchmark.summary}</p>
+				<div class="lab-stats">
+					<div class="lab-stat"><b>{benchmark.runs.length}</b><span>Runs</span></div>
+					<div class="lab-stat"><b>{playable}</b><span>Playable</span></div>
+					<div class="lab-stat"><b>{best?.total ?? '—'}</b><span>Best score</span></div>
+					<div class="lab-stat"><b>{benchmark.difficulty}</b><span>Difficulty</span></div>
+				</div>
+			</div>
+
+			<div class="runlist">
+				{
+					benchmark.runs.map((run, index) => (
+						<article
+							class={`run${index === 0 && run.gatePassed ? ' top' : ''}${run.gatePassed ? '' : ' gate-failed'}`}
+						>
+							<div class="rank">{index === 0 && run.gatePassed ? '★' : `#${index + 1}`}</div>
+							<div>
+								<div class="who">
+									{runLabel(run)}
+									<em>
+										{run.agent}
+										{run.reasoning ? ` · ${run.reasoning}` : ''}
+									</em>
+								</div>
+								<div class="facts">
+									<span>{run.ranAt.slice(0, 10)}</span>
+									{run.buildBytes > 0 && <span>{megabytes(run.buildBytes)}</span>}
+									<span>
+										{run.gatePassed ? 'gate passed' : `gate failed at ${run.gateFailedAt}`}
+									</span>
+								</div>
+								<div class="bar">
+									<i style={`width:${run.total}%;background:${bandColour(run.band)}`} />
+								</div>
+							</div>
+							<div class="runside">
+								<div class="scorebig" style={`color:${bandColour(run.band)}`}>
+									{run.total}
+									<small>/ 100</small>
+								</div>
+								<a class="btn btn-sm" href={`/lab/${benchmark.id}/${run.slug}/`}>Details →</a>
+							</div>
+						</article>
+					))
+				}
+			</div>
+
+			<p class="crumb">
+				Scored by rubric {benchmark.rubricId}, scorer {benchmark.scorerVersion}. Scores from
+				different scorer versions are not comparable.
+			</p>
+		</main>
+		<Footer />
+	</body>
+</html>

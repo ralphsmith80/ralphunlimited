@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VOIDBREAKER</title>
+    <link rel="icon" href="./assets/img/plasma.png" />
+    <script type="module" crossorigin src="./assets/index-DLRDP-pD.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-D1Zh0Itz.css">
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+
+    <div id="overlay">
+      <!-- Title screen -->
+      <section id="screen-title" class="screen" hidden>
+        <div class="title-block">
+          <h1 class="logo">VOID<span>BREAKER</span></h1>
+          <p class="tagline">The rift is open. Crack the field. Feed the void.</p>
+        </div>
+
+        <div class="title-columns">
+          <div class="panel" id="ship-select">
+            <h2>SELECT FRAME</h2>
+            <div id="ship-cards"></div>
+          </div>
+
+          <div class="panel" id="records">
+            <h2>BEST RUNS</h2>
+            <ol id="highscore-list"></ol>
+            <div id="meta-stats"></div>
+          </div>
+        </div>
+
+        <button id="btn-launch" class="big-btn">LAUNCH &nbsp;⟶</button>
+
+        <div class="controls-hint">
+          <span><b>MOUSE</b> aim</span>
+          <span><b>LMB / SPACE</b> fire</span>
+          <span><b>WASD / ARROWS</b> thrust</span>
+          <span><b>SHIFT / RMB</b> dash</span>
+          <span><b>ESC</b> pause</span>
+          <span><b>M</b> mute</span>
+        </div>
+        <p class="fineprint">
+          Chain kills to grow your multiplier — one hit resets it. Watch your heat.
+          Scrap levels you up. Stand in the rift if you dare.
+        </p>
+      </section>
+
+      <!-- Upgrade draft -->
+      <section id="screen-upgrade" class="screen dim" hidden>
+        <h2 class="draft-title">SYSTEM SURGE — CHOOSE AN UPGRADE</h2>
+        <div id="upgrade-cards"></div>
+        <p class="fineprint">Press 1 / 2 / 3 or click</p>
+      </section>
+
+      <!-- Pause -->
+      <section id="screen-pause" class="screen dim" hidden>
+        <div class="panel narrow">
+          <h2>PAUSED</h2>
+          <div id="pause-loadout" class="loadout"></div>
+          <button id="btn-resume" class="big-btn">RESUME</button>
+          <button id="btn-restart" class="menu-btn">RESTART RUN</button>
+          <button id="btn-quit" class="menu-btn">ABANDON TO TITLE</button>
+          <button id="btn-mute" class="menu-btn">SOUND: ON</button>
+          <div class="controls-hint small">
+            <span><b>MOUSE</b> aim</span>
+            <span><b>LMB/SPACE</b> fire</span>
+            <span><b>WASD</b> thrust</span>
+            <span><b>SHIFT/RMB</b> dash</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Game over -->
+      <section id="screen-gameover" class="screen dim" hidden>
+        <h2 class="go-title">FRAME LOST</h2>
+        <p id="go-newbest" class="newbest" hidden>◆ NEW BEST RUN ◆</p>
+        <div class="panel narrow">
+          <table id="run-summary"></table>
+          <div id="go-achievements"></div>
+        </div>
+        <button id="btn-again" class="big-btn">ONE MORE RUN&nbsp; ↺</button>
+        <button id="btn-title" class="menu-btn">TITLE</button>
+        <p class="fineprint">ENTER to relaunch</p>
+      </section>
+    </div>
+
+  </body>
+</html>

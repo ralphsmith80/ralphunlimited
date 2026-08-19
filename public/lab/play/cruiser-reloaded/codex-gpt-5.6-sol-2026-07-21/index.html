@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#050914" />
+    <meta
+      name="description"
+      content="Cruiser Reloaded — an overdrive arcade odyssey."
+    />
+    <title>Cruiser Reloaded</title>
+    <script type="module" crossorigin src="/assets/index-0JyNrLux.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-xAWPxJTN.css">
+  </head>
+  <body>
+    <main id="game-shell">
+      <canvas
+        id="game"
+        width="960"
+        height="540"
+        aria-label="Cruiser Reloaded game canvas"
+      ></canvas>
+      <div id="scanlines" aria-hidden="true"></div>
+      <section id="overlay" class="screen"></section>
+      <div id="toast" aria-live="polite"></div>
+      <div id="touch-controls" aria-label="Touch controls">
+        <div id="touch-stick"><span></span></div>
+        <button data-touch="fire">FIRE</button>
+        <button data-touch="boost">DRIVE</button>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#040611" />
+    <meta name="description" content="Voidbreaker — a high-risk asteroid arcade roguelite." />
+    <title>VOIDBREAKER</title>
+    <script type="module" crossorigin src="/assets/index-BcA32AlV.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DU_x--EF.css">
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="game" aria-label="Voidbreaker game arena"></canvas>
+      <div id="vignette"></div>
+      <section id="title" class="screen active">
+        <div class="title-wrap">
+          <div class="eyebrow">SIGNAL // VBR-77</div>
+          <h1>VOID<span>BREAKER</span></h1>
+          <p class="tagline">THE RIFT PAYS THE BRAVE.</p>
+          <div class="title-grid">
+            <div class="briefing glass">
+              <div class="micro">FIELD DIRECTIVE</div>
+              <h2>Hunt close. Cash out alive.</h2>
+              <p>A gravity wound is eating the belt. Destroy threats inside its halo to overcharge your multiplier—then dive through the wreckage for volatile scrap.</p>
+              <div class="controls">
+                <span><b>WASD</b> thrust</span><span><b>MOUSE</b> aim + fire</span><span><b>SHIFT</b> phase dash</span><span><b>ESC</b> pause</span>
+              </div>
+            </div>
+            <div class="loadout glass">
+              <div class="micro">SELECT FRAME</div>
+              <div id="frames" class="frames"></div>
+              <div class="records"><span>BEST RUN <strong id="best">000,000</strong></span><span>LIFETIME SCRAP <strong id="bank">0</strong></span></div>
+            </div>
+          </div>
+          <div class="start-row">
+            <button id="start" class="primary">BREACH THE VOID <small>[ ENTER ]</small></button>
+            <button id="how" class="quiet">HOW TO SURVIVE</button>
+            <button id="audio" class="icon-button" aria-label="Toggle audio">AUDIO: ON</button>
+          </div>
+          <div class="footer-line"><i></i><span>LOCAL PILOT PROFILE // PROGRESS SAVES AUTOMATICALLY</span><i></i></div>
+        </div>
+      </section>
+
+      <section id="hud" class="active-game" aria-live="polite">
+        <div class="hud-left">
+          <div class="brand">VOID<span>BREAKER</span></div>
+          <div class="wave-label">BREACH <strong id="wave">01</strong><small id="waveState">INCOMING</small></div>
+        </div>
+        <div class="hud-center">
+          <div class="score-label">SALVAGE SCORE</div><div id="score" class="score">000000</div>
+          <div id="mult" class="mult">×1.0 STABLE</div>
+        </div>
+        <div class="hud-right">
+          <div class="bar-block"><div><span>HULL</span><b id="hpText">100</b></div><div class="bar hp"><i id="hpBar"></i></div></div>
+          <div class="bar-block"><div><span>REACTOR HEAT</span><b id="heatText">0%</b></div><div class="bar heat"><i id="heatBar"></i></div></div>
+          <div class="dash-pips" id="dashPips"><i></i><i></i></div>
+        </div>
+        <div class="xp-track"><i id="xpBar"></i><span id="level">CORE LV. 1</span></div>
+        <div id="riftReadout" class="rift-readout">RIFT PROXIMITY <b>00%</b></div>
+        <div id="bossBar" class="boss-bar"><span>THE NULL TITAN</span><div><i></i></div></div>
+      </section>
+
+      <section id="upgrade" class="screen modal-screen">
+        <div class="modal glass wide">
+          <div class="eyebrow">CORE SYNCHRONIZATION</div>
+          <h2>CHOOSE YOUR MUTATION</h2>
+          <p>The void adapts. So do you.</p>
+          <div id="cards" class="cards"></div>
+          <small class="key-hint">PRESS 1 — 3 TO INSTALL</small>
+        </div>
+      </section>
+
+      <section id="pause" class="screen modal-screen">
+        <div class="modal glass">
+          <div class="eyebrow">TEMPORAL LOCK</div><h2>RUN PAUSED</h2>
+          <p>The belt keeps dreaming without you.</p>
+          <button id="resume" class="primary">RESUME <small>[ ESC ]</small></button>
+          <button id="abandon" class="quiet danger">ABANDON RUN</button>
+        </div>
+      </section>
+
+      <section id="gameover" class="screen">
+        <div class="summary glass">
+          <div class="eyebrow">PILOT SIGNAL LOST</div><h2>BREACH COLLAPSED</h2>
+          <div id="newBest" class="new-best">NEW PERSONAL RECORD</div>
+          <div id="finalScore" class="final-score">000000</div>
+          <div class="stat-grid">
+            <div><span>BREACH REACHED</span><b id="sumWave">01</b></div><div><span>THREATS ERASED</span><b id="sumKills">0</b></div>
+            <div><span>SCRAP RECOVERED</span><b id="sumScrap">0</b></div><div><span>PEAK CHAIN</span><b id="sumMult">×1.0</b></div>
+            <div><span>TIME IN VOID</span><b id="sumTime">00:00</b></div><div><span>FRAME XP</span><b id="sumXp">+0</b></div>
+          </div>
+          <div id="unlock" class="unlock"></div>
+          <div class="start-row"><button id="retry" class="primary">RUN IT BACK <small>[ ENTER ]</small></button><button id="menu" class="quiet">HANGAR</button></div>
+        </div>
+      </section>
+
+      <section id="instructions" class="screen modal-screen">
+        <div class="modal glass instruction-modal">
+          <button id="closeHow" class="close">×</button><div class="eyebrow">PILOT FIELD MANUAL</div><h2>PLAY GREEDY. MOVE SMART.</h2>
+          <div class="manual-grid">
+            <article><b>01</b><h3>FLY + FIRE</h3><p>Thrust with WASD. Your ship faces the pointer; hold the mouse to fire. Momentum carries, but counter-thrust bites hard.</p></article>
+            <article><b>02</b><h3>FEED THE RIFT</h3><p>Fight inside the cyan halo to build Resonance and multiply every score. Taking a hit collapses the chain.</p></article>
+            <article><b>03</b><h3>BREAK + BUILD</h3><p>Collect violet scrap to level your core. Every level offers one of three run-changing modules.</p></article>
+            <article><b>04</b><h3>PHASE DASH</h3><p>Shift tears you safely through danger and weapon heat. Two charges regenerate; dash through enemies to damage them.</p></article>
+          </div>
+          <button id="closeHow2" class="primary">UNDERSTOOD</button>
+        </div>
+      </section>
+      <div id="toast" class="toast"></div>
+    </main>
+  </body>
+</html>
