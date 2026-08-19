@@ -142,14 +142,14 @@ const description =
 						} else {
 							const rating = ratings[chip.dataset.key!];
 							if (rating?.count) {
-								// One purple scale for the human number, so the two modes read
-								// as different instruments rather than different opinions.
+								// The human number stays in the blog's warm palette; the star
+								// glyph and vote count are what mark it as the other instrument.
 								const hue =
-									rating.overall >= 4 ? "#a88fad" : rating.overall >= 3 ? "#8d7a92" : "#6d6070";
+									rating.overall >= 4 ? "#e8c496" : rating.overall >= 3 ? "#d4a574" : "#9b7e5e";
 								chip.style.background = hue;
 								chip.innerHTML = `${rating.overall.toFixed(1)}★<small>${rating.count} vote${rating.count === 1 ? "" : "s"}</small>`;
 							} else {
-								chip.style.background = "rgba(168,143,173,.14)";
+								chip.style.background = "rgba(212,165,116,.14)";
 								chip.innerHTML = `–<small>unrated</small>`;
 							}
 						}

@@ -8,7 +8,10 @@
 	--lab-partial: #d4a574;
 	--lab-thin: #b5705f;
 	--lab-dead: #6b615a;
-	--lab-accent: #a88fad;
+	/* Player-rating accent: the theme's candle-gold, one step brighter than the
+	   harness amber so the two instruments stay distinguishable without leaving
+	   the blog's warm palette. */
+	--lab-accent: var(--accent-highlight);
 }
 
 .lab-main {
@@ -501,8 +504,8 @@ a.chip:hover {
 }
 
 .note {
-	background: rgba(168, 143, 173, 0.07);
-	border: 1px solid rgba(168, 143, 173, 0.22);
+	background: var(--glow-warm);
+	border: 1px solid rgba(212, 165, 116, 0.25);
 	border-left: 3px solid var(--lab-accent);
 	border-radius: 0 var(--radius-md) var(--radius-md) 0;
 	padding: var(--space-md) var(--space-lg);
@@ -675,7 +678,7 @@ a.chip:hover {
 .star[data-on="true"] {
 	border-color: var(--lab-accent);
 	color: var(--lab-accent);
-	background: rgba(168, 143, 173, 0.1);
+	background: var(--glow-candle);
 }
 
 .vavg {
