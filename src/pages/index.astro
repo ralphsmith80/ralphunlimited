@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import retroCruiserHero from '../assets/images/retro-cruiser-hero.png';
+import labCollage from '../assets/images/lab-collage.webp';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { stats } from '../lib/lab';
 
@@ -37,6 +38,26 @@ const posts = (await getCollection('blog'))
 						</a>
 						<a href="/games/retro-cruiser/index.html" class="btn btn-secondary">
 							Play Retro Cruiser
+						</a>
+						<a href="/lab/" class="btn btn-secondary btn-lab">
+							<svg
+								width="15"
+								height="15"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="1.7"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<path d="M9.5 2.5h5M10.5 2.5v6l-5.4 9.2A2 2 0 0 0 6.8 20.7h10.4a2 2 0 0 0 1.7-3L13.5 8.5v-6"></path>
+								<path d="M7.2 14.5h9.6"></path>
+								<circle cx="11" cy="17.3" r="0.4" fill="currentColor" stroke="none"></circle>
+								<circle cx="13.6" cy="16.4" r="0.55" fill="currentColor" stroke="none"></circle>
+								<circle cx="12.2" cy="18.6" r="0.3" fill="currentColor" stroke="none"></circle>
+							</svg>
+							Enter the Lab
 						</a>
 					</div>
 				</div>
@@ -98,8 +119,8 @@ const posts = (await getCollection('blog'))
 			</section>
 			<!-- Lab Feature -->
 			<section class="game-feature lab-feature">
-				<a href="/lab/" class="game-image lab-image" aria-label="Enter the Lab">
-					<span class="lab-image-stat">{stats.runs} runs · {stats.models} models</span>
+				<a href="/lab/" class="game-image" aria-label="Enter the Lab">
+					<img src={labCollage.src} alt="Four AI-built games from the Lab" />
 				</a>
 				<div class="game-content">
 					<span class="game-label lab-label">Featured Experiment</span>
@@ -128,19 +149,16 @@ const posts = (await getCollection('blog'))
 				color: var(--accent-mystical);
 			}
 
-			.lab-image {
-				background: radial-gradient(ellipse at 60% 40%, #2f2a44, #141017);
-				display: grid;
-				place-items: center;
-				aspect-ratio: 16 / 10;
+			.btn-lab {
+				border-color: var(--accent-mystical);
+				color: var(--accent-mystical);
 			}
 
-			.lab-image-stat {
-				font-family: var(--font-mono);
-				font-size: 0.8rem;
-				letter-spacing: 0.12em;
-				text-transform: uppercase;
-				color: rgba(232, 196, 150, 0.55);
+			.btn-lab:hover {
+				border-color: var(--accent-mystical);
+				color: var(--bg-primary);
+				background: var(--accent-mystical);
+				box-shadow: 0 4px 20px rgba(168, 143, 173, 0.25);
 			}
 
 			/* Hero Section */
