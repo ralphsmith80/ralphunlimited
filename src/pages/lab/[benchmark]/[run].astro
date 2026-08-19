@@ -58,7 +58,7 @@ const description = `${runLabel(run)} scored ${run.total}/100 on ${benchmark.nam
 				<div>
 					{
 						run.playable ? (
-							<a class="playframe" href={run.playable}>
+							<a class="playframe" href={run.playable} data-play target="_blank" rel="noopener">
 								{hero && <img src={`/lab/${hero}`} alt={`${runLabel(run)} gameplay`} />}
 								<span class="ply">▶</span>
 							</a>
@@ -69,7 +69,7 @@ const description = `${runLabel(run)} scored ${run.total}/100 on ${benchmark.nam
 						)
 					}
 					<div style="display:flex;gap:.6rem;margin-top:.85rem;flex-wrap:wrap">
-						{run.playable && <a class="btn btn-sm" href={run.playable}>Play fullscreen →</a>}
+						{run.playable && <a class="btn btn-sm" href={run.playable} data-play target="_blank" rel="noopener">Play fullscreen →</a>}
 						<a class="btn btn-secondary btn-sm" href={`/lab/${benchmark.id}/`}>All runs</a>
 					</div>
 					{
@@ -88,7 +88,73 @@ const description = `${runLabel(run)} scored ${run.total}/100 on ${benchmark.nam
 					}
 				</div>
 
-				<aside class="scorepanel">
+				<aside
+					id="lab-run"
+					data-bench={benchmark.id}
+					data-slug={run.slug}
+					data-playable={run.playable ? "true" : "false"}
+				>
+					<div class="dualscore">
+						<div class="machine">
+							<div class="k">Harness</div>
+							<div class="v">{run.total}<small> / 100</small></div>
+							<div class="sub">measured · {benchmark.rubricId}</div>
+						</div>
+						<div class="human">
+							<div class="k">Players</div>
+							<div class="v" data-players-value>–<small> / 5</small></div>
+							<div class="sub" data-players-count>no ratings yet</div>
+						</div>
+					</div>
+
+					{
+						run.playable && (
+							<section class="votebox">
+								<h4>Rate this build</h4>
+								<p class="lede">
+									The harness measures what a machine can measure. Whether it is any fun is your
+									call.
+								</p>
+								<div class="vlock" data-gate>
+									Play for a minute to unlock rating. No account; one vote per browser.
+								</div>
+								<div class="vrows" data-locked="true">
+									{
+										[
+											["fun", "Fun", "one more run?"],
+											["depth", "Depth", "systems"],
+											["polish", "Polish", "juice and feel"],
+										].map(([key, label, hint]) => (
+											<div class="vrow" data-axis={key}>
+												<span class="vlabel">
+													{label}
+													<em>{hint}</em>
+												</span>
+												<span class="stars">
+													{[1, 2, 3, 4, 5].map((value) => (
+														<button type="button" class="star" data-value={value}>
+															{value}
+														</button>
+													))}
+												</span>
+												<span class="vavg" data-avg>
+													–
+												</span>
+											</div>
+										))
+									}
+									<button type="button" class="btn btn-sm vsubmit" data-submit disabled>
+										Submit rating
+									</button>
+								</div>
+								<div class="vfoot">
+									<span data-vote-status>Ratings are live and update as they arrive.</span>
+								</div>
+							</section>
+						)
+					}
+
+					<div class="scorepanel" style="margin-top:var(--space-lg)">
 					<div class="head">
 						<div>
 							<div class="n" style={`color:${bandColour(run.band)}`}>
@@ -144,9 +210,102 @@ const description = `${runLabel(run)} scored ${run.total}/100 on ${benchmark.nam
 						<p>{megabytes(run.buildBytes)} of static output</p>
 						<p>scorer {benchmark.scorerVersion}</p>
 					</div>
+					</div>
 				</aside>
 			</div>
 		</main>
 		<Footer />
+		<script>
+			import { ConvexClient } from "convex/browser";
+			import { api } from "../../../../convex/_generated/api";
+
+			const root = document.getElementById("lab-run");
+			const url = import.meta.env.PUBLIC_CONVEX_URL;
+			if (root && url) {
+				const benchId = root.dataset.bench!;
+				const runSlug = root.dataset.slug!;
+				const client = new ConvexClient(url);
+
+				// --- live averages --------------------------------------------------
+				const valueEl = root.querySelector("[data-players-value]")!;
+				const countEl = root.querySelector("[data-players-count]")!;
+				client.onUpdate(api.votes.runRatings, { benchId, runSlug }, (ratings) => {
+					valueEl.innerHTML = ratings.count
+						? `${ratings.overall}<small> / 5</small>`
+						: `–<small> / 5</small>`;
+					countEl.textContent = ratings.count
+						? `${ratings.count} rating${ratings.count === 1 ? "" : "s"} · live`
+						: "no ratings yet";
+					for (const axis of ["fun", "depth", "polish"] as const) {
+						const cell = root.querySelector(`[data-axis="${axis}"] [data-avg]`);
+						if (cell) cell.innerHTML = ratings.count ? `<b>${ratings[axis]}</b> avg` : "–";
+					}
+				});
+
+				// --- play gate: rating unlocks a minute after Play is clicked --------
+				const playedKey = `lab-played:${benchId}/${runSlug}`;
+				for (const link of document.querySelectorAll("[data-play]")) {
+					link.addEventListener("click", () => {
+						if (!localStorage.getItem(playedKey)) localStorage.setItem(playedKey, String(Date.now()));
+					});
+				}
+				const gate = root.querySelector("[data-gate]");
+				const rows = root.querySelector(".vrows") as HTMLElement | null;
+				const tick = () => {
+					const playedAt = Number(localStorage.getItem(playedKey) || 0);
+					if (!playedAt) return;
+					const remaining = 60_000 - (Date.now() - playedAt);
+					if (remaining <= 0) {
+						rows?.setAttribute("data-locked", "false");
+						(gate as HTMLElement | null)?.style.setProperty("display", "none");
+					} else if (gate) {
+						gate.textContent = `Keep playing — rating unlocks in ${Math.ceil(remaining / 1000)}s.`;
+					}
+				};
+				tick();
+				setInterval(tick, 1_000);
+
+				// --- star picking + submit ------------------------------------------
+				const picks: Record<string, number> = {};
+				const submit = root.querySelector("[data-submit]") as HTMLButtonElement | null;
+				const status = root.querySelector("[data-vote-status]")!;
+				for (const row of root.querySelectorAll("[data-axis]")) {
+					const axis = (row as HTMLElement).dataset.axis!;
+					for (const star of row.querySelectorAll(".star")) {
+						star.addEventListener("click", () => {
+							picks[axis] = Number((star as HTMLElement).dataset.value);
+							for (const sibling of row.querySelectorAll(".star")) {
+								(sibling as HTMLElement).dataset.on = String(
+									Number((sibling as HTMLElement).dataset.value) <= picks[axis],
+								);
+							}
+							if (submit) submit.disabled = !(picks.fun && picks.depth && picks.polish);
+						});
+					}
+				}
+				submit?.addEventListener("click", async () => {
+					submit.disabled = true;
+					let voterId = localStorage.getItem("lab-voter-id");
+					if (!voterId) {
+						voterId = crypto.randomUUID();
+						localStorage.setItem("lab-voter-id", voterId);
+					}
+					try {
+						await client.mutation(api.votes.castVote, {
+							benchId,
+							runSlug,
+							voterId,
+							fun: picks.fun,
+							depth: picks.depth,
+							polish: picks.polish,
+						});
+						status.textContent = "Your rating is in. Rate again any time to change it.";
+					} catch (error) {
+						status.textContent = `Could not save the rating: ${error instanceof Error ? error.message : error}`;
+						submit.disabled = false;
+					}
+				});
+			}
+		</script>
 	</body>
 </html>

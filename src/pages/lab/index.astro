@@ -34,7 +34,13 @@ const description =
 				</div>
 			</div>
 
-			<h3>Standings</h3>
+			<div class="rowhead">
+				<h3 style="margin:0">Standings</h3>
+				<div class="toggle" id="standings-toggle" hidden>
+					<button type="button" data-mode="harness" data-on="true">Harness score</button>
+					<button type="button" data-mode="players" class="hum" data-on="false">Player rating</button>
+				</div>
+			</div>
 			<div class="matrix-wrap">
 				<table class="matrix">
 					<tr>
@@ -62,6 +68,11 @@ const description =
 											<a
 												class="chip"
 												style={`background:${bandColour(run.band)}`}
+												data-chip
+												data-key={`${benchmark.id}/${run.slug}`}
+												data-total={run.total}
+												data-colour={bandColour(run.band)}
+												data-label={run.gatePassed ? 'view' : 'gate'}
 												href={`/lab/${benchmark.id}/${run.slug}/`}
 											>
 												{run.total}
@@ -110,5 +121,53 @@ const description =
 			</div>
 		</main>
 		<Footer />
+		<script>
+			import { ConvexClient } from "convex/browser";
+			import { api } from "../../../convex/_generated/api";
+
+			const url = import.meta.env.PUBLIC_CONVEX_URL;
+			const toggle = document.getElementById("standings-toggle");
+			if (url && toggle) {
+				const client = new ConvexClient(url);
+				let ratings: Record<string, { count: number; overall: number }> = {};
+
+				const paint = (mode: "harness" | "players") => {
+					for (const button of toggle.querySelectorAll("button")) {
+						button.dataset.on = String(button.dataset.mode === mode);
+					}
+					for (const chip of document.querySelectorAll<HTMLElement>("[data-chip]")) {
+						if (mode === "harness") {
+							chip.style.background = chip.dataset.colour!;
+							chip.innerHTML = `${chip.dataset.total}<small>${chip.dataset.label}</small>`;
+						} else {
+							const rating = ratings[chip.dataset.key!];
+							if (rating?.count) {
+								// One purple scale for the human number, so the two modes read
+								// as different instruments rather than different opinions.
+								const hue =
+									rating.overall >= 4 ? "#a88fad" : rating.overall >= 3 ? "#8d7a92" : "#6d6070";
+								chip.style.background = hue;
+								chip.innerHTML = `${rating.overall.toFixed(1)}★<small>${rating.count} vote${rating.count === 1 ? "" : "s"}</small>`;
+							} else {
+								chip.style.background = "rgba(168,143,173,.14)";
+								chip.innerHTML = `–<small>unrated</small>`;
+							}
+						}
+					}
+				};
+
+				client.onUpdate(api.votes.allRatings, {}, (all) => {
+					ratings = all as typeof ratings;
+					toggle.hidden = false;
+					const active = toggle.querySelector('[data-on="true"]') as HTMLElement;
+					paint((active?.dataset.mode as "harness" | "players") ?? "harness");
+				});
+				for (const button of toggle.querySelectorAll("button")) {
+					button.addEventListener("click", () =>
+						paint(button.dataset.mode as "harness" | "players"),
+					);
+				}
+			}
+		</script>
 	</body>
 </html>
