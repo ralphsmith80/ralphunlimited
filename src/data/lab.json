@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-19T14:23:39.414Z",
+  "generatedAt": "2026-08-19T14:44:10.254Z",
   "benchmarks": [
     {
       "id": "retro-cruiser",
@@ -14,7 +14,7 @@
         {
           "slug": "cursor-cli-default-2026-07-01",
           "agent": "cursor",
-          "model": null,
+          "model": "composer-2.5",
           "reasoning": "high",
           "ranAt": "2026-07-01T23:15:18.521Z",
           "total": 93,
@@ -245,7 +245,7 @@
         {
           "slug": "codex-cli-default-2026-07-01",
           "agent": "codex",
-          "model": null,
+          "model": "gpt-5.5",
           "reasoning": "high",
           "ranAt": "2026-07-01T01:08:40.388Z",
           "total": 56,
@@ -960,7 +960,7 @@
         {
           "slug": "grok-cli-default-2026-08-12",
           "agent": "grok",
-          "model": null,
+          "model": "grok-4.6",
           "reasoning": "high",
           "ranAt": "2026-08-12T21:07:12.153Z",
           "total": 84,
