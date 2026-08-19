@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-19T14:44:10.254Z",
+  "generatedAt": "2026-08-19T16:15:19.836Z",
   "benchmarks": [
     {
       "id": "retro-cruiser",
@@ -1050,7 +1050,7 @@
               "label": "Runtime health",
               "weight": 2,
               "score": 5,
-              "rationale": "no console errors, first frame in 111ms, 59fps median"
+              "rationale": "no console errors, first frame in 131ms, 59fps median"
             },
             {
               "id": "loop",
@@ -1099,7 +1099,7 @@
             {
               "id": "depth.spawnRateDelta",
               "label": "Late vs early draw calls",
-              "value": 1.84,
+              "value": 1.85,
               "status": "info",
               "detail": "8.7 → 16.0 draws per frame over 243s of one run"
             }
