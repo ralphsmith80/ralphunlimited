@@ -69,12 +69,12 @@ const posts = (await getCollection('blog'))
 			</section>
 
 			<!-- Lab Feature -->
-			<section class="game-feature lab-feature">
+			<section class="game-feature">
 				<a href="/lab/" class="game-image" aria-label="Enter the Lab">
 					<img src={labCollage.src} alt="Four AI-built games from the Lab" />
 				</a>
 				<div class="game-content">
-					<span class="game-label lab-label">Featured Experiment</span>
+					<span class="game-label">Featured Experiment</span>
 					<h2>The Lab</h2>
 					<p>
 						{stats.models} AI models, {stats.benchmarks} benchmarks, {stats.runs} attempts at rebuilding
@@ -139,16 +139,6 @@ const posts = (await getCollection('blog'))
 		<Footer />
 
 		<style>
-			/* Lab Feature */
-			.lab-feature {
-				background: linear-gradient(120deg, rgba(168, 143, 173, 0.08), transparent);
-				border-color: rgba(168, 143, 173, 0.2);
-			}
-
-			.lab-label {
-				color: var(--accent-mystical);
-			}
-
 			/* Hero Section */
 			.hero {
 				padding: var(--space-2xl) var(--space-lg);
