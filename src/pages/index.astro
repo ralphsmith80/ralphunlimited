@@ -33,12 +33,6 @@ const posts = (await getCollection('blog'))
 						This is where I share the journey.
 					</p>
 					<div class="hero-actions">
-						<a href="/blog/" class="btn btn-secondary">
-							Browse the Journal
-						</a>
-						<a href="/games/retro-cruiser/index.html" class="btn btn-secondary">
-							Play Retro Cruiser
-						</a>
 						<a href="/lab/" class="btn">
 							<svg
 								width="15"
@@ -59,6 +53,12 @@ const posts = (await getCollection('blog'))
 							</svg>
 							Enter the Lab
 						</a>
+						<a href="/games/retro-cruiser/index.html" class="btn btn-secondary">
+							Play Retro Cruiser
+						</a>
+						<a href="/blog/" class="btn btn-secondary">
+							Browse the Journal
+						</a>
 					</div>
 				</div>
 				<div class="hero-decoration">
@@ -68,6 +68,42 @@ const posts = (await getCollection('blog'))
 				</div>
 			</section>
 
+			<!-- Lab Feature -->
+			<section class="game-feature lab-feature">
+				<a href="/lab/" class="game-image" aria-label="Enter the Lab">
+					<img src={labCollage.src} alt="Four AI-built games from the Lab" />
+				</a>
+				<div class="game-content">
+					<span class="game-label lab-label">Featured Experiment</span>
+					<h2>The Lab</h2>
+					<p>
+						{stats.models} AI models, {stats.benchmarks} benchmarks, {stats.runs} attempts at rebuilding
+						my old games. Every run is scored by the same automated harness, and {stats.playable} of
+						them are playable right here.
+					</p>
+					<a href="/lab/" class="btn">
+						Enter the Lab →
+					</a>
+				</div>
+			</section>
+			<!-- Game Feature -->
+			<section class="game-feature">
+				<div class="game-content">
+					<span class="game-label">Featured Creation</span>
+					<h2>Retro Cruiser</h2>
+					<p>
+						A space shooter built with Phaser.js. Navigate the cosmos, 
+						blast through asteroids, and chase that high score. 
+						Playable right here in your browser.
+					</p>
+					<a href="/games/retro-cruiser/index.html" class="btn">
+						Launch Game →
+					</a>
+				</div>
+				<a href="/games/retro-cruiser/index.html" class="game-image" aria-label="Launch Retro Cruiser">
+					<img src={retroCruiserHero.src} alt="Retro Cruiser Game" />
+				</a>
+			</section>
 			<!-- Featured Posts -->
 			<section class="posts-section">
 				<header class="section-header">
@@ -99,42 +135,6 @@ const posts = (await getCollection('blog'))
 				</div>
 			</section>
 
-			<!-- Game Feature -->
-			<section class="game-feature">
-				<div class="game-content">
-					<span class="game-label">Featured Creation</span>
-					<h2>Retro Cruiser</h2>
-					<p>
-						A space shooter built with Phaser.js. Navigate the cosmos, 
-						blast through asteroids, and chase that high score. 
-						Playable right here in your browser.
-					</p>
-					<a href="/games/retro-cruiser/index.html" class="btn">
-						Launch Game →
-					</a>
-				</div>
-				<a href="/games/retro-cruiser/index.html" class="game-image" aria-label="Launch Retro Cruiser">
-					<img src={retroCruiserHero.src} alt="Retro Cruiser Game" />
-				</a>
-			</section>
-			<!-- Lab Feature -->
-			<section class="game-feature lab-feature">
-				<a href="/lab/" class="game-image" aria-label="Enter the Lab">
-					<img src={labCollage.src} alt="Four AI-built games from the Lab" />
-				</a>
-				<div class="game-content">
-					<span class="game-label lab-label">Featured Experiment</span>
-					<h2>The Lab</h2>
-					<p>
-						{stats.models} AI models, {stats.benchmarks} benchmarks, {stats.runs} attempts at rebuilding
-						my old games. Every run is scored by the same automated harness, and {stats.playable} of
-						them are playable right here.
-					</p>
-					<a href="/lab/" class="btn">
-						Enter the Lab →
-					</a>
-				</div>
-			</section>
 		</main>
 		<Footer />
 
