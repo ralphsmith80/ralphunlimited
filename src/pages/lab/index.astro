@@ -3,12 +3,34 @@ import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { SITE_TITLE } from '../../consts';
-import { benchmarks, bandColour, standings, stats } from '../../lib/lab';
+import { benchmarks, bandColour, runLabel, standings, stats } from '../../lib/lab';
 import '../../styles/lab.css';
 
 const rows = standings();
+// Keep the chosen play-first story order independent of the benchmark publish order.
+const playOrder = new Map(
+	['voidbreaker', 'cruiser-reloaded', 'retro-cruiser'].map((id, index) => [id, index] as const),
+);
+const playBenchmarks = [...benchmarks].sort(
+	(a, b) => (playOrder.get(a.id) ?? playOrder.size) - (playOrder.get(b.id) ?? playOrder.size),
+);
+const playableGames = playBenchmarks.flatMap((benchmark) =>
+	benchmark.runs.flatMap((run) => {
+		if (!run.playable) return [];
+		return [
+			{
+				benchmarkId: benchmark.id,
+				benchmarkName: benchmark.name.split(' — ')[0],
+				label: runLabel(run),
+				agent: run.agent,
+				href: run.playable,
+				shot: run.shots[1] ?? run.shots[0] ?? null,
+			},
+		];
+	}),
+);
 const description =
-	'AI coding models rebuild my old games. Every run scored by the same automated harness, every build playable in your browser.';
+	'AI coding models rebuild my old games. Play every build in your browser and decide which versions work best.';
 ---
 
 <!doctype html>
@@ -26,6 +48,17 @@ const description =
 					I hand coding models an old game of mine and a goal. They get one shot, no hints, no
 					follow-up. Everything they build is scored by the same harness and playable below.
 				</p>
+				<aside class="lab-score-callout">
+					<span class="lab-score-callout-icon" aria-hidden="true">▶</span>
+					<div>
+						<strong>We have numbers. You decide the score.</strong>
+						<p>
+							The automated harness checks technical details, but it cannot judge fun. Play any
+							build and score it yourself.
+						</p>
+					</div>
+					<a href="#play-the-builds">Play the games ↓</a>
+				</aside>
 				<div class="lab-stats">
 					<div class="lab-stat"><b>{stats.benchmarks}</b><span>Benchmarks</span></div>
 					<div class="lab-stat"><b>{stats.runs}</b><span>Runs</span></div>
@@ -34,96 +67,190 @@ const description =
 				</div>
 			</div>
 
-			<div class="rowhead">
-				<h3 style="margin:0">Standings</h3>
-				<div class="toggle" id="standings-toggle" hidden>
-					<button type="button" data-mode="harness" data-on="true">Harness score</button>
-					<button type="button" data-mode="players" class="hum" data-on="false">Player rating</button>
+			<section class="lab-section" aria-labelledby="benchmarks-heading">
+				<div class="lab-section-head">
+					<div>
+						<span class="lab-section-eyebrow">Three experiments</span>
+						<h2 id="benchmarks-heading">The benchmarks</h2>
+					</div>
+					<p>See the brief each model received, then compare what the models built.</p>
 				</div>
-			</div>
-			<div class="matrix-wrap">
-				<table class="matrix">
-					<tr>
-						<th class="rowh"></th>
-						{benchmarks.map((benchmark) => <th>{benchmark.name.split(' — ')[0]}</th>)}
-					</tr>
+				<div class="bench-grid">
 					{
-						rows.map((row) => (
-							<tr>
-								<th class="rowh">
-									{row.label}
-									<small>{row.agent}</small>
-								</th>
-								{benchmarks.map((benchmark) => {
-									const run = row.byBenchmark.get(benchmark.id);
-									if (!run) {
-										return (
-											<td>
-												<span class="chip empty">—</span>
-											</td>
-										);
-									}
-									return (
-										<td>
-											<a
-												class="chip"
-												style={`background:${bandColour(run.band)}`}
-												data-chip
-												data-key={`${benchmark.id}/${run.slug}`}
-												data-total={run.total}
-												data-colour={bandColour(run.band)}
-												data-label={run.gatePassed ? 'view' : 'gate'}
-												href={`/lab/${benchmark.id}/${run.slug}/`}
-											>
-												{run.total}
-												<small>{run.gatePassed ? 'view' : 'gate'}</small>
-											</a>
-										</td>
-									);
-								})}
-							</tr>
+						playBenchmarks.map((benchmark) => {
+							const playable = benchmark.runs.filter((run) => run.playable).length;
+							return (
+								<a class="bench-card" href={`/lab/${benchmark.id}/`}>
+									<span class="flavor">{benchmark.category}</span>
+									<h3>{benchmark.name.split(' — ')[0]}</h3>
+									<p>{benchmark.summary}</p>
+									<div class="bench-foot">
+										<span class="playable-count">{playable} playable builds</span>
+										<span class="bench-link">Explore →</span>
+									</div>
+								</a>
+							);
+						})
+					}
+				</div>
+			</section>
+
+			<section class="playable-section" id="play-the-builds" aria-labelledby="play-heading">
+				<div class="playable-heading">
+					<span class="lab-section-eyebrow">{stats.playable} builds, ready now</span>
+					<h2 id="play-heading">Play the builds</h2>
+					<p>Pick a model and jump straight into its game.</p>
+				</div>
+				<div class="game-filters" role="group" aria-label="Filter playable builds">
+					<button type="button" data-game-filter="all" aria-pressed="true">All builds</button>
+					{
+						playBenchmarks.map((benchmark) => (
+							<button type="button" data-game-filter={benchmark.id} aria-pressed="false">
+								{benchmark.name.split(' — ')[0]}
+							</button>
 						))
 					}
-				</table>
-			</div>
-			<div class="legend">
-				<span><i style="background:var(--lab-strong)"></i>75–100 strong</span>
-				<span><i style="background:var(--lab-partial)"></i>50–74 partial</span>
-				<span><i style="background:var(--lab-thin)"></i>1–49 thin</span>
-				<span><i style="background:var(--lab-dead)"></i>0 gate failed</span>
-				<span><i style="border:1px dashed rgba(212,165,116,.4);background:transparent"></i>not attempted</span>
-			</div>
+				</div>
+				<div class="game-rail-shell">
+					<div class="game-rail" data-game-rail tabindex="0">
+						{
+							playableGames.map((game) => (
+								<a
+									class="game-card"
+									data-game-card
+									data-benchmark={game.benchmarkId}
+									href={game.href}
+								>
+									<span class="game-thumb">
+										{game.shot && (
+											<img
+												src={`/lab/${game.shot}`}
+												alt={`${game.benchmarkName} built by ${game.label}`}
+												width="960"
+												height="600"
+												loading="lazy"
+											/>
+										)}
+										<span class="game-play-icon" aria-hidden="true">▶</span>
+									</span>
+									<span class="game-card-body">
+										<span class="game-benchmark">{game.benchmarkName}</span>
+										<strong>{game.label}</strong>
+										<span class="game-meta">
+											<span>via {game.agent}</span>
+											<span>Play now →</span>
+										</span>
+									</span>
+								</a>
+							))
+						}
+					</div>
+					<button class="game-rail-next" type="button" data-game-rail-next aria-label="Show more games">
+						<span aria-hidden="true">›</span>
+					</button>
+				</div>
+			</section>
 
-			<h3 style="margin-top:var(--space-xl)">The benchmarks</h3>
-			<div class="bench-grid">
-				{
-					benchmarks.map((benchmark) => {
-						const best = benchmark.runs[0];
-						const playable = benchmark.runs.filter((run) => run.playable).length;
-						return (
-							<a class="bench-card" href={`/lab/${benchmark.id}/`}>
-								<span class="flavor">{benchmark.category}</span>
-								<h3>{benchmark.name.split(' — ')[0]}</h3>
-								<p>{benchmark.summary}</p>
-								<div class="bench-foot">
-									<span class="runs">
-										{benchmark.runs.length} runs · {playable} playable
-									</span>
-									<span class="best">
-										<b>{best?.total ?? '—'}</b>
-										<span>best score</span>
-									</span>
-								</div>
-							</a>
-						);
-					})
-				}
-			</div>
+			<section class="standings-section" aria-labelledby="standings-heading">
+				<div class="rowhead">
+					<div>
+						<span class="lab-section-eyebrow">Secondary evidence</span>
+						<h2 id="standings-heading">Automated standings</h2>
+					</div>
+					<div class="toggle" id="standings-toggle" hidden>
+						<button type="button" data-mode="harness" data-on="true">Harness score</button>
+						<button type="button" data-mode="players" class="hum" data-on="false">Player rating</button>
+					</div>
+				</div>
+				<p class="standings-intro">
+					Harness scores describe technical checks. They are useful for comparison, but they are
+					not a final judgment of the game.
+				</p>
+				<div class="matrix-wrap">
+					<table class="matrix">
+						<tr>
+							<th class="rowh"></th>
+							{benchmarks.map((benchmark) => <th>{benchmark.name.split(' — ')[0]}</th>)}
+						</tr>
+						{
+							rows.map((row) => (
+								<tr>
+									<th class="rowh">
+										{row.label}
+										<small>{row.agent}</small>
+									</th>
+									{benchmarks.map((benchmark) => {
+										const run = row.byBenchmark.get(benchmark.id);
+										if (!run) {
+											return (
+												<td>
+													<span class="chip empty">—</span>
+												</td>
+											);
+										}
+										return (
+											<td>
+												<a
+													class="chip"
+													style={`background:${bandColour(run.band)}`}
+													data-chip
+													data-key={`${benchmark.id}/${run.slug}`}
+													data-total={run.total}
+													data-colour={bandColour(run.band)}
+													data-label={run.gatePassed ? 'view' : 'gate'}
+													href={`/lab/${benchmark.id}/${run.slug}/`}
+												>
+													{run.total}
+													<small>{run.gatePassed ? 'view' : 'gate'}</small>
+												</a>
+											</td>
+										);
+									})}
+								</tr>
+							))
+						}
+					</table>
+				</div>
+				<div class="legend">
+					<span><i style="background:var(--lab-strong)"></i>75–100 strong</span>
+					<span><i style="background:var(--lab-partial)"></i>50–74 partial</span>
+					<span><i style="background:var(--lab-thin)"></i>1–49 thin</span>
+					<span><i style="background:var(--lab-dead)"></i>0 gate failed</span>
+					<span><i style="border:1px dashed rgba(212,165,116,.4);background:transparent"></i>not attempted</span>
+				</div>
+			</section>
 		</main>
 		<Footer />
 		<script>
 			import { ConvexClient } from "convex/browser";
 			import { api } from "../../../convex/_generated/api";
+
+			const gameRail = document.querySelector<HTMLElement>("[data-game-rail]");
+			const gameFilters = document.querySelectorAll<HTMLButtonElement>("[data-game-filter]");
+			const gameCards = document.querySelectorAll<HTMLElement>("[data-game-card]");
+			const gameRailNext = document.querySelector<HTMLButtonElement>("[data-game-rail-next]");
+
+			for (const filterButton of gameFilters) {
+				filterButton.addEventListener("click", () => {
+					const filter = filterButton.dataset.gameFilter;
+					for (const button of gameFilters) {
+						button.setAttribute("aria-pressed", String(button === filterButton));
+					}
+					for (const card of gameCards) {
+						card.hidden = filter !== "all" && card.dataset.benchmark !== filter;
+					}
+					gameRail?.scrollTo({ left: 0, behavior: "smooth" });
+				});
+			}
+
+			gameRailNext?.addEventListener("click", () => {
+				if (!gameRail) return;
+				const atEnd = gameRail.scrollLeft + gameRail.clientWidth >= gameRail.scrollWidth - 8;
+				gameRail.scrollTo({
+					left: atEnd ? 0 : gameRail.scrollLeft + gameRail.clientWidth * 0.8,
+					behavior: "smooth",
+				});
+			});
 
 			const url = import.meta.env.PUBLIC_CONVEX_URL;
 			const toggle = document.getElementById("standings-toggle");
