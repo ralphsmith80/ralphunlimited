@@ -9,7 +9,7 @@ Mechanical transforms only:
   - asteroid sheet hue-shifted teal for crystal rocks
   - ship sheet hue-shifted for Reaper / Bulwark / Riftwalker frames
   - ship alpha extracted to a white flash silhouette
-  - music.ogg re-encoded to Ogg Vorbis
+  - music.wav re-encoded to Ogg Vorbis
   - fire / boom / explode WAVs copied as-is
 
 Unused originals (fonts, GameAtlas pack, BMP duplicate, panel) were left behind.
