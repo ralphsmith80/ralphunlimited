@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-08-28T19:38:40.138Z",
+  "generatedAt": "2026-08-31T14:18:01.663Z",
   "benchmarks": [
     {
       "id": "retro-cruiser",
@@ -713,6 +713,83 @@
           "shots": [
             "shots/voidbreaker/codex-gpt-5.6-sol-2026-07-21/00-title.webp",
             "shots/voidbreaker/codex-gpt-5.6-sol-2026-07-21/02-mid.webp"
+          ]
+        },
+        {
+          "slug": "openrouter-z-ai-glm-5.3-flash-2026-08-31",
+          "agent": "openrouter",
+          "model": "z-ai-glm-5.3-flash",
+          "reasoning": "high",
+          "ranAt": "2026-08-31T14:00:55.062Z",
+          "total": 55,
+          "band": "partial",
+          "gatePassed": true,
+          "gateFailedAt": null,
+          "criteria": [
+            {
+              "id": "runtime",
+              "label": "Runtime health",
+              "weight": 2,
+              "score": 5,
+              "rationale": "no console errors, first frame in 75ms, 59fps median"
+            },
+            {
+              "id": "loop",
+              "label": "Playable loop",
+              "weight": 2,
+              "score": 3.5,
+              "rationale": "input reaches a handler, score changes, no game-over state reached"
+            },
+            {
+              "id": "depth",
+              "label": "Systems depth",
+              "weight": 4,
+              "score": 2,
+              "rationale": "9 distinct sprite sources, 45 distinct screens"
+            },
+            {
+              "id": "assets",
+              "label": "Asset lineage",
+              "weight": 2,
+              "score": 2,
+              "rationale": "5 of 21 original assets reused by name"
+            },
+            {
+              "id": "code",
+              "label": "Code quality",
+              "weight": 2,
+              "score": 3.5,
+              "rationale": "7 modules, largest file 589 lines, typed, no tests"
+            },
+            {
+              "id": "docs",
+              "label": "Documentation",
+              "weight": 1,
+              "score": 0,
+              "rationale": "no usable README"
+            }
+          ],
+          "observations": [
+            {
+              "id": "loop.restartWorks",
+              "label": "Restarts after game over",
+              "value": false,
+              "status": "fail",
+              "detail": null
+            },
+            {
+              "id": "depth.spawnRateDelta",
+              "label": "Late vs early draw calls",
+              "value": 1.08,
+              "status": "info",
+              "detail": "12.2 → 13.1 draws per frame over 243s of one run"
+            }
+          ],
+          "buildBytes": 2577214,
+          "playable": "/lab/play/voidbreaker/openrouter-z-ai-glm-5.3-flash-2026-08-31/index.html",
+          "shots": [
+            "shots/voidbreaker/openrouter-z-ai-glm-5.3-flash-2026-08-31/00-title.webp",
+            "shots/voidbreaker/openrouter-z-ai-glm-5.3-flash-2026-08-31/02-mid.webp"
           ]
         },
         {
