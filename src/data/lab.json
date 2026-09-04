@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-02T03:42:45.247Z",
+  "generatedAt": "2026-09-04T21:20:44.961Z",
   "benchmarks": [
     {
       "id": "retro-cruiser",
@@ -559,6 +559,83 @@
           "shots": [
             "shots/voidbreaker/claude-claude-fable-5-1-1m-2026-09-02/00-title.webp",
             "shots/voidbreaker/claude-claude-fable-5-1-1m-2026-09-02/02-mid.webp"
+          ]
+        },
+        {
+          "slug": "codex-gpt-6-astra-2026-09-04",
+          "agent": "codex",
+          "model": "gpt-6-astra",
+          "reasoning": "xhigh",
+          "ranAt": "2026-09-04T19:47:43.990Z",
+          "total": 77,
+          "band": "strong",
+          "gatePassed": true,
+          "gateFailedAt": null,
+          "criteria": [
+            {
+              "id": "runtime",
+              "label": "Runtime health",
+              "weight": 2,
+              "score": 5,
+              "rationale": "no console errors, first frame in 147ms, 59fps median"
+            },
+            {
+              "id": "loop",
+              "label": "Playable loop",
+              "weight": 2,
+              "score": 5,
+              "rationale": "input reaches a handler, score changes, reaches game over"
+            },
+            {
+              "id": "depth",
+              "label": "Systems depth",
+              "weight": 4,
+              "score": 2.8,
+              "rationale": "9 distinct sprite sources, 73 distinct screens"
+            },
+            {
+              "id": "assets",
+              "label": "Asset lineage",
+              "weight": 2,
+              "score": 3,
+              "rationale": "9 of 21 original assets reused by name"
+            },
+            {
+              "id": "code",
+              "label": "Code quality",
+              "weight": 2,
+              "score": 4,
+              "rationale": "14 modules, largest file 1043 lines, typed, has tests"
+            },
+            {
+              "id": "docs",
+              "label": "Documentation",
+              "weight": 1,
+              "score": 5,
+              "rationale": "11904 byte README, 11 sections"
+            }
+          ],
+          "observations": [
+            {
+              "id": "loop.restartWorks",
+              "label": "Restarts after game over",
+              "value": true,
+              "status": "pass",
+              "detail": null
+            },
+            {
+              "id": "depth.spawnRateDelta",
+              "label": "Late vs early draw calls",
+              "value": 1.07,
+              "status": "info",
+              "detail": "13.6 → 14.5 draws per frame over 51s of one run"
+            }
+          ],
+          "buildBytes": 1762108,
+          "playable": "/lab/play/voidbreaker/codex-gpt-6-astra-2026-09-04/index.html",
+          "shots": [
+            "shots/voidbreaker/codex-gpt-6-astra-2026-09-04/00-title.webp",
+            "shots/voidbreaker/codex-gpt-6-astra-2026-09-04/02-mid.webp"
           ]
         },
         {
@@ -1186,6 +1263,83 @@
           "shots": [
             "shots/cruiser-reloaded/claude-claude-fable-5-2026-07-25/00-title.webp",
             "shots/cruiser-reloaded/claude-claude-fable-5-2026-07-25/02-mid.webp"
+          ]
+        },
+        {
+          "slug": "codex-gpt-6-astra-2026-09-04",
+          "agent": "codex",
+          "model": "gpt-6-astra",
+          "reasoning": "xhigh",
+          "ranAt": "2026-09-04T19:47:38.292Z",
+          "total": 85,
+          "band": "strong",
+          "gatePassed": true,
+          "gateFailedAt": null,
+          "criteria": [
+            {
+              "id": "runtime",
+              "label": "Runtime health",
+              "weight": 2,
+              "score": 5,
+              "rationale": "no console errors, first frame in 181ms, 59fps median"
+            },
+            {
+              "id": "loop",
+              "label": "Playable loop",
+              "weight": 2,
+              "score": 5,
+              "rationale": "input reaches a handler, score changes, reaches game over"
+            },
+            {
+              "id": "depth",
+              "label": "Systems depth",
+              "weight": 4,
+              "score": 4.6,
+              "rationale": "34 distinct sprite sources, 122 distinct screens"
+            },
+            {
+              "id": "assets",
+              "label": "Asset lineage",
+              "weight": 2,
+              "score": 2,
+              "rationale": "15 of 93 original assets reused by name"
+            },
+            {
+              "id": "code",
+              "label": "Code quality",
+              "weight": 2,
+              "score": 4,
+              "rationale": "13 modules, largest file 874 lines, typed, has tests"
+            },
+            {
+              "id": "docs",
+              "label": "Documentation",
+              "weight": 1,
+              "score": 5,
+              "rationale": "9920 byte README, 8 sections"
+            }
+          ],
+          "observations": [
+            {
+              "id": "loop.restartWorks",
+              "label": "Restarts after game over",
+              "value": false,
+              "status": "fail",
+              "detail": null
+            },
+            {
+              "id": "depth.spawnRateDelta",
+              "label": "Late vs early draw calls",
+              "value": 0.98,
+              "status": "info",
+              "detail": "19.6 → 19.1 draws per frame over 108s of one run"
+            }
+          ],
+          "buildBytes": 2704827,
+          "playable": "/lab/play/cruiser-reloaded/codex-gpt-6-astra-2026-09-04/index.html",
+          "shots": [
+            "shots/cruiser-reloaded/codex-gpt-6-astra-2026-09-04/00-title.webp",
+            "shots/cruiser-reloaded/codex-gpt-6-astra-2026-09-04/02-mid.webp"
           ]
         },
         {
