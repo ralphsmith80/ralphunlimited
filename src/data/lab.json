@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-04T21:20:44.961Z",
+  "generatedAt": "2026-09-09T21:43:59.185Z",
   "benchmarks": [
     {
       "id": "retro-cruiser",
@@ -2016,6 +2016,94 @@
           "buildBytes": 0,
           "playable": null,
           "shots": []
+        }
+      ]
+    },
+    {
+      "id": "void-cruiser-3d",
+      "name": "Void Cruiser 3D",
+      "summary": "Combine Cruiser Reloaded's fuel, weapons, and drone combat with Voidbreaker's asteroid destruction and run progression in one complete 3D arcade game. Author the models and make depth matter in play.",
+      "category": "JS / games / 3D / modeling / game-design",
+      "difficulty": "hard",
+      "rubricId": "web-arcade-v1",
+      "scorerVersion": "2.2.0",
+      "runs": [
+        {
+          "slug": "codex-gpt-6-astra-2026-09-09",
+          "agent": "codex",
+          "model": "gpt-6-astra",
+          "reasoning": "high",
+          "ranAt": "2026-09-09T18:48:47.315Z",
+          "total": 72,
+          "band": "partial",
+          "gatePassed": true,
+          "gateFailedAt": null,
+          "criteria": [
+            {
+              "id": "runtime",
+              "label": "Runtime health",
+              "weight": 2,
+              "score": 5,
+              "rationale": "no console errors, first frame in 320ms, 59fps median"
+            },
+            {
+              "id": "loop",
+              "label": "Playable loop",
+              "weight": 2,
+              "score": 5,
+              "rationale": "input reaches a handler, score changes, reaches game over"
+            },
+            {
+              "id": "depth",
+              "label": "Systems depth",
+              "weight": 4,
+              "score": 2.5,
+              "rationale": "0 distinct sprite sources, 89 distinct screens"
+            },
+            {
+              "id": "assets",
+              "label": "Asset lineage",
+              "weight": 2,
+              "score": 2,
+              "rationale": "2 of 113 original assets reused by name"
+            },
+            {
+              "id": "code",
+              "label": "Code quality",
+              "weight": 2,
+              "score": 4,
+              "rationale": "16 modules, largest file 1413 lines, typed, has tests"
+            },
+            {
+              "id": "docs",
+              "label": "Documentation",
+              "weight": 1,
+              "score": 5,
+              "rationale": "17937 byte README, 12 sections"
+            }
+          ],
+          "observations": [
+            {
+              "id": "loop.restartWorks",
+              "label": "Restarts after game over",
+              "value": false,
+              "status": "fail",
+              "detail": null
+            },
+            {
+              "id": "depth.spawnRateDelta",
+              "label": "Late vs early draw calls",
+              "value": 0.88,
+              "status": "info",
+              "detail": "62.5 → 55.1 draws per frame over 236s of one run"
+            }
+          ],
+          "buildBytes": 1521849,
+          "playable": "/lab/play/void-cruiser-3d/codex-gpt-6-astra-2026-09-09/index.html",
+          "shots": [
+            "shots/void-cruiser-3d/codex-gpt-6-astra-2026-09-09/00-title.webp",
+            "shots/void-cruiser-3d/codex-gpt-6-astra-2026-09-09/02-mid.webp"
+          ]
         }
       ]
     }
