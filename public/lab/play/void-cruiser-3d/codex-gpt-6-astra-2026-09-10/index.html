@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#09131a" />
+    <meta
+      name="description"
+      content="A short, ferocious 3D space run. Break the belt. Burn your fuel. Beat the Tollkeeper."
+    />
+    <title>Void Cruiser 3D • Break the belt</title>
+    <script type="module" crossorigin src="./assets/index-B5GNDPZy.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-D7Xqp37H.css">
+  </head>
+  <body>
+    <canvas id="game" aria-label="Void Cruiser 3D game"></canvas
+    ><canvas id="overlay" aria-hidden="true"></canvas>
+    <div id="vignette"></div>
+    <div id="damage"></div>
+    <div id="boost-edge"></div>
+    <header>
+      <a class="brand" href="#" id="brand" aria-label="Void Cruiser"
+        ><span class="brand-mark">⋈</span> VOID CRUISER <small>3D</small></a
+      >
+      <div class="header-right">
+        <span id="record">BEST 000000</span
+        ><button id="mute" aria-label="Mute sound">SOUND ON <kbd>M</kbd></button
+        ><button id="pause" aria-label="Pause game">PAUSE <kbd>P</kbd></button>
+      </div>
+    </header>
+    <main id="title" class="screen">
+      <div class="title-copy">
+        <div class="eyebrow"><i></i> KESTREL FLIGHT SYSTEMS / ARCADE 01</div>
+        <h1>VOID<br /><span>CRUISER</span><sup>3D</sup></h1>
+        <div class="title-rule"></div>
+        <p class="tagline">Break the belt.<br />Leave nothing in your wake.</p>
+        <p class="intro">
+          A two-minute burn through hostile space.<br />Turn rocks into fuel.
+          Turn fuel into trouble.
+        </p>
+        <button id="launch" class="primary">
+          IGNITE ENGINES <span>↗</span>
+        </button>
+        <div class="enter-hint">PRESS ENTER TO LAUNCH</div>
+      </div>
+      <div class="ship-caption">
+        <span>VC–07 / KESTREL</span><b>TWIN PLASMA · RAM SHIELD</b
+        ><small>Fuel is ammunition. Spend it well.</small>
+      </div>
+      <div class="title-bottom">
+        <div><kbd>W A S D</kbd><span>FLY</span></div>
+        <div><kbd>MOUSE</kbd><span>AIM · AUTO FIRE</span></div>
+        <div><kbd>SHIFT</kbd><span>BOOST + RAM</span></div>
+        <div><kbd>SPACE</kbd><span>SHOCKWAVE · 30 FUEL</span></div>
+        <p>HEADPHONES RECOMMENDED<br />ONE SHIP. ONE WAY THROUGH.</p>
+      </div>
+    </main>
+    <section id="hud" class="hidden" aria-label="Flight instruments">
+      <div class="score-block">
+        <label>RUN SCORE</label>
+        <div id="score">000000</div>
+        <span id="combo">×1</span><small id="chain">BREAK SOMETHING</small>
+      </div>
+      <div class="sector">
+        <span id="sector">01 / THE SHATTER BELT</span>
+        <div class="route"><i id="progress"></i></div>
+        <small id="objective">BREAK ROCKS · COLLECT FUEL · KEEP MOVING</small>
+      </div>
+      <div id="boss-hud" class="hidden">
+        <label>THE TOLLKEEPER <span id="boss-state">CORE EXPOSED</span></label>
+        <div class="bar"><i id="boss-health"></i></div>
+      </div>
+      <div id="announcement"><strong></strong><span></span></div>
+      <div class="instruments">
+        <div class="meter hull">
+          <div><label>HULL INTEGRITY</label><b id="hull-number">100</b></div>
+          <div class="bar"><i id="hull"></i></div>
+          <small id="hull-label">KESTREL / SYSTEMS NOMINAL</small>
+        </div>
+        <div class="weapon">
+          <label id="weapon">I / TWIN PLASMA</label
+          ><span id="weapon-progress">0 / 12 SALVAGE</span
+          ><small id="pulse">SPACE · SHOCKWAVE READY</small>
+        </div>
+        <div class="meter fuel">
+          <div><label>REACTOR FUEL</label><b id="fuel-number">100</b></div>
+          <div class="bar"><i id="fuel"></i></div>
+          <small id="fuel-label">HOLD SHIFT · BOOST / RAM SHIELD</small>
+        </div>
+      </div>
+      <div class="flight-foot">
+        <span id="speed">420 M/S</span
+        ><span
+          >WASD FLY &nbsp; / &nbsp; MOUSE AIM &nbsp; / &nbsp; SHIFT RAM &nbsp; /
+          &nbsp; SPACE PULSE</span
+        ><span id="clock">00:00</span>
+      </div>
+    </section>
+    <section id="paused" class="screen modal hidden">
+      <div class="panel">
+        <div class="eyebrow">FLIGHT SUSPENDED</div>
+        <h2>Hold your fire.</h2>
+        <p>The belt can wait.</p>
+        <button class="primary" id="resume">
+          RESUME FLIGHT <span>↗</span></button
+        ><button class="secondary" id="restart-pause">
+          RESTART RUN <kbd>R</kbd>
+        </button>
+        <p class="small">
+          WASD fly · Mouse aim · Shift boost and ram<br />Space shockwave · P
+          pause · M mute
+        </p>
+      </div>
+    </section>
+    <section id="summary" class="screen modal hidden">
+      <div class="panel">
+        <div class="eyebrow" id="result-label">
+          SIGNAL LOST / FLIGHT RECORDER
+        </div>
+        <h2 id="result-title">A beautiful wreck.</h2>
+        <p id="result-reason">The belt collected its toll.</p>
+        <div class="final-score" id="final-score">000000</div>
+        <div class="new-record" id="new-record">NEW PERSONAL BEST</div>
+        <div class="stats">
+          <div><b id="final-kills">0</b><span>TARGETS BROKEN</span></div>
+          <div><b id="final-chain">×1</b><span>BEST MULTIPLIER</span></div>
+          <div><b id="final-time">0:00</b><span>TIME IN FLIGHT</span></div>
+        </div>
+        <p id="retry-hook" class="retry-hook"></p>
+        <button class="primary" id="retry">BURN AGAIN <span>↗</span></button>
+        <div class="enter-hint">ENTER OR R · INSTANT RETRY</div>
+      </div>
+    </section>
+    <div id="fatal" class="hidden"></div>
+  </body>
+</html>
