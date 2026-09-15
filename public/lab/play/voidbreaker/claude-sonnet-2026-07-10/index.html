@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Voidbreaker</title>
+    <script type="module" crossorigin src="./assets/index-k3u5zo40.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-iE-yY0FI.css">
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game-canvas"></canvas>
+
+      <!-- TITLE SCREEN -->
+      <section id="title-screen" class="overlay">
+        <div class="overlay-panel title-panel">
+          <h1 class="logo">VOID<span class="accent">BREAKER</span></h1>
+          <p class="tagline">Break the rocks. Chase the chain. Don't get greedy&hellip; or do.</p>
+
+          <div class="title-columns">
+            <div class="title-col">
+              <h2>Loadout</h2>
+              <div id="loadout-list" class="loadout-list"></div>
+            </div>
+            <div class="title-col">
+              <h2>Controls</h2>
+              <ul class="controls-list">
+                <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / <kbd>&uarr;&larr;&darr;&rarr;</kbd> &mdash; thrust &amp; turn</li>
+                <li><kbd>Space</kbd> &mdash; fire plasma</li>
+                <li><kbd>Shift</kbd> &mdash; boost thrusters</li>
+                <li><kbd>P</kbd> / <kbd>Esc</kbd> &mdash; pause</li>
+                <li><kbd>M</kbd> &mdash; mute audio</li>
+              </ul>
+            </div>
+            <div class="title-col">
+              <h2>Top Runs</h2>
+              <ol id="high-score-list" class="score-list"></ol>
+            </div>
+          </div>
+
+          <div class="title-actions">
+            <button id="start-run-btn" class="btn btn-primary">Start Run</button>
+            <button id="start-daily-btn" class="btn btn-secondary">Daily Seed Run</button>
+          </div>
+          <p id="daily-status" class="daily-status"></p>
+
+          <div class="title-col achievements-col">
+            <h2>Achievements</h2>
+            <div id="achievement-list" class="achievement-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HUD -->
+      <section id="hud" class="hud hidden">
+        <div class="hud-top-left">
+          <div class="hud-score">SCORE <span id="hud-score">0</span></div>
+          <div class="hud-combo hidden" id="hud-combo">CHAIN x<span id="hud-combo-mult">1</span></div>
+        </div>
+        <div class="hud-top-right">
+          <div class="hud-wave">WAVE <span id="hud-wave">1</span></div>
+          <div class="hud-lives" id="hud-lives"></div>
+        </div>
+        <div class="hud-bottom-left">
+          <div class="meter-label">WEAPON</div>
+          <div class="meter"><div id="hud-heat-bar" class="meter-fill heat"></div></div>
+          <div class="meter-label">BOOST</div>
+          <div class="meter"><div id="hud-boost-bar" class="meter-fill boost"></div></div>
+        </div>
+        <div id="hud-boss" class="hud-boss hidden">
+          <div class="hud-boss-label">TITAN ASTEROID</div>
+          <div class="meter boss-meter"><div id="hud-boss-bar" class="meter-fill boss"></div></div>
+        </div>
+        <div id="hud-rift-prompt" class="hud-rift-prompt hidden">HOLD POSITION TO CHANNEL RIFT</div>
+      </section>
+
+      <!-- PAUSE -->
+      <section id="pause-screen" class="overlay hidden">
+        <div class="overlay-panel">
+          <h2>Paused</h2>
+          <ul class="controls-list">
+            <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / <kbd>&uarr;&larr;&darr;&rarr;</kbd> &mdash; thrust &amp; turn</li>
+            <li><kbd>Space</kbd> &mdash; fire plasma &nbsp; <kbd>Shift</kbd> &mdash; boost</li>
+          </ul>
+          <div class="title-actions">
+            <button id="resume-btn" class="btn btn-primary">Resume</button>
+            <button id="quit-btn" class="btn btn-secondary">Quit to Title</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- GAME OVER -->
+      <section id="game-over-screen" class="overlay hidden">
+        <div class="overlay-panel">
+          <h2 id="game-over-title">Hull Breached</h2>
+          <p id="new-high-score-banner" class="new-high-score hidden">NEW HIGH SCORE</p>
+          <div id="run-summary" class="run-summary"></div>
+          <div id="toast-run-container" class="toast-run-container"></div>
+          <div class="title-actions">
+            <button id="restart-btn" class="btn btn-primary">Fly Again</button>
+            <button id="title-btn" class="btn btn-secondary">Title</button>
+          </div>
+        </div>
+      </section>
+
+      <button id="mute-btn" class="mute-btn" title="Mute (M)">&#128266;</button>
+    </div>
+  </body>
+</html>

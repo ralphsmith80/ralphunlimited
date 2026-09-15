@@ -1,0 +1,10 @@
+Cruiser Reloaded — asset provenance
+
+Every file in public/assets/ is derived from the original Retro Cruiser
+asset set (benchmarks/cruiser-reloaded/source/assets) by tools/build-assets.mjs.
+Transforms are limited to: BMP/GIF/M4A/OGG/WAV -> PNG/MP3 transcodes,
+downscaling, and HSL recolouring for ship/enemy variants.
+
+No third-party art or audio was introduced. Starfields, nebulae, shield
+bubbles, lasers, HUD chrome and all particle effects are drawn procedurally
+at runtime in src/.

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Retro Cruiser!</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="user-scalable=0, initial-scale=1, minimum-scale=1, maximum-scale=1, width=device-width" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <style>
+      body {
+        margin: 0;
+        background: #000;
+        overflow: hidden;
+      }
+      /* The bitmap font used for all in-game text (same file the original served). */
+      @font-face {
+        font-family: 'retro2';
+        src: url('./assets/fonts/PressStart2P.ttf') format('truetype');
+      }
+    </style>
+
+    <!-- The original page blocked spacebar scrolling with a window.onkeydown
+         hack; Phaser 3 captures the key itself (and ignores events that were
+         already defaultPrevented), so no hack here. -->
+    <script type="module" crossorigin src="./assets/index-C3QSJLs3.js"></script>
+  </head>
+  <body>
+    <div id="game"></div>
+  </body>
+</html>
