@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#081326" />
+    <meta name="description" content="Cruiser Reloaded is a fast salvage run through a hostile debris field." />
+    <title>Cruiser Reloaded</title>
+    <script type="module" crossorigin src="/lab/play/cruiser-reloaded/codex-gpt-6-sol-2026-09-22/assets/index-DAzleT8E.js"></script>
+    <link rel="stylesheet" crossorigin href="/lab/play/cruiser-reloaded/codex-gpt-6-sol-2026-09-22/assets/index-BXmx0alk.css">
+  </head>
+  <body>
+    <div id="app">
+      <div class="game-frame">
+        <canvas id="game" width="960" height="600" aria-label="Cruiser Reloaded game field"></canvas>
+        <div id="hud" class="hud hidden" aria-live="off">
+          <div class="hud-top">
+            <div class="brand-mini">CR<span>///</span>R</div>
+            <div class="score-block"><span>Score</span><strong id="score">0</strong></div>
+            <div class="score-block"><span>Sector</span><strong id="sector">01</strong></div>
+            <div class="score-block combo"><span>Chain</span><strong id="chain">x1.0</strong></div>
+            <button id="pause-button" class="icon-button" aria-label="Pause game">Ⅱ</button>
+          </div>
+          <div class="hud-bottom">
+            <div class="meter-block"><span>Hull</span><div class="meter"><i id="hull-fill"></i></div><b id="hull-text">100</b></div>
+            <div class="meter-block fuel"><span>Fuel</span><div class="meter"><i id="fuel-fill"></i></div><b id="fuel-text">100</b></div>
+            <div class="pulse-hint" id="pulse-hint">X <span>Pulse</span></div>
+          </div>
+        </div>
+        <div id="toast" class="toast hidden"></div>
+        <div id="overlay" class="overlay"></div>
+        <div class="touch-controls hidden" id="touch-controls">
+          <button id="touch-boost">Boost</button><button id="touch-pulse">Pulse</button>
+        </div>
+      </div>
+      <div class="outside-note">WASD / arrows move &nbsp; · &nbsp; Cannons fire automatically &nbsp; · &nbsp; Shift boosts &nbsp; · &nbsp; X pulses &nbsp; · &nbsp; P pauses</div>
+    </div>
+  </body>
+</html>
