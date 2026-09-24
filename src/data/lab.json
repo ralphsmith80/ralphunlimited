@@ -2799,9 +2799,9 @@
           ]
         },
         {
-          "slug": "claude-opus-1m-2026-09-22",
+          "slug": "claude-claude-opus-5-5-1m-2026-09-22",
           "agent": "claude",
-          "model": "opus-1m",
+          "model": "claude-opus-5-5-1m",
           "reasoning": "high",
           "ranAt": "2026-09-22T19:48:37.720Z",
           "total": 71,
@@ -2869,10 +2869,10 @@
             }
           ],
           "buildBytes": 6292433,
-          "playable": "/lab/play/void-cruiser-3d/claude-opus-1m-2026-09-22/index.html",
+          "playable": "/lab/play/void-cruiser-3d/claude-claude-opus-5-5-1m-2026-09-22/index.html",
           "shots": [
-            "shots/void-cruiser-3d/claude-opus-1m-2026-09-22/00-title.webp",
-            "shots/void-cruiser-3d/claude-opus-1m-2026-09-22/02-mid.webp"
+            "shots/void-cruiser-3d/claude-claude-opus-5-5-1m-2026-09-22/00-title.webp",
+            "shots/void-cruiser-3d/claude-claude-opus-5-5-1m-2026-09-22/02-mid.webp"
           ]
         },
         {
