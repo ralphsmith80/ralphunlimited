@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Void Cruiser 3D. A fast arcade run through a rock belt. Boost, shoot, chain explosions, and grab fuel." />
+    <title>Void Cruiser 3D</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2 L22 26 L16 22 L10 26 Z' fill='%23b8b4d6'/%3E%3Cpath d='M16 22 L18 30 L14 30 Z' fill='%234aa6ff'/%3E%3C/svg%3E" />
+    <script type="module" crossorigin src="./static/index-ud1gCOVd.js"></script>
+    <link rel="stylesheet" crossorigin href="./static/index-2NubYWJy.css">
+  </head>
+  <body class="booting">
+    <canvas id="view" aria-label="Game view"></canvas>
+    <canvas id="overlay"></canvas>
+
+    <div id="vignette"></div>
+    <div id="flash"></div>
+    <div id="lowhull"></div>
+
+    <div id="hud" class="hidden">
+      <div id="score-block">
+        <div class="label">SCORE</div>
+        <div id="score">0</div>
+        <div id="mult-row"><span id="mult">x1</span><div id="chain"><i id="chain-fill"></i></div></div>
+        <div id="cards"><div></div><div></div><div></div></div>
+        <div id="salvage"><span id="salvage-label">SALVAGE</span><div id="salvage-bar"><i id="salvage-fill"></i></div><b id="salvage-num">0/14</b></div>
+      </div>
+      <div id="sector-block"><div id="sector">SECTOR 1</div><div id="sector-name">THE BELT</div></div>
+      <div id="best-block"><div class="label">BEST</div><div id="best">0</div></div>
+
+      <div id="bar-hull" class="vbar left"><div class="vbar-label">HULL</div><div class="vbar-track"><i id="hull-fill"></i></div><div class="vbar-num" id="hull-num">100</div></div>
+      <div id="bar-fuel" class="vbar right"><div class="vbar-label">FUEL</div><div class="vbar-track"><i id="fuel-fill"></i></div><div class="vbar-num" id="fuel-num">100</div></div>
+
+      <div id="weapon-block">
+        <div id="weapon-name">PULSE</div>
+        <div id="weapon-tier"><i></i><i></i><i></i></div>
+        <div id="oc-row"><span id="oc-label">OVERCLOCK [E]</span><div id="oc-bar"><i id="oc-fill"></i></div></div>
+        <div id="modules"><b data-m="0" title="Shield cell">S</b><b data-m="1" title="Magnet">M</b><b data-m="2" title="Ram frame">R</b><b data-m="3" title="Deep tank">T</b><b data-m="4" title="Afterburner">A</b></div>
+      </div>
+
+      <div id="boss-bar" class="hidden"><div id="boss-name">HIVE GATE</div><div id="boss-segs"><i></i><i></i><i></i><i></i><i class="core"></i></div></div>
+      <div id="banner"><div id="banner-main"></div><div id="banner-sub"></div></div>
+      <div id="hint"></div>
+      <div id="pause-btn" role="button" tabindex="-1" title="Pause (Esc)">II</div>
+      <div id="mute-btn" role="button" tabindex="-1" title="Mute (M)">SND</div>
+    </div>
+
+    <div id="reticle" class="hidden"><i></i></div>
+
+    <section id="screen-title" class="screen hidden">
+      <div class="title-wrap">
+        <div class="title-top">
+          <h1><span>VOID</span><span class="accent">CRUISER</span><span class="tag">3D</span></h1>
+          <p class="tagline">Blast the belt. Burn fuel to go faster. Chain the explosions.</p>
+        </div>
+        <div class="title-bottom">
+          <div id="ships"></div>
+          <div id="ship-blurb"></div>
+          <div class="row">
+            <button id="btn-launch" class="big">LAUNCH<small>SPACE</small></button>
+          </div>
+          <div class="row small">
+            <label class="check" id="daily-toggle"><input type="checkbox" id="daily-check" /> <span id="daily-label">Daily run</span></label>
+            <button id="btn-help" class="ghost">HOW TO PLAY [H]</button>
+            <button id="btn-mute-title" class="ghost">SOUND ON [M]</button>
+          </div>
+          <div id="scores"></div>
+          <div class="controls-line">Mouse: steer and aim  |  Hold left click or Space: fire  |  Hold right click or Shift: boost  |  E: overclock</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-help" class="screen hidden">
+      <div class="panel wide">
+        <h2>HOW TO PLAY</h2>
+        <div class="help-grid">
+          <div><h3>Fly</h3><p>Move the mouse. Your cruiser follows. Your shots go where the reticle points. WASD or arrows also work.</p></div>
+          <div><h3>Shoot</h3><p>Hold left click or Space. Rocks split into fragments. Fragments hit other rocks and drones. Explosions push things.</p></div>
+          <div><h3>Boost</h3><p>Hold right click or Shift. You go faster, the field comes faster, and small rocks shatter on your hull. It burns fuel.</p></div>
+          <div><h3>Fuel</h3><p>Blue cells restore fuel. Ore rocks always drop one. Drone patrols carry them. An empty tank stalls the engine.</p></div>
+          <div><h3>Overclock</h3><p>Press E. It costs 26 fuel. Fire rate goes up for a few seconds. Every kill adds time.</p></div>
+          <div><h3>Nova rocks</h3><p>Red rocks explode big. Shoot one when the marker turns green, about 10 to 30 meters out, and it wipes the screen.</p></div>
+          <div><h3>Graze</h3><p>Pass close to rocks and shots without touching them. You get points and a little fuel.</p></div>
+          <div><h3>Score</h3><p>Kills build a multiplier. Any hit on your hull resets it. Fly through gates for bonus. Beat the Hive Gate, then bank your run at the extraction gate or push on.</p></div>
+        </div>
+        <button id="btn-help-close" class="big">GOT IT<small>ESC</small></button>
+      </div>
+    </section>
+
+    <section id="screen-pause" class="screen hidden">
+      <div class="panel">
+        <h2>PAUSED</h2>
+        <button id="btn-resume" class="big">RESUME<small>ESC</small></button>
+        <button id="btn-restart" class="ghost">RESTART RUN [R]</button>
+        <button id="btn-quit" class="ghost">QUIT TO TITLE [X]</button>
+        <button id="btn-mute" class="ghost">SOUND ON [M]</button>
+        <p class="hint-small">Mouse: steer and aim. Left click or Space: fire. Right click or Shift: boost. E: overclock.</p>
+      </div>
+    </section>
+
+    <section id="screen-summary" class="screen hidden">
+      <div class="panel wide summary">
+        <div id="sum-head">RUN OVER</div>
+        <div id="sum-cause"></div>
+        <div id="sum-score">0</div>
+        <div id="sum-best"></div>
+        <div id="sum-stats"></div>
+        <div id="sum-cards"></div>
+        <div id="sum-reason"></div>
+        <div id="sum-unlocks"></div>
+        <div class="row">
+          <button id="btn-again" class="big">FLY AGAIN<small>SPACE / R</small></button>
+          <button id="btn-title" class="ghost">TITLE [ESC]</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-loading" class="screen">
+      <div class="panel">
+        <h2>VOID CRUISER 3D</h2>
+        <div id="loading-bar"><i id="loading-fill"></i></div>
+        <p id="loading-text">Loading models and sound</p>
+        <p id="loading-error" class="err hidden"></p>
+      </div>
+    </section>
+
+    <noscript>Void Cruiser 3D needs JavaScript and WebGL 2 in a desktop browser.</noscript>
+  </body>
+</html>
