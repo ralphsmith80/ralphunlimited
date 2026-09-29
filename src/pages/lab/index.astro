@@ -9,9 +9,11 @@ import '../../styles/lab.css';
 const rows = standings();
 // Every time bar shares one scale, the slowest run in the table, so any two cells compare directly.
 const slowestMs = Math.max(
-	1,
+	0,
 	...rows.flatMap((row) => [...row.byBenchmark.values()].map((run) => run.durationMs ?? 0)),
 );
+// Data published before run times existed has none; show no time bars rather than "no time" everywhere.
+const showTimes = slowestMs > 0;
 // Keep the chosen play-first story order independent of the benchmark publish order.
 const playOrder = new Map(
 	['voidbreaker', 'cruiser-reloaded', 'retro-cruiser'].map((id, index) => [id, index] as const),
@@ -209,7 +211,7 @@ const description =
 													{run.total}
 													<small>{run.gatePassed ? 'view' : 'gate'}</small>
 												</a>
-												{took ? (
+												{showTimes && (took ? (
 													<span class="time-line">
 														<span class="track">
 															<i style={`width:${((run.durationMs ?? 0) / slowestMs) * 100}%`} />
@@ -218,7 +220,7 @@ const description =
 													</span>
 												) : (
 													<span class="time-line none">no time</span>
-												)}
+												))}
 											</td>
 										);
 									})}
@@ -233,7 +235,7 @@ const description =
 					<span><i style="background:var(--lab-thin)"></i>1–49 thin</span>
 					<span><i style="background:var(--lab-dead)"></i>0 gate failed</span>
 					<span><i style="border:1px dashed rgba(212,165,116,.4);background:transparent"></i>not attempted</span>
-					<span><i style="height:3px;vertical-align:2px;background:var(--accent-tertiary)"></i>run time (full bar is the slowest run)</span>
+					{showTimes && <span><i style="height:3px;vertical-align:2px;background:var(--accent-tertiary)"></i>run time (full bar is the slowest run)</span>}
 				</div>
 			</section>
 		</main>
