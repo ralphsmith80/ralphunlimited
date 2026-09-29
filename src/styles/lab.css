@@ -240,6 +240,37 @@ a.chip:hover {
 	color: var(--text-muted);
 }
 
+/* Run time under a standings chip; bar widths share the table's slowest run as 100%. */
+.time-line {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin-top: 0.3rem;
+	font-family: var(--font-mono);
+	font-size: 0.62rem;
+	color: var(--text-muted);
+	white-space: nowrap;
+}
+
+.time-line .track {
+	flex: 1;
+	height: 3px;
+	background: rgba(212, 165, 116, 0.12);
+	border-radius: 2px;
+	overflow: hidden;
+}
+
+.time-line .track i {
+	display: block;
+	height: 100%;
+	background: var(--accent-tertiary);
+}
+
+.time-line.none {
+	justify-content: center;
+	opacity: 0.6;
+}
+
 .legend {
 	display: flex;
 	gap: 1.25rem;

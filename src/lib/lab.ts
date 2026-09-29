@@ -32,6 +32,8 @@ export type LabRun = {
 	model: string | null;
 	reasoning: string | null;
 	ranAt: string;
+	/** Time the agent worked, excluding pauses between resumes. Absent or null when not recorded. */
+	durationMs?: number | null;
 	total: number;
 	band: 'gate-failed' | 'thin' | 'partial' | 'strong' | 'exceptional';
 	gatePassed: boolean;
@@ -81,6 +83,13 @@ export const stats = {
 	),
 	models: new Set(benchmarks.flatMap((b) => b.runs.map(runLabel))).size,
 };
+
+/** "42 min" or "1 h 5 min"; null when the run time was not recorded. */
+export function runTime(run: LabRun) {
+	if (run.durationMs == null) return null;
+	const minutes = Math.max(1, Math.round(run.durationMs / 60_000));
+	return minutes < 60 ? `${minutes} min` : `${Math.floor(minutes / 60)} h ${minutes % 60} min`;
+}
 
 /** Score bands drive colour everywhere, so the thresholds live in one place. */
 export function bandColour(band: LabRun['band']) {

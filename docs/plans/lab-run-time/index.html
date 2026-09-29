@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run time in the automated standings: three options</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Fira+Code:wght@400;500&family=Libre+Franklin:wght@600;800&display=swap');
+:root {
+	color-scheme: dark;
+	--bg-primary: #1a1614; --bg-secondary: #211e1b; --bg-elevated: #2a2622; --bg-card: #252220;
+	--text-primary: #f5f0e8; --text-secondary: #c4b8a8; --text-muted: #8a7e70;
+	--accent-primary: #d4a574; --accent-tertiary: #9b7e5e; --accent-highlight: #e8c496;
+	--lab-strong: #8fae74; --lab-partial: #d4a574; --lab-thin: #b5705f; --lab-dead: #6b615a;
+	--font-display: 'Libre Franklin', system-ui, sans-serif;
+	--font-body: 'Crimson Pro', Georgia, serif;
+	--font-mono: 'Fira Code', 'SF Mono', monospace;
+	--radius-sm: 4px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); font-size: 1.1rem; line-height: 1.55; }
+main { max-width: 1180px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+h1, h2, h3 { font-family: var(--font-display); margin: 0; }
+h1 { font-size: 2.2rem; font-weight: 800; }
+h2 { font-size: 1.5rem; font-weight: 800; }
+.intro { max-width: 72ch; color: var(--text-secondary); }
+.intro p { margin: .6rem 0; }
+code { font-family: var(--font-mono); font-size: .85em; color: var(--accent-highlight); background: var(--bg-elevated); padding: .05rem .3rem; border-radius: 3px; }
+.eyebrow { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-primary); }
+.option { margin-top: 3.5rem; padding: 1.75rem; background: var(--bg-secondary); border: 1px solid rgba(212,165,116,.1); border-radius: 8px; }
+.option-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+.option-head p { margin: .35rem 0 0; color: var(--text-secondary); max-width: 64ch; font-size: 1rem; }
+.pros { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; font-size: .95rem; color: var(--text-secondary); }
+.pros b { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); font-weight: 400; display: block; }
+.pros ul { margin: .25rem 0 0; padding-left: 1.1rem; }
+
+/* Copied from the site's standings styles */
+.matrix-wrap { overflow-x: auto; margin-top: 1.25rem; }
+table.matrix { border-collapse: separate; border-spacing: 6px; width: 100%; min-width: 620px; }
+table.matrix th { font-family: var(--font-mono); font-size: .66rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); font-weight: 400; text-align: center; vertical-align: bottom; padding-bottom: .3rem; }
+table.matrix th.rowh { text-align: left; padding-right: .75rem; white-space: nowrap; font-size: .78rem; color: var(--text-secondary); text-transform: none; letter-spacing: 0; font-family: var(--font-display); }
+table.matrix th.rowh small { display: block; font-family: var(--font-mono); font-size: .6rem; color: var(--text-muted); letter-spacing: .05em; }
+.chip { display: block; border-radius: var(--radius-sm); padding: .5rem .3rem; text-align: center; font-family: var(--font-mono); font-size: .9rem; color: #1a1614; border: 1px solid transparent; }
+.chip small { display: block; font-size: .55rem; letter-spacing: .06em; opacity: .72; text-transform: uppercase; }
+.chip.empty { background: transparent; border: 1px dashed rgba(212,165,116,.18); color: var(--text-muted); }
+.toggle { display: inline-flex; border: 1px solid rgba(212,165,116,.25); border-radius: 999px; padding: 3px; gap: 2px; }
+.toggle button { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; background: none; border: 0; color: var(--text-muted); padding: .4rem .8rem; border-radius: 999px; cursor: pointer; }
+.toggle button[data-on="true"] { background: var(--accent-primary); color: #1a1614; }
+.legend { display: flex; gap: 1.25rem; flex-wrap: wrap; font-family: var(--font-mono); font-size: .66rem; color: var(--text-muted); margin-top: .75rem; align-items: center; }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: .35rem; vertical-align: -1px; }
+
+/* Option C: time line under each chip */
+.time-line { display: flex; align-items: center; gap: .4rem; margin-top: .3rem; font-family: var(--font-mono); font-size: .62rem; color: var(--text-muted); }
+.time-line .track { flex: 1; height: 3px; background: rgba(212,165,116,.12); border-radius: 2px; overflow: hidden; }
+.time-line .track i { display: block; height: 100%; background: var(--accent-tertiary); }
+.time-line.none { justify-content: center; opacity: .6; }
+</style>
+</head>
+<body>
+<main>
+	<span class="eyebrow">ralphunlimited · The Lab · 2026-09-29</span>
+	<h1>Run time in the automated standings</h1>
+	<div class="intro">
+		<p>Three ways to show how long each run took in the standings table on <code>/lab/</code>. Every table below uses the real published data, including the run times that the next publish adds.</p>
+		<p>Each cell is the model's <em>best-scoring</em> run on that benchmark, the same as today. The time is the time of that run. A dash means the run has no recorded time: the July runs and the old retro-cruiser runs.</p>
+	</div>
+
+	<section class="option">
+		<div class="option-head">
+			<div>
+				<span class="eyebrow">Option A</span>
+				<h2>Time inside the score chip</h2>
+				<p>The small label under each score changes from "view" to the run time. Nothing else on the page changes.</p>
+			</div>
+		</div>
+		<div class="matrix-wrap"><table class="matrix" data-variant="a"></table></div>
+		<div class="pros">
+			<div><b>Good</b><ul><li>Smallest change. The table stays the same size.</li><li>You see the score and the time together.</li></ul></div>
+			<div><b>Weaker</b><ul><li>The time is small, so comparing many cells takes effort.</li><li>The "view" and "gate" hint is gone. A failed gate still shows as a grey 0.</li></ul></div>
+		</div>
+	</section>
+
+	<section class="option">
+		<div class="option-head">
+			<div>
+				<span class="eyebrow">Option B</span>
+				<h2>A "Run time" view in the toggle</h2>
+				<p>A third button joins "Harness score" and "Player rating". In this view each chip shows the time, shaded by speed across <em>every</em> run in the table: bright is fast, dark is slow. Click the buttons to switch.</p>
+			</div>
+			<div class="toggle" data-toggle="b">
+				<button type="button" data-mode="harness" data-on="false">Harness score</button>
+				<button type="button" data-mode="players" data-on="false">Player rating</button>
+				<button type="button" data-mode="time" data-on="true">Run time</button>
+			</div>
+		</div>
+		<div class="matrix-wrap"><table class="matrix" data-variant="b"></table></div>
+		<div class="legend" data-legend="b">
+			<span><i style="background:#e8c496"></i>fastest</span>
+			<span><i style="background:#9b7e5e"></i>middle</span>
+			<span><i style="background:#5a4a3c"></i>slowest</span>
+			<span><i style="background:rgba(212,165,116,.14)"></i>no time recorded</span>
+		</div>
+		<div class="pros">
+			<div><b>Good</b><ul><li>Large, easy-to-compare numbers. The shading makes fast and slow runs clear at a glance.</li><li>Follows the toggle pattern the table already uses for player ratings.</li></ul></div>
+			<div><b>Weaker</b><ul><li>You cannot see the score and the time at the same moment.</li><li>One more control to learn.</li></ul></div>
+		</div>
+	</section>
+
+	<section class="option">
+		<div class="option-head">
+			<div>
+				<span class="eyebrow">Option C</span>
+				<h2>Time line under each chip</h2>
+				<p>The score chip stays as it is. Under it, a thin bar and the time. All bars use one scale, the slowest run in the table, so you can compare any cell with any other cell.</p>
+			</div>
+		</div>
+		<div class="matrix-wrap"><table class="matrix" data-variant="c"></table></div>
+		<div class="pros">
+			<div><b>Good</b><ul><li>Score and time are both visible, with no toggle.</li><li>The bars make long runs easy to spot across the whole table.</li></ul></div>
+			<div><b>Weaker</b><ul><li>Each row gets taller, so the table is longer.</li><li>Busier to look at.</li></ul></div>
+		</div>
+	</section>
+</main>
+<script>
+const DATA = {"benches":[{"id":"retro-cruiser","name":"Retro Cruiser"},{"id":"voidbreaker","name":"Voidbreaker"},{"id":"cruiser-reloaded","name":"Cruiser Reloaded"},{"id":"void-cruiser-3d","name":"Void Cruiser 3D"}],"rows":[{"label":"gemini-3.7-flash-high","agent":"antigravity","cells":{"voidbreaker":{"total":82,"band":"strong","gate":true,"ms":318866},"cruiser-reloaded":{"total":98,"band":"exceptional","gate":true,"ms":null}}},{"label":"composer-2.5","agent":"cursor","cells":{"retro-cruiser":{"total":93,"band":"exceptional","gate":true,"ms":null}}},{"label":"claude-sonnet-5-5","agent":"claude","cells":{"voidbreaker":{"total":84,"band":"strong","gate":true,"ms":7549183},"cruiser-reloaded":{"total":91,"band":"exceptional","gate":true,"ms":7963886},"void-cruiser-3d":{"total":74,"band":"partial","gate":true,"ms":11068401}}},{"label":"claude-fable-5","agent":"claude","cells":{"retro-cruiser":{"total":75,"band":"strong","gate":true,"ms":null},"voidbreaker":{"total":75,"band":"strong","gate":true,"ms":null},"cruiser-reloaded":{"total":86,"band":"strong","gate":true,"ms":3154200}}},{"label":"gpt-6-astra","agent":"codex","cells":{"voidbreaker":{"total":77,"band":"strong","gate":true,"ms":2456973},"cruiser-reloaded":{"total":85,"band":"strong","gate":true,"ms":2448449},"void-cruiser-3d":{"total":72,"band":"partial","gate":true,"ms":1816069}}},{"label":"grok-4.6","agent":"grok","cells":{"voidbreaker":{"total":78,"band":"strong","gate":true,"ms":1244814},"cruiser-reloaded":{"total":84,"band":"strong","gate":true,"ms":1118259}}},{"label":"grok-4.7","agent":"grok","cells":{"voidbreaker":{"total":67,"band":"partial","gate":true,"ms":null},"cruiser-reloaded":{"total":83,"band":"strong","gate":true,"ms":2916716}}},{"label":"claude-fable-5-1-1m","agent":"claude","cells":{"voidbreaker":{"total":78,"band":"strong","gate":true,"ms":1714849},"cruiser-reloaded":{"total":82,"band":"strong","gate":true,"ms":2605278},"void-cruiser-3d":{"total":66,"band":"partial","gate":true,"ms":2243989}}},{"label":"claude-opus-5","agent":"claude","cells":{"cruiser-reloaded":{"total":79,"band":"strong","gate":true,"ms":4570282}}},{"label":"stealth-union-alpha","agent":"openrouter","cells":{"voidbreaker":{"total":73,"band":"partial","gate":true,"ms":1319852},"cruiser-reloaded":{"total":78,"band":"strong","gate":true,"ms":2042152},"void-cruiser-3d":{"total":63,"band":"partial","gate":true,"ms":1767923}}},{"label":"grok-4.5-fast-xhigh","agent":"cursor","cells":{"retro-cruiser":{"total":75,"band":"strong","gate":true,"ms":null}}},{"label":"sonnet","agent":"claude","cells":{"voidbreaker":{"total":73,"band":"partial","gate":true,"ms":null},"cruiser-reloaded":{"total":0,"band":"gate-failed","gate":false,"ms":null}}},{"label":"gpt-5.6-sol","agent":"codex","cells":{"voidbreaker":{"total":62,"band":"partial","gate":true,"ms":698271},"cruiser-reloaded":{"total":73,"band":"partial","gate":true,"ms":630738}}},{"label":"gpt-5.6-terra","agent":"codex","cells":{"voidbreaker":{"total":52,"band":"partial","gate":true,"ms":null},"cruiser-reloaded":{"total":72,"band":"partial","gate":true,"ms":null}}},{"label":"muse-spark-1.3-xhigh","agent":"cursor","cells":{"cruiser-reloaded":{"total":72,"band":"partial","gate":true,"ms":560569}}},{"label":"claude-opus-5-5-1m","agent":"claude","cells":{"voidbreaker":{"total":56,"band":"partial","gate":true,"ms":1492183},"cruiser-reloaded":{"total":61,"band":"partial","gate":true,"ms":1917742},"void-cruiser-3d":{"total":71,"band":"partial","gate":true,"ms":3852770}}},{"label":"opus-1m","agent":"claude","cells":{"void-cruiser-3d":{"total":71,"band":"partial","gate":true,"ms":3852770}}},{"label":"gpt-6-sol","agent":"codex","cells":{"voidbreaker":{"total":67,"band":"partial","gate":true,"ms":1178681},"cruiser-reloaded":{"total":70,"band":"partial","gate":true,"ms":955093},"void-cruiser-3d":{"total":65,"band":"partial","gate":true,"ms":1125735}}},{"label":"gpt-5.5","agent":"codex","cells":{"retro-cruiser":{"total":56,"band":"partial","gate":true,"ms":null}}},{"label":"z-ai-glm-5.3-flash","agent":"openrouter","cells":{"voidbreaker":{"total":55,"band":"partial","gate":true,"ms":716039},"cruiser-reloaded":{"total":47,"band":"thin","gate":true,"ms":985498}}}]};
+const bandColour = (band) => ({ exceptional: 'var(--lab-strong)', strong: 'var(--lab-strong)', partial: 'var(--lab-partial)', thin: 'var(--lab-thin)' })[band] ?? 'var(--lab-dead)';
+const fmt = (ms) => {
+	if (ms == null) return null;
+	const m = Math.max(1, Math.round(ms / 60000));
+	return m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${m % 60} min`;
+};
+const times = DATA.rows.flatMap((r) => Object.values(r.cells).map((c) => c.ms)).filter((ms) => ms != null).sort((a, b) => a - b);
+const slowest = times[times.length - 1];
+// Rank across every run in the table: 0 = fastest, 1 = slowest.
+const rank = (ms) => times.indexOf(ms) / (times.length - 1);
+const mix = (t) => {
+	const from = [232, 196, 150], to = [90, 74, 60];
+	return `rgb(${from.map((f, i) => Math.round(f + (to[i] - f) * t)).join(',')})`;
+};
+const header = `<tr><th class="rowh"></th>${DATA.benches.map((b) => `<th>${b.name}</th>`).join('')}</tr>`;
+
+function chip(cell, variant, mode) {
+	if (!cell) return `<span class="chip empty">–</span>`;
+	const time = fmt(cell.ms);
+	if (variant === 'a') {
+		return `<span class="chip" style="background:${bandColour(cell.band)}">${cell.total}<small>${time ?? '–'}</small></span>`;
+	}
+	if (variant === 'b' && mode === 'time') {
+		if (!time) return `<span class="chip" style="background:rgba(212,165,116,.14);color:var(--text-muted)">–<small>no time</small></span>`;
+		const t = rank(cell.ms);
+		return `<span class="chip" style="background:${mix(t)};color:${t > 0.6 ? 'var(--text-primary)' : '#1a1614'}">${time}<small>score ${cell.total}</small></span>`;
+	}
+	if (variant === 'b' && mode === 'players') {
+		return `<span class="chip" style="background:rgba(212,165,116,.14);color:var(--text-muted)">–<small>unrated</small></span>`;
+	}
+	const base = `<span class="chip" style="background:${bandColour(cell.band)}">${cell.total}<small>${cell.gate ? 'view' : 'gate'}</small></span>`;
+	if (variant === 'c') {
+		const line = time
+			? `<span class="time-line"><span class="track"><i style="width:${(cell.ms / slowest) * 100}%"></i></span>${time}</span>`
+			: `<span class="time-line none">no time</span>`;
+		return base + line;
+	}
+	return base;
+}
+
+function render(variant, mode) {
+	const table = document.querySelector(`[data-variant="${variant}"]`);
+	table.innerHTML = header + DATA.rows.map((row) =>
+		`<tr><th class="rowh">${row.label}<small>${row.agent}</small></th>${DATA.benches.map((b) => `<td>${chip(row.cells[b.id], variant, mode)}</td>`).join('')}</tr>`
+	).join('');
+}
+
+render('a');
+render('b', 'time');
+render('c');
+for (const button of document.querySelectorAll('[data-toggle="b"] button')) {
+	button.addEventListener('click', () => {
+		for (const other of button.parentElement.children) other.dataset.on = String(other === button);
+		render('b', button.dataset.mode);
+		document.querySelector('[data-legend="b"]').hidden = button.dataset.mode !== 'time';
+	});
+}
+</script>
+</body>
+</html>
