@@ -2,7 +2,7 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { benchmarks, bandColour, runLabel, type LabBenchmark } from '../../lib/lab';
+import { benchmarks, bandColour, runLabel, runTime, type LabBenchmark } from '../../lib/lab';
 import '../../styles/lab.css';
 
 export function getStaticPaths() {
@@ -55,6 +55,7 @@ const megabytes = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 								</div>
 								<div class="facts">
 									<span>{run.ranAt.slice(0, 10)}</span>
+									{runTime(run) && <span>{runTime(run)}</span>}
 									{run.buildBytes > 0 && <span>{megabytes(run.buildBytes)}</span>}
 									<span>
 										{run.gatePassed ? 'gate passed' : `gate failed at ${run.gateFailedAt}`}

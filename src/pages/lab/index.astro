@@ -3,10 +3,15 @@ import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { SITE_TITLE } from '../../consts';
-import { benchmarks, bandColour, runLabel, standings, stats } from '../../lib/lab';
+import { benchmarks, bandColour, runLabel, runTime, standings, stats } from '../../lib/lab';
 import '../../styles/lab.css';
 
 const rows = standings();
+// Every time bar shares one scale, the slowest run in the table, so any two cells compare directly.
+const slowestMs = Math.max(
+	1,
+	...rows.flatMap((row) => [...row.byBenchmark.values()].map((run) => run.durationMs ?? 0)),
+);
 // Keep the chosen play-first story order independent of the benchmark publish order.
 const playOrder = new Map(
 	['voidbreaker', 'cruiser-reloaded', 'retro-cruiser'].map((id, index) => [id, index] as const),
@@ -188,6 +193,7 @@ const description =
 												</td>
 											);
 										}
+										const took = runTime(run);
 										return (
 											<td>
 												<a
@@ -203,6 +209,16 @@ const description =
 													{run.total}
 													<small>{run.gatePassed ? 'view' : 'gate'}</small>
 												</a>
+												{took ? (
+													<span class="time-line">
+														<span class="track">
+															<i style={`width:${((run.durationMs ?? 0) / slowestMs) * 100}%`} />
+														</span>
+														{took}
+													</span>
+												) : (
+													<span class="time-line none">no time</span>
+												)}
 											</td>
 										);
 									})}
@@ -217,6 +233,7 @@ const description =
 					<span><i style="background:var(--lab-thin)"></i>1–49 thin</span>
 					<span><i style="background:var(--lab-dead)"></i>0 gate failed</span>
 					<span><i style="border:1px dashed rgba(212,165,116,.4);background:transparent"></i>not attempted</span>
+					<span><i style="height:3px;vertical-align:2px;background:var(--accent-tertiary)"></i>run time (full bar is the slowest run)</span>
 				</div>
 			</section>
 		</main>

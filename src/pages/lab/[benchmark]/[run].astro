@@ -2,7 +2,7 @@
 import BaseHead from '../../../components/BaseHead.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
-import { benchmarks, bandColour, runLabel, type LabBenchmark, type LabRun } from '../../../lib/lab';
+import { benchmarks, bandColour, runLabel, runTime, type LabBenchmark, type LabRun } from '../../../lib/lab';
 import '../../../styles/lab.css';
 
 export function getStaticPaths() {
@@ -19,6 +19,7 @@ const megabytes = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 const hero = run.shots[1] ?? run.shots[0] ?? null;
 // The hero already shows one frame; the strip below shows the rest.
 const otherShots = run.shots.filter((shot) => shot !== hero);
+const took = runTime(run);
 const description = `${runLabel(run)} scored ${run.total}/100 on ${benchmark.name.split(' — ')[0]}.`;
 ---
 
@@ -39,7 +40,7 @@ const description = `${runLabel(run)} scored ${run.total}/100 on ${benchmark.nam
 				<p class="lab-lede" style="font-size:1rem">
 					Run on {run.ranAt.slice(0, 10)} via the {run.agent} CLI{
 						run.reasoning ? ` at ${run.reasoning} reasoning` : ''
-					}. One shot, unattended.
+					}. {took ? `Took ${took}, one shot, unattended.` : 'One shot, unattended.'}
 				</p>
 			</div>
 
