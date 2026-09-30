@@ -2,7 +2,15 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { benchmarks, bandColour, runLabel, runTime, type LabBenchmark } from '../../lib/lab';
+import {
+	benchmarks,
+	bandColour,
+	compactCount,
+	outputPerMinute,
+	runLabel,
+	runTime,
+	type LabBenchmark,
+} from '../../lib/lab';
 import '../../styles/lab.css';
 
 export function getStaticPaths() {
@@ -16,6 +24,9 @@ const { benchmark } = Astro.props as { benchmark: LabBenchmark };
 const playable = benchmark.runs.filter((run) => run.playable).length;
 const best = benchmark.runs[0];
 const megabytes = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+const count = (value: number) => value.toLocaleString('en-US');
+const percent = (part: number, whole: number) => `${whole ? Math.round((part / whole) * 100) : 0}%`;
+const runs = benchmark.runs.map((run) => ({ run, rate: outputPerMinute(run) }));
 ---
 
 <!doctype html>
@@ -40,7 +51,7 @@ const megabytes = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 
 			<div class="runlist">
 				{
-					benchmark.runs.map((run, index) => (
+					runs.map(({ run, rate }, index) => (
 						<article
 							class={`run${index === 0 && run.gatePassed ? ' top' : ''}${run.gatePassed ? '' : ' gate-failed'}`}
 						>
@@ -65,6 +76,36 @@ const megabytes = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 									<i style={`width:${run.total}%;background:${bandColour(run.band)}`} />
 								</div>
 							</div>
+							{rate === null || !run.tokens ? (
+								<div class="tok none">tokens not reported</div>
+							) : (
+								<div class="tok" tabindex="0" aria-describedby={`tokens-${run.slug}`}>
+									<div class="rate">
+										{count(rate)}
+										<small>out tok/min</small>
+									</div>
+									<div class="subline">
+										{`${compactCount(run.tokens.output)} out · ${percent(run.tokens.cachedInput, run.tokens.input)} cached`}
+									</div>
+									<div class="tip" id={`tokens-${run.slug}`} role="tooltip">
+										<dl>
+											<dt>Output</dt>
+											<dd>{count(run.tokens.output)}</dd>
+											<dt>Input</dt>
+											<dd>{count(run.tokens.input)}</dd>
+											<dt>Cached input</dt>
+											<dd>
+												{`${count(run.tokens.cachedInput)} (${percent(run.tokens.cachedInput, run.tokens.input)})`}
+											</dd>
+											<dt>Fresh input</dt>
+											<dd>{count(run.tokens.input - run.tokens.cachedInput)}</dd>
+											<dt>Run time</dt>
+											<dd>{runTime(run)}</dd>
+										</dl>
+										<p>Output includes reasoning tokens.</p>
+									</div>
+								</div>
+							)}
 							<div class="runside">
 								<div class="scorebig" style={`color:${bandColour(run.band)}`}>
 									{run.total}
@@ -76,6 +117,11 @@ const megabytes = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 					))
 				}
 			</div>
+
+			<p class="crumb">
+				Out tok/min is output tokens divided by the time the agent worked. Hover or focus a
+				number for the full count.
+			</p>
 
 			<p class="crumb">
 				Scored by rubric {benchmark.rubricId}, scorer {benchmark.scorerVersion}. Scores from

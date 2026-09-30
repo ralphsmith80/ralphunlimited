@@ -26,6 +26,16 @@ export type LabObservation = {
 	detail: string | null;
 };
 
+/**
+ * Tokens the agent spent on a run, summed over resumes. `input` includes cache
+ * reads, `cachedInput` is that cached part, and `output` includes reasoning.
+ */
+export type LabTokens = {
+	input: number;
+	cachedInput: number;
+	output: number;
+};
+
 export type LabRun = {
 	slug: string;
 	agent: string;
@@ -34,6 +44,8 @@ export type LabRun = {
 	ranAt: string;
 	/** Time the agent worked, excluding pauses between resumes. Absent or null when not recorded. */
 	durationMs?: number | null;
+	/** Absent or null for older runs and for agents whose CLI does not report usage. */
+	tokens?: LabTokens | null;
 	total: number;
 	band: 'gate-failed' | 'thin' | 'partial' | 'strong' | 'exceptional';
 	gatePassed: boolean;
@@ -89,6 +101,17 @@ export function runTime(run: LabRun) {
 	if (run.durationMs == null) return null;
 	const minutes = Math.max(1, Math.round(run.durationMs / 60_000));
 	return minutes < 60 ? `${minutes} min` : `${Math.floor(minutes / 60)} h ${minutes % 60} min`;
+}
+
+/** Output tokens per minute of agent time; null when tokens or run time is missing. */
+export function outputPerMinute(run: LabRun) {
+	if (!run.tokens || !run.durationMs) return null;
+	return Math.round(run.tokens.output / (run.durationMs / 60_000));
+}
+
+/** "88.7K" or "4.3M". */
+export function compactCount(count: number) {
+	return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(count);
 }
 
 /** Score bands drive colour everywhere, so the thresholds live in one place. */
