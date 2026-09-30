@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token rate in the standings: three options</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Fira+Code:wght@400;500&family=Libre+Franklin:wght@500;600;700;800&display=swap');
+:root {
+	color-scheme: dark;
+	--bg-primary: #1a1614; --bg-secondary: #211e1b; --bg-elevated: #2a2622; --bg-card: #252220;
+	--text-primary: #f5f0e8; --text-secondary: #c4b8a8; --text-muted: #8a7e70;
+	--accent-primary: #d4a574; --accent-tertiary: #9b7e5e; --accent-highlight: #e8c496;
+	--lab-strong: #8fae74; --lab-partial: #d4a574; --lab-thin: #b5705f; --lab-dead: #6b615a;
+	--lab-accent: var(--accent-highlight);
+	--font-display: 'Libre Franklin', system-ui, sans-serif;
+	--font-body: 'Crimson Pro', Georgia, serif;
+	--font-mono: 'Fira Code', 'SF Mono', monospace;
+	--border-subtle: 1px solid rgba(212,165,116,.1);
+	--radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+	--transition-fast: 0.15s ease;
+	/* Output-speed fill (option 2). One warm hue; bar length carries the value. */
+	--rate-fill: rgba(232,196,150,.34);
+	--rate-rest: rgba(212,165,116,.07);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); font-size: 18px; line-height: 1.55; }
+main.doc { max-width: 1240px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+h1, h2, h3, h4 { font-family: var(--font-display); margin: 0; }
+.doc > h1 { font-size: 2.2rem; font-weight: 800; }
+a { color: var(--accent-primary); text-decoration: none; }
+.intro { max-width: 72ch; color: var(--text-secondary); }
+.intro p { margin: .6rem 0; }
+code { font-family: var(--font-mono); font-size: .85em; color: var(--accent-highlight); background: var(--bg-elevated); padding: .05rem .3rem; border-radius: 3px; }
+.eyebrow { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-primary); }
+.option { margin-top: 3.5rem; padding: 1.75rem; background: var(--bg-secondary); border: var(--border-subtle); border-radius: 8px; }
+.option-head h2 { font-size: 1.5rem; font-weight: 800; }
+.option-head p { margin: .35rem 0 0; color: var(--text-secondary); max-width: 72ch; font-size: 1rem; }
+.where { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); margin-top: .5rem; }
+.stage { margin-top: 1.4rem; padding: 2rem; background: var(--bg-primary); border: var(--border-subtle); border-radius: var(--radius-md); }
+.pros { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.25rem; font-size: .95rem; color: var(--text-secondary); }
+.pros b, .touch b { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); font-weight: 400; display: block; }
+.pros ul, .touch ul { margin: .25rem 0 0; padding-left: 1.1rem; }
+.touch { margin-top: 1rem; font-size: .92rem; color: var(--text-secondary); }
+.defs { margin-top: 1.25rem; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .75rem; }
+.def { padding: .8rem 1rem; background: var(--bg-card); border: var(--border-subtle); border-radius: var(--radius-md); font-size: .95rem; color: var(--text-secondary); }
+.def b { display: block; font-family: var(--font-mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); font-weight: 400; margin-bottom: .2rem; }
+.variant { display: inline-flex; gap: .5rem; align-items: center; margin-top: .9rem; font-family: var(--font-mono); font-size: .66rem; color: var(--text-muted); }
+
+/* ---------- Copied from the site's lab.css (standings) ---------- */
+.lab-section-eyebrow { display: block; font-family: var(--font-mono); font-size: .62rem; text-transform: uppercase; letter-spacing: .13em; color: var(--lab-accent); }
+.rowhead { display: flex; align-items: baseline; gap: 1rem; margin-bottom: .75rem; flex-wrap: wrap; }
+.rowhead h2 { margin: .25rem 0 0; font-size: clamp(1.5rem, 3vw, 1.8rem); font-weight: 600; line-height: 1.25; letter-spacing: -.01em; }
+.toggle { display: inline-flex; border: 1px solid rgba(212,165,116,.2); border-radius: var(--radius-sm); overflow: hidden; margin-left: auto; }
+.toggle button { font-family: var(--font-mono); font-size: .64rem; letter-spacing: .07em; text-transform: uppercase; padding: .35rem .7rem; background: transparent; border: 0; color: var(--text-muted); cursor: pointer; transition: var(--transition-fast); }
+.toggle button[data-on="true"] { background: var(--accent-primary); color: #1a1614; font-weight: 600; }
+.toggle button.hum[data-on="true"] { background: var(--lab-accent); }
+.standings-intro { max-width: 560px; margin: .55rem 0 0; font-size: .86rem; line-height: 1.5; color: var(--text-secondary); }
+.matrix-wrap { overflow-x: auto; margin-top: 1rem; }
+table.matrix { border-collapse: separate; border-spacing: 6px; width: 100%; min-width: 620px; }
+table.matrix th { font-family: var(--font-mono); font-size: .66rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); font-weight: 400; text-align: center; vertical-align: bottom; padding-bottom: .3rem; }
+table.matrix th.rowh { text-align: left; padding-right: .75rem; white-space: nowrap; font-size: .78rem; color: var(--text-secondary); text-transform: none; letter-spacing: 0; font-family: var(--font-display); font-weight: 500; }
+table.matrix th.rowh small { display: block; font-family: var(--font-mono); font-size: .6rem; color: var(--text-muted); letter-spacing: .05em; }
+.chip { display: block; border-radius: var(--radius-sm); padding: .5rem .3rem; text-align: center; font-family: var(--font-mono); font-size: .9rem; color: #1a1614; transition: var(--transition-fast); border: 1px solid transparent; line-height: 1.75; }
+a.chip:hover { transform: translateY(-1px); box-shadow: 0 3px 14px rgba(0,0,0,.35); color: #1a1614; }
+.chip small { display: block; font-size: .55rem; letter-spacing: .06em; opacity: .72; text-transform: uppercase; line-height: 1.5; }
+.chip.empty { background: transparent; border: 1px dashed rgba(212,165,116,.18); color: var(--text-muted); }
+.time-line { display: flex; align-items: center; gap: .4rem; margin-top: .3rem; font-family: var(--font-mono); font-size: .62rem; color: var(--text-muted); white-space: nowrap; }
+.time-line .track { flex: 1; height: 3px; background: rgba(212,165,116,.12); border-radius: 2px; overflow: hidden; }
+.time-line .track i { display: block; height: 100%; background: var(--accent-tertiary); }
+.time-line.none { justify-content: center; opacity: .6; }
+.legend { display: flex; gap: 1.25rem; flex-wrap: wrap; font-family: var(--font-mono); font-size: .66rem; color: var(--text-muted); margin-top: .75rem; align-items: center; }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: .35rem; vertical-align: -1px; }
+
+/* ---------- New: shared token tooltip (same content as the run list pick) ---------- */
+[data-tip] { cursor: help; outline: none; }
+[data-tip]:focus-visible { box-shadow: 0 0 0 2px var(--accent-tertiary); border-radius: 2px; }
+.tip { position: fixed; z-index: 20; width: 240px; padding: .7rem .8rem; background: var(--bg-elevated); border: 1px solid rgba(212,165,116,.25); border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,.45); font-family: var(--font-mono); font-size: .66rem; line-height: 1.5; color: var(--text-secondary); pointer-events: none; visibility: hidden; }
+.tip .head { color: var(--text-primary); margin-bottom: .35rem; }
+.tip dl { display: grid; grid-template-columns: 1fr auto; gap: .25rem .75rem; margin: 0; }
+.tip dt { color: var(--text-muted); }
+.tip dd { margin: 0; text-align: right; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.tip p { margin: .5rem 0 0; color: var(--text-muted); font-size: .6rem; }
+
+/* ---------- Option 1: a rate line under the time line ---------- */
+.rate-line { display: block; margin-top: .15rem; font-family: var(--font-mono); font-size: .62rem; color: var(--text-secondary); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rate-line small { font-size: 1em; color: var(--text-muted); }
+.rate-line.none { color: var(--text-muted); opacity: .6; text-align: center; }
+.time-line .rate { color: var(--text-secondary); }
+.time-line .sep { opacity: .5; }
+
+/* ---------- Option 2: output speed mode on the chips ---------- */
+.chip.rate { color: var(--text-primary); border-color: rgba(212,165,116,.18); }
+a.chip.rate:hover { color: var(--text-primary); }
+.chip.rate small { color: var(--text-secondary); opacity: .85; }
+/* Light text here: the live site's unrated chip uses dark text on this dark fill and is hard to read. */
+.chip.norate, a.chip.norate:hover { color: var(--text-muted); }
+.legend[hidden] { display: none; }
+.toggle button.spd[data-on="true"] { background: var(--accent-tertiary); color: #f5f0e8; }
+
+/* ---------- Option 3: per-model summary column ---------- */
+table.matrix th.sum-h { text-align: left; padding-left: 1rem; border-left: 1px solid rgba(212,165,116,.12); }
+table.matrix th.sum-h small { display: block; text-transform: none; letter-spacing: .02em; font-size: .58rem; opacity: .8; }
+td.sum { min-width: 150px; padding-left: 1rem; border-left: 1px solid rgba(212,165,116,.12); vertical-align: middle; font-family: var(--font-mono); }
+td.sum .v { font-size: .9rem; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+td.sum .v small { font-size: .58rem; color: var(--text-muted); margin-left: .25rem; }
+td.sum .track { height: 3px; margin-top: .3rem; background: rgba(212,165,116,.12); border-radius: 2px; overflow: hidden; }
+td.sum .track i { display: block; height: 100%; background: var(--accent-highlight); }
+td.sum .sub { font-size: .58rem; color: var(--text-muted); margin-top: .25rem; white-space: nowrap; }
+td.sum.none { font-size: .6rem; color: var(--text-muted); }
+td.sum.none span { opacity: .7; }
+
+@media (max-width: 820px) {
+	.pros, .defs { grid-template-columns: 1fr; }
+	.stage { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+<main class="doc">
+	<span class="eyebrow">ralphunlimited · The Lab home · 2026-09-30</span>
+	<h1>Token rate in the standings</h1>
+	<div class="intro">
+		<p>Three ways to add output tokens per minute to the "Automated standings" table on <code>/lab/</code>. Each mock is a copy of the real table with the same styles and the same rows.</p>
+		<p>The run list mock uses "out tok/min", a short subline, and a hover card. These mocks use the same number, words, and hover card, so the two pages match.</p>
+		<p>Sample data: the Void Cruiser 3D column has the eight sample token runs from the run list mock. All other runs have <code>tokens: null</code>, as they will at first. Hover or focus any rate to see the full count.</p>
+	</div>
+
+	<div class="defs">
+		<div class="def"><b>Out tok/min</b>output ÷ (durationMs ÷ 60,000). Null when tokens or run time is missing.</div>
+		<div class="def"><b>Which run</b>Each cell shows the model's best run for that benchmark. Its rate can be null when an older run has the best score.</div>
+		<div class="def"><b>Never reported</b>Cursor, Grok, and Antigravity do not give token counts. Their cells stay empty for good.</div>
+	</div>
+
+	<!-- ============ OPTION 1 ============ -->
+	<section class="option">
+		<div class="option-head">
+			<span class="eyebrow">Option 1</span>
+			<h2>A rate line under the run time</h2>
+			<p>Each cell gets one more short line under its time bar, for example "2,482 out tok/min". Cells with no tokens say "no tokens", in the same faint style as "no time". Use the switch to see the rate and time on one line.</p>
+			<div class="where">/lab/ · src/pages/lab/index.astro, inside each standings cell</div>
+			<div class="variant" role="group" aria-label="Line layout">Layout
+				<span class="toggle" style="margin-left:.25rem" id="layout-1">
+					<button type="button" data-layout="two" data-on="true">Own line</button>
+					<button type="button" data-layout="one" data-on="false">Time line</button>
+				</span>
+			</div>
+		</div>
+		<div class="stage" id="stage-1"></div>
+		<div class="pros">
+			<div><b>Good</b><ul><li>Speed and time sit together, and the rate uses that time.</li><li>No new control. The toggle stays as it is.</li></ul></div>
+			<div><b>Weaker</b><ul><li>Until more runs report tokens, most cells say "no tokens". The "Time line" layout hides that noise: a null rate shows nothing.</li><li>Every row gets about 14px taller in the "Own line" layout.</li></ul></div>
+		</div>
+		<div class="touch"><b>What it touches</b><ul>
+			<li><code>lab.ts</code>: a <code>tokenRate(run)</code> helper next to <code>runTime</code>, and the <code>tokens</code> field on <code>LabRun</code>.</li>
+			<li><code>index.astro</code>: one <code>&lt;span class="rate-line"&gt;</code> after the time line. Show it only when some run in the table has tokens, like <code>showTimes</code>. Add one legend item.</li>
+			<li><code>lab.css</code>: <code>.rate-line</code> and <code>.rate-line.none</code>, plus the hover card. The card must be fixed or placed by script, because <code>.matrix-wrap</code> scrolls and clips anything that overflows it.</li>
+		</ul></div>
+	</section>
+
+	<!-- ============ OPTION 2 ============ -->
+	<section class="option">
+		<div class="option-head">
+			<span class="eyebrow">Option 2</span>
+			<h2>A third toggle: Output speed</h2>
+			<p>The toggle gets "Output speed" next to Harness score and Player rating. In that mode each chip shows its rate. A fill from the left shows the rate against the fastest run in the table. Chips with no tokens look like unrated chips in Player rating mode. The legend changes with the mode.</p>
+			<div class="where">/lab/ · src/pages/lab/index.astro, toggle, chips, legend, and the paint() script</div>
+		</div>
+		<div class="stage" id="stage-2"></div>
+		<div class="pros">
+			<div><b>Good</b><ul><li>Cells stay the same height. The data only shows when a reader asks for it.</li><li>The fill gives a rate scale that you can read at a glance.</li></ul></div>
+			<div><b>Weaker</b><ul><li>With few token runs, this mode is mostly empty chips for now.</li><li>A reader cannot see speed and score at the same time.</li></ul></div>
+		</div>
+		<div class="touch"><b>What it touches</b><ul>
+			<li><code>index.astro</code>: a third toggle button; <code>data-rate</code>, <code>data-rate-pct</code>, and token data attributes on each chip; a "rate" branch in <code>paint()</code>; a second legend that swaps in.</li>
+			<li>The toggle is <code>hidden</code> until Convex connects today. Output speed needs no Convex, so show the toggle when token data exists, and hide only the Player rating button without Convex.</li>
+			<li><code>lab.css</code>: <code>.chip.rate</code>, <code>.chip.norate</code>, and a third button colour.</li>
+		</ul></div>
+	</section>
+
+	<!-- ============ OPTION 3 ============ -->
+	<section class="option">
+		<div class="option-head">
+			<span class="eyebrow">Option 3</span>
+			<h2>A speed column at the end of each row</h2>
+			<p>The cells do not change. A new last column gives each model's median out tok/min across all its runs that reported tokens, with a bar on a shared scale and a run count. Null rows say why: the agent never reports, or no run has tokens yet.</p>
+			<div class="where">/lab/ · src/pages/lab/index.astro, one more th and td per row</div>
+		</div>
+		<div class="stage" id="stage-3"></div>
+		<div class="pros">
+			<div><b>Good</b><ul><li>One number per model is easy to compare down the column.</li><li>It uses every run with tokens, not only the best run per cell, so it fills in faster.</li></ul></div>
+			<div><b>Weaker</b><ul><li>It mixes benchmarks. A slow 3D build and a fast rebuild give one median.</li><li>The table gets wider. On a phone the column needs the scroll.</li></ul></div>
+		</div>
+		<div class="touch"><b>What it touches</b><ul>
+			<li><code>lab.ts</code>: <code>standings()</code> also collects each model's token runs (not only the best), and a <code>median</code> helper.</li>
+			<li><code>index.astro</code>: one header cell and one summary cell per row. The null text uses the agent name.</li>
+			<li><code>lab.css</code>: <code>th.sum-h</code> and <code>td.sum</code>. <code>table.matrix</code> <code>min-width</code> goes from 620px to about 780px.</li>
+		</ul></div>
+	</section>
+</main>
+
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script>
+// Benchmarks in publish order, as the real table shows them.
+const benches = [
+	{ id: 'retro-cruiser', name: 'Retro Cruiser' },
+	{ id: 'voidbreaker', name: 'Voidbreaker' },
+	{ id: 'cruiser-reloaded', name: 'Cruiser Reloaded' },
+	{ id: 'void-cruiser-3d', name: 'Void Cruiser 3D' },
+];
+// Best run per benchmark: [total, band, durationMs, tokens]. Real published values,
+// except Void Cruiser 3D, which uses the sample token runs from the run list mock.
+const T = (input, cachedInput, output) => ({ input, cachedInput, output });
+const rows = [
+	['gemini-3.7-flash-high', 'antigravity', { voidbreaker: [82, 'strong', 318866], 'cruiser-reloaded': [98, 'exceptional', null], 'void-cruiser-3d': [60, 'partial', null] }],
+	['composer-2.5', 'cursor', { 'retro-cruiser': [93, 'exceptional', null] }],
+	['claude-sonnet-5-5', 'claude', { voidbreaker: [84, 'strong', 7549183], 'cruiser-reloaded': [91, 'exceptional', 7963886], 'void-cruiser-3d': [81, 'strong', 4260000, T(9870512, 9512004, 176240)] }],
+	['gpt-6.1-sol', 'codex', { voidbreaker: [79, 'strong', 2080935], 'cruiser-reloaded': [89, 'strong', 3037911], 'void-cruiser-3d': [79, 'strong', 2100000, T(2764216, 2618624, 60358)] }],
+	['claude-fable-5', 'claude', { 'retro-cruiser': [75, 'strong', null], voidbreaker: [75, 'strong', null], 'cruiser-reloaded': [86, 'strong', 3154200] }],
+	['gpt-6-astra', 'codex', { voidbreaker: [77, 'strong', 2456973], 'cruiser-reloaded': [85, 'strong', 2448449], 'void-cruiser-3d': [72, 'partial', 1816069] }],
+	['grok-4.6', 'grok', { voidbreaker: [78, 'strong', 1244814], 'cruiser-reloaded': [84, 'strong', 1118259] }],
+	['grok-4.7', 'grok', { voidbreaker: [67, 'partial', null], 'cruiser-reloaded': [83, 'strong', 2916716], 'void-cruiser-3d': [69, 'partial', 2460000] }],
+	['claude-fable-5-1-1m', 'claude', { voidbreaker: [78, 'strong', 1714849], 'cruiser-reloaded': [82, 'strong', 2605278], 'void-cruiser-3d': [68, 'partial', 2280000, T(3204881, 3050114, 72905)] }],
+	['claude-opus-5', 'claude', { 'cruiser-reloaded': [79, 'strong', 4570282] }],
+	['stealth-union-alpha', 'openrouter', { voidbreaker: [73, 'partial', 1319852], 'cruiser-reloaded': [78, 'strong', 2042152], 'void-cruiser-3d': [64, 'partial', 1740000, T(1902330, 1688410, 41220)] }],
+	['grok-4.5-fast-xhigh', 'cursor', { 'retro-cruiser': [75, 'strong', null] }],
+	['claude-opus-5-5', 'claude', { 'void-cruiser-3d': [74, 'partial', 3120000, T(6120400, 5902118, 141380)] }],
+	['sonnet', 'claude', { voidbreaker: [73, 'partial', null], 'cruiser-reloaded': [0, 'gate-failed', null] }],
+	['gpt-5.6-sol', 'codex', { voidbreaker: [62, 'partial', 698271], 'cruiser-reloaded': [73, 'partial', 630738] }],
+	['gpt-5.6-terra', 'codex', { voidbreaker: [52, 'partial', null], 'cruiser-reloaded': [72, 'partial', null] }],
+	['muse-spark-1.3-xhigh', 'cursor', { 'cruiser-reloaded': [72, 'partial', 560569] }],
+	['claude-opus-5-5-1m', 'claude', { voidbreaker: [56, 'partial', 1492183], 'cruiser-reloaded': [61, 'partial', 1917742], 'void-cruiser-3d': [71, 'partial', 3852770] }],
+	['gpt-6-sol', 'codex', { voidbreaker: [67, 'partial', 1178681], 'cruiser-reloaded': [70, 'partial', 955093], 'void-cruiser-3d': [65, 'partial', 1125735] }],
+	['gpt-5.5', 'codex', { 'retro-cruiser': [56, 'partial', null] }],
+	['z-ai-glm-5.3-flash', 'openrouter', { voidbreaker: [55, 'partial', 716039], 'cruiser-reloaded': [47, 'thin', 985498], 'void-cruiser-3d': [52, 'partial', 1020000, T(1120774, 980332, 54610)] }],
+].map(([label, agent, cells]) => ({
+	label, agent,
+	by: new Map(Object.entries(cells).map(([id, [total, band, durationMs, tokens]]) => [id, { total, band, durationMs, tokens: tokens ?? null }])),
+}));
+// Runs that are not a cell's best but still reported tokens. Option 3 counts them.
+const extraTokenRuns = {
+	'gpt-6.1-sol': [{ durationMs: 2640000, tokens: T(4318623, 4159872, 88712) }, { durationMs: 3480000, tokens: T(7440280, 7060608, 92571) }],
+};
+// Total run count per model, for "2 of 5 runs".
+const runCount = { 'gpt-6.1-sol': 5, 'claude-sonnet-5-5': 4, 'claude-fable-5-1-1m': 4, 'stealth-union-alpha': 4, 'claude-opus-5-5': 1, 'z-ai-glm-5.3-flash': 3 };
+// Sample player ratings for the Player rating mode.
+const ratings = { 'claude-sonnet-5-5/cruiser-reloaded': [4.3, 6], 'gpt-6.1-sol/cruiser-reloaded': [4.1, 3], 'gemini-3.7-flash-high/cruiser-reloaded': [3.6, 5], 'composer-2.5/retro-cruiser': [3.9, 2], 'grok-4.7/void-cruiser-3d': [3.8, 4], 'claude-fable-5/cruiser-reloaded': [2.8, 1] };
+const neverReports = new Set(['cursor', 'grok', 'antigravity']);
+
+const band = { exceptional: 'var(--lab-strong)', strong: 'var(--lab-strong)', partial: 'var(--lab-partial)', thin: 'var(--lab-thin)', 'gate-failed': 'var(--lab-dead)' };
+const n = (x) => Math.round(x).toLocaleString('en-US');
+const compact = (x) => x >= 1e6 ? `${(x / 1e6).toFixed(1)}M` : x >= 1e3 ? `${(x / 1e3).toFixed(1)}K` : String(x);
+const pct = (x) => `${Math.round(x * 100)}%`;
+const runTime = (ms) => { if (ms == null) return null; const m = Math.max(1, Math.round(ms / 60000)); return m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${m % 60} min`; };
+// The headline metric. Null when either tokens or run time is missing.
+const outPerMin = (r) => r.tokens && r.durationMs ? r.tokens.output / (r.durationMs / 60000) : null;
+const median = (xs) => { const s = [...xs].sort((a, b) => a - b); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+
+const allRuns = rows.flatMap((row) => [...row.by.values()]);
+const slowestMs = Math.max(0, ...allRuns.map((r) => r.durationMs ?? 0));
+const fastestRate = Math.max(0, ...allRuns.map((r) => outPerMin(r) ?? 0));
+
+function el(tag, attrs = {}, text) {
+	const node = document.createElement(tag);
+	for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+	if (text != null) node.textContent = text;
+	return node;
+}
+
+// ---------- One shared hover card. Fixed position, so the scrolling table cannot clip it. ----------
+const tip = document.getElementById('tip');
+const tipContent = new WeakMap();
+function runTip(label, benchName, r) {
+	const t = r.tokens;
+	const dl = el('dl');
+	[['Output', n(t.output)], ['Input', n(t.input)], ['Cached input', `${n(t.cachedInput)} (${pct(t.cachedInput / t.input)})`], ['Fresh input', n(t.input - t.cachedInput)], ['Run time', runTime(r.durationMs)]]
+		.forEach(([k, v]) => dl.append(el('dt', {}, k), el('dd', {}, v)));
+	return [el('div', { class: 'head' }, `${label} · ${benchName}`), dl, el('p', {}, `${compact(t.output)} out · ${pct(t.cachedInput / t.input)} cached. Output includes reasoning tokens.`)];
+}
+function attachTip(node, build) {
+	node.setAttribute('data-tip', '');
+	node.setAttribute('tabindex', '0');
+	tipContent.set(node, build);
+}
+function showTip(node) {
+	tip.replaceChildren(...tipContent.get(node)());
+	const box = node.getBoundingClientRect();
+	tip.style.visibility = 'visible';
+	const w = tip.offsetWidth, h = tip.offsetHeight;
+	const left = Math.min(Math.max(8, box.right - w), innerWidth - w - 8);
+	const below = box.bottom + 8 + h < innerHeight;
+	tip.style.left = `${left}px`;
+	tip.style.top = `${below ? box.bottom + 8 : box.top - h - 8}px`;
+}
+const hideTip = () => (tip.style.visibility = 'hidden');
+document.addEventListener('pointerover', (e) => { const t = e.target.closest?.('[data-tip]'); if (t) showTip(t); });
+document.addEventListener('pointerout', (e) => { const t = e.target.closest?.('[data-tip]'); if (t && !t.contains(e.relatedTarget)) hideTip(); });
+document.addEventListener('focusin', (e) => { if (e.target.matches('[data-tip]')) showTip(e.target); });
+document.addEventListener('focusout', hideTip);
+addEventListener('scroll', hideTip, { passive: true });
+
+// ---------- The standings table, as index.astro renders it, with an option's additions ----------
+function timeLine(r) {
+	if (!r.durationMs) return el('span', { class: 'time-line none' }, 'no time');
+	const line = el('span', { class: 'time-line' });
+	const track = el('span', { class: 'track' });
+	track.append(el('i', { style: `width:${(r.durationMs / slowestMs) * 100}%` }));
+	line.append(track, document.createTextNode(runTime(r.durationMs)));
+	return line;
+}
+
+function standings(stageId, opt) {
+	const stage = document.getElementById(stageId);
+	const section = el('section', { class: 'standings-section' });
+
+	const head = el('div', { class: 'rowhead' });
+	const titles = el('div');
+	titles.append(el('span', { class: 'lab-section-eyebrow' }, 'Secondary evidence'), el('h2', {}, 'Automated standings'));
+	const toggle = el('div', { class: 'toggle' });
+	const modes = [['harness', 'Harness score', ''], ['players', 'Player rating', 'hum']];
+	if (opt.speedMode) modes.push(['speed', 'Output speed', 'spd']);
+	for (const [mode, text, cls] of modes) toggle.append(el('button', { type: 'button', 'data-mode': mode, 'data-on': String(mode === 'harness'), ...(cls ? { class: cls } : {}) }, text));
+	head.append(titles, toggle);
+	section.append(head, el('p', { class: 'standings-intro' }, 'Harness scores describe technical checks. They are useful for comparison, but they are not a final judgment of the game.'));
+
+	const wrap = el('div', { class: 'matrix-wrap' });
+	const table = el('table', { class: 'matrix' });
+	if (opt.summary) table.style.minWidth = '780px';
+	const hr = el('tr');
+	hr.append(el('th', { class: 'rowh' }));
+	benches.forEach((b) => hr.append(el('th', {}, b.name)));
+	if (opt.summary) {
+		const th = el('th', { class: 'sum-h' }, 'Out tok/min');
+		th.append(el('small', {}, 'median of runs with tokens'));
+		hr.append(th);
+	}
+	table.append(hr);
+
+	// Option 3 scale: the fastest model median is a full bar.
+	const medians = new Map(rows.map((row) => {
+		const rates = [...row.by.values(), ...(extraTokenRuns[row.label] ?? [])].map(outPerMin).filter((x) => x != null);
+		return [row.label, rates.length ? { rate: median(rates), count: rates.length } : null];
+	}));
+	const fastestMedian = Math.max(0, ...[...medians.values()].map((m) => m?.rate ?? 0));
+
+	const chips = [];
+	for (const row of rows) {
+		const tr = el('tr');
+		const th = el('th', { class: 'rowh' }, row.label);
+		th.append(el('small', {}, row.agent));
+		tr.append(th);
+		for (const b of benches) {
+			const td = el('td');
+			const r = row.by.get(b.id);
+			if (!r) { td.append(el('span', { class: 'chip empty' }, '—')); tr.append(td); continue; }
+			const chip = el('a', { class: 'chip', href: '#', style: `background:${band[r.band]}` });
+			chip.addEventListener('click', (e) => e.preventDefault());
+			chips.push({ chip, row, bench: b, r });
+			td.append(chip);
+			const rate = outPerMin(r);
+			if (opt.rateLine === 'two') {
+				td.append(timeLine(r));
+				if (rate != null) {
+					const line = el('span', { class: 'rate-line' }, n(rate));
+					line.append(el('small', {}, ' out tok/min'));
+					attachTip(line, () => runTip(row.label, b.name, r));
+					td.append(line);
+				} else {
+					td.append(el('span', { class: 'rate-line none' }, 'no tokens'));
+				}
+			} else if (opt.rateLine === 'one') {
+				const line = timeLine(r);
+				if (rate != null && r.durationMs) {
+					const extra = el('span', { class: 'rate' }, `${compact(Math.round(rate))}/min`);
+					attachTip(extra, () => runTip(row.label, b.name, r));
+					line.append(el('span', { class: 'sep' }, '·'), extra);
+				}
+				td.append(line);
+			} else {
+				td.append(timeLine(r));
+			}
+			tr.append(td);
+		}
+		if (opt.summary) {
+			const m = medians.get(row.label);
+			if (m) {
+				const td = el('td', { class: 'sum' });
+				const v = el('div', { class: 'v' }, n(m.rate));
+				v.append(el('small', {}, 'out tok/min'));
+				const track = el('div', { class: 'track' });
+				track.append(el('i', { style: `width:${(m.rate / fastestMedian) * 100}%` }));
+				td.append(v, track, el('div', { class: 'sub' }, `${m.count} of ${runCount[row.label] ?? m.count} runs`));
+				attachTip(td, () => {
+					const runs = [...row.by.entries()].filter(([, r]) => outPerMin(r) != null).map(([id, r]) => [benches.find((b) => b.id === id).name, r]);
+					(extraTokenRuns[row.label] ?? []).forEach((r) => runs.push(['Void Cruiser 3D (other run)', r]));
+					const dl = el('dl');
+					runs.forEach(([name, r]) => dl.append(el('dt', {}, name), el('dd', {}, n(outPerMin(r)))));
+					return [el('div', { class: 'head' }, `${row.label} · out tok/min per run`), dl, el('p', {}, 'The column shows the median. Runs without tokens are left out.')];
+				});
+				tr.append(td);
+			} else {
+				const td = el('td', { class: 'sum none' });
+				td.append(el('span', {}, neverReports.has(row.agent) ? `not reported by ${row.agent}` : 'no token runs yet'));
+				tr.append(td);
+			}
+		}
+		table.append(tr);
+	}
+	wrap.append(table);
+	section.append(wrap);
+
+	// Legends. Option 2 swaps the score legend for a speed legend.
+	const scoreLegend = el('div', { class: 'legend' });
+	scoreLegend.innerHTML = `<span><i style="background:var(--lab-strong)"></i>75–100 strong</span>
+		<span><i style="background:var(--lab-partial)"></i>50–74 partial</span>
+		<span><i style="background:var(--lab-thin)"></i>1–49 thin</span>
+		<span><i style="background:var(--lab-dead)"></i>0 gate failed</span>
+		<span><i style="border:1px dashed rgba(212,165,116,.4);background:transparent"></i>not attempted</span>
+		<span><i style="height:3px;vertical-align:2px;background:var(--accent-tertiary)"></i>run time (full bar is the slowest run)</span>`;
+	if (opt.rateLine) scoreLegend.insertAdjacentHTML('beforeend', `<span>out tok/min = output tokens per minute of run time. Hover for the full count.</span>`);
+	if (opt.summary) scoreLegend.insertAdjacentHTML('beforeend', `<span><i style="height:3px;vertical-align:2px;background:var(--accent-highlight)"></i>median out tok/min (full bar is the fastest model)</span>`);
+	const speedLegend = el('div', { class: 'legend', hidden: '' });
+	speedLegend.innerHTML = `<span><i style="background:linear-gradient(to right, var(--rate-fill) 60%, var(--rate-rest) 60%);border:1px solid rgba(212,165,116,.18)"></i>fill length = out tok/min (full chip is the fastest run, ${n(fastestRate)})</span>
+		<span><i style="background:rgba(212,165,116,.14)"></i>no tokens reported</span>
+		<span><i style="border:1px dashed rgba(212,165,116,.4);background:transparent"></i>not attempted</span>
+		<span><i style="height:3px;vertical-align:2px;background:var(--accent-tertiary)"></i>run time (full bar is the slowest run)</span>`;
+	section.append(scoreLegend, speedLegend);
+
+	// Mirrors paint() in index.astro, plus the new speed branch.
+	const paint = (mode) => {
+		for (const button of toggle.querySelectorAll('button')) button.dataset.on = String(button.dataset.mode === mode);
+		scoreLegend.hidden = mode === 'speed';
+		speedLegend.hidden = mode !== 'speed';
+		for (const { chip, row, bench, r } of chips) {
+			chip.classList.remove('rate', 'norate');
+			chip.removeAttribute('data-tip');
+			chip.removeAttribute('tabindex');
+			if (mode === 'harness') {
+				chip.style.background = band[r.band];
+				chip.innerHTML = `${r.total}<small>${r.band === 'gate-failed' ? 'gate' : 'view'}</small>`;
+			} else if (mode === 'players') {
+				const rating = ratings[`${row.label}/${bench.id}`];
+				if (rating) {
+					const [overall, count] = rating;
+					chip.style.background = overall >= 4 ? '#e8c496' : overall >= 3 ? '#d4a574' : '#9b7e5e';
+					chip.innerHTML = `${overall.toFixed(1)}★<small>${count} vote${count === 1 ? '' : 's'}</small>`;
+				} else {
+					chip.classList.add('norate');
+					chip.style.background = 'rgba(212,165,116,.14)';
+					chip.innerHTML = '–<small>unrated</small>';
+				}
+			} else {
+				const rate = outPerMin(r);
+				if (rate != null) {
+					const w = (rate / fastestRate) * 100;
+					chip.classList.add('rate');
+					chip.style.background = `linear-gradient(to right, var(--rate-fill) ${w}%, var(--rate-rest) ${w}%)`;
+					chip.innerHTML = `${n(rate)}<small>out tok/min</small>`;
+					tipContent.set(chip, () => runTip(row.label, bench.name, r));
+					chip.setAttribute('data-tip', '');
+				} else {
+					chip.classList.add('norate');
+					chip.style.background = 'rgba(212,165,116,.14)';
+					chip.innerHTML = '–<small>no tokens</small>';
+				}
+			}
+		}
+	};
+	for (const button of toggle.querySelectorAll('button')) button.addEventListener('click', () => paint(button.dataset.mode));
+	paint('harness');
+	stage.replaceChildren(section);
+	return paint;
+}
+
+standings('stage-1', { rateLine: 'two' });
+document.querySelectorAll('#layout-1 button').forEach((b) => b.addEventListener('click', () => {
+	document.querySelectorAll('#layout-1 button').forEach((x) => (x.dataset.on = String(x === b)));
+	standings('stage-1', { rateLine: b.dataset.layout });
+}));
+// Option 2 opens in the new mode so the change is visible without a click.
+standings('stage-2', { speedMode: true })('speed');
+standings('stage-3', { summary: true });
+</script>
+</body>
+</html>
