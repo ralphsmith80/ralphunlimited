@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#111725" />
+    <meta name="description" content="A salvage cruiser, a hostile belt, one more run. Play Cruiser Reloaded, a complete arcade space shooter." />
+    <title>Cruiser Reloaded | The salvage run</title>
+    <link rel="icon" href="./assets/art/pearl.png" />
+    <script type="module" crossorigin src="./assets/index-CCk0d4jm.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BS2Ad53l.css">
+  </head>
+  <body>
+    <div id="app">
+      <header class="masthead">
+        <a class="brand" href="./" aria-label="Cruiser Reloaded home"><span class="brand-mark">CR<span>↗</span></span><span>Cruiser <strong>Reloaded</strong></span></a>
+        <div class="masthead-right"><span class="local-status"><i></i> Offline arcade / v1.0</span><button id="sound" class="icon-button" aria-label="Mute audio" title="Toggle audio [M]">♪ <span>Sound on</span></button><button id="fullscreen" class="icon-button" aria-label="Enter fullscreen" title="Fullscreen">⛶</button></div>
+      </header>
+      <main>
+        <div class="screen-label"><span><i class="signal"></i> Flight deck <span class="subtle">/ The salvage run</span></span><span id="record">Personal best <b>000000</b></span></div>
+        <section id="cabinet" class="cabinet" aria-label="Cruiser Reloaded game">
+          <canvas id="game" width="1280" height="720" aria-label="Space flight playfield. Use WASD or arrow keys to fly. Hold Shift or Space for overdrive. Press E for a pulse." tabindex="0"></canvas>
+          <div id="hud" class="hud" hidden>
+            <div class="hud-sector"><span id="sector-label">Sector 01 / 04</span><strong id="sector-name">The crossing</strong><div class="route-progress"><i id="route-fill"></i></div></div>
+            <div class="hud-score"><span>Score <b id="combo">×1</b></span><strong id="score">000000</strong><small id="scrap">0 scrap</small></div>
+            <div class="resource"><span>Hull <b id="health-value">100</b></span><div class="resource-track"><i id="health-fill"></i></div></div>
+            <div class="resource fuel"><span>Fuel <b id="fuel-value">100</b></span><div class="resource-track"><i id="fuel-fill"></i></div></div>
+            <button id="pause-button" class="icon-button" aria-label="Pause game" title="Pause [Esc]">Ⅱ</button>
+          </div>
+          <div id="run-bottom" class="run-bottom" hidden><div id="modules">Standard cannon</div><span id="pulse-status">E / Pulse ready</span><span id="drive-status">Shift / Overdrive</span></div>
+          <div id="overlay" class="overlay" aria-live="polite"><div class="loading"><span class="pixel">CRUISER RELOADED</span><p>Loading the flight deck...</p></div></div>
+          <div class="corner top-left"></div><div class="corner top-right"></div><div class="corner bottom-left"></div><div class="corner bottom-right"></div>
+        </section>
+        <div class="controls-strip"><div><kbd>W A S D</kbd><span>Fly</span><i>/</i><kbd>Shift</kbd><span>Overdrive</span><i>/</i><kbd>E</kbd><span>Pulse</span></div><div><span>Cannons auto-fire</span><i>/</i><kbd>Esc</kbd><span>Pause</span></div></div>
+        <div class="touch-controls"><span>Drag the playfield to fly</span><button id="touch-drive">Hold overdrive</button><button id="touch-pulse">Pulse</button></div>
+      </main>
+      <footer><span>Built from the wreckage of Retro Cruiser.</span><span>Collect. Overclock. Come back stronger.</span></footer>
+    </div>
+  </body>
+</html>

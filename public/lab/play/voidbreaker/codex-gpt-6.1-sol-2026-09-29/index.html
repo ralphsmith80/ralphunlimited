@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#07101d" />
+    <meta
+      name="description"
+      content="Voidbreaker. Break the field. Chase the salvage. Survive one more sector."
+    />
+    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+    <title>Voidbreaker | Into the debris</title>
+    <script type="module" crossorigin src="./assets/index-xWEJQeby.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-SJv218gq.css">
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="arena" aria-label="Voidbreaker space arena"></canvas>
+      <div id="hud" hidden></div>
+      <div id="overlay"></div>
+      <div id="toast" role="status" aria-live="polite"></div>
+      <nav id="utilities" aria-label="Game settings">
+        <button id="sound" aria-label="Mute audio" title="Sound [M]">
+          ♪ <span>Sound on</span>
+        </button>
+        <button id="motion" title="Reduce flashes and shake">
+          ◉ <span>Effects on</span>
+        </button>
+        <button
+          id="fullscreen"
+          aria-label="Toggle fullscreen"
+          title="Fullscreen"
+        >
+          ⛶
+        </button>
+        <button id="pause" aria-label="Pause game" title="Pause [Esc]" hidden>
+          Ⅱ
+        </button>
+      </nav>
+      <div id="touch-dash">
+        <button id="dash-button" aria-label="Phase dash">Dash</button>
+      </div>
+    </main>
+  </body>
+</html>
