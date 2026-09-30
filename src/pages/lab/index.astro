@@ -401,20 +401,28 @@ const description =
 			};
 			const rateChip = (target: EventTarget | null) =>
 				target instanceof Element ? target.closest<HTMLElement>("[data-chip].rate") : null;
+			// A keyboard-focused chip keeps its card: when a hover card closes or the page
+			// scrolls, the card returns to (or follows) the focused chip.
+			const settleTip = () => {
+				const focused = rateChip(document.activeElement);
+				if (focused) showTip(focused);
+				else hideTip();
+			};
 			document.addEventListener("pointerover", (event) => {
 				const chip = rateChip(event.target);
 				if (chip) showTip(chip);
 			});
 			document.addEventListener("pointerout", (event) => {
 				const chip = rateChip(event.target);
-				if (chip && !chip.contains(event.relatedTarget as Node | null)) hideTip();
+				if (chip && !chip.contains(event.relatedTarget as Node | null)) settleTip();
 			});
 			document.addEventListener("focusin", (event) => {
 				const chip = rateChip(event.target);
 				if (chip) showTip(chip);
 			});
 			document.addEventListener("focusout", hideTip);
-			addEventListener("scroll", hideTip, { passive: true });
+			// Capture also catches the table's own sideways scroll, which does not bubble.
+			document.addEventListener("scroll", settleTip, { passive: true, capture: true });
 
 			if (toggle) {
 				const current = () =>
