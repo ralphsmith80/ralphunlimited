@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-30T02:46:12.185Z",
+  "generatedAt": "2026-09-30T18:15:41.834Z",
   "benchmarks": [
     {
       "id": "retro-cruiser",
@@ -406,7 +406,12 @@
             "shots/voidbreaker/claude-claude-sonnet-5-5-2026-09-29/00-title.webp",
             "shots/voidbreaker/claude-claude-sonnet-5-5-2026-09-29/02-mid.webp"
           ],
-          "durationMs": 7549183
+          "durationMs": 7549183,
+          "tokens": {
+            "input": 114741159,
+            "cachedInput": 113541054,
+            "output": 729810
+          }
         },
         {
           "slug": "antigravity-gemini-3.7-flash-high-2026-08-14",
@@ -484,7 +489,8 @@
             "shots/voidbreaker/antigravity-gemini-3.7-flash-high-2026-08-14/00-title.webp",
             "shots/voidbreaker/antigravity-gemini-3.7-flash-high-2026-08-14/02-mid.webp"
           ],
-          "durationMs": 318866
+          "durationMs": 318866,
+          "tokens": null
         },
         {
           "slug": "codex-gpt-6.1-sol-2026-09-29",
@@ -562,7 +568,12 @@
           "shots": [
             "shots/voidbreaker/codex-gpt-6.1-sol-2026-09-29/00-title.webp",
             "shots/voidbreaker/codex-gpt-6.1-sol-2026-09-29/02-mid.webp"
-          ]
+          ],
+          "tokens": {
+            "input": 2764216,
+            "cachedInput": 2618624,
+            "output": 60358
+          }
         },
         {
           "slug": "grok-grok-4.6-2026-08-12",
@@ -640,7 +651,8 @@
             "shots/voidbreaker/grok-grok-4.6-2026-08-12/00-title.webp",
             "shots/voidbreaker/grok-grok-4.6-2026-08-12/02-mid.webp"
           ],
-          "durationMs": 1244814
+          "durationMs": 1244814,
+          "tokens": null
         },
         {
           "slug": "claude-claude-fable-5-1-1m-2026-09-02",
@@ -718,7 +730,8 @@
             "shots/voidbreaker/claude-claude-fable-5-1-1m-2026-09-02/00-title.webp",
             "shots/voidbreaker/claude-claude-fable-5-1-1m-2026-09-02/02-mid.webp"
           ],
-          "durationMs": 1714849
+          "durationMs": 1714849,
+          "tokens": null
         },
         {
           "slug": "codex-gpt-6-astra-2026-09-04",
@@ -796,7 +809,8 @@
             "shots/voidbreaker/codex-gpt-6-astra-2026-09-04/00-title.webp",
             "shots/voidbreaker/codex-gpt-6-astra-2026-09-04/02-mid.webp"
           ],
-          "durationMs": 2456973
+          "durationMs": 2456973,
+          "tokens": null
         },
         {
           "slug": "claude-claude-fable-5-2026-07-21",
@@ -874,7 +888,8 @@
             "shots/voidbreaker/claude-claude-fable-5-2026-07-21/00-title.webp",
             "shots/voidbreaker/claude-claude-fable-5-2026-07-21/02-mid.webp"
           ],
-          "durationMs": null
+          "durationMs": null,
+          "tokens": null
         },
         {
           "slug": "claude-sonnet-2026-07-10",
@@ -952,7 +967,8 @@
             "shots/voidbreaker/claude-sonnet-2026-07-10/00-title.webp",
             "shots/voidbreaker/claude-sonnet-2026-07-10/02-mid.webp"
           ],
-          "durationMs": null
+          "durationMs": null,
+          "tokens": null
         },
         {
           "slug": "openrouter-stealth-union-alpha-2026-09-17",
@@ -1030,7 +1046,12 @@
             "shots/voidbreaker/openrouter-stealth-union-alpha-2026-09-17/00-title.webp",
             "shots/voidbreaker/openrouter-stealth-union-alpha-2026-09-17/02-mid.webp"
           ],
-          "durationMs": 1319852
+          "durationMs": 1319852,
+          "tokens": {
+            "input": 2375752,
+            "cachedInput": 1995398,
+            "output": 39645
+          }
         },
         {
           "slug": "grok-grok-4.7-2026-09-22",
@@ -1108,7 +1129,8 @@
             "shots/voidbreaker/grok-grok-4.7-2026-09-22/00-title.webp",
             "shots/voidbreaker/grok-grok-4.7-2026-09-22/02-mid.webp"
           ],
-          "durationMs": null
+          "durationMs": null,
+          "tokens": null
         },
         {
           "slug": "codex-gpt-6-sol-2026-09-22",
@@ -1186,7 +1208,12 @@
             "shots/voidbreaker/codex-gpt-6-sol-2026-09-22/00-title.webp",
             "shots/voidbreaker/codex-gpt-6-sol-2026-09-22/02-mid.webp"
           ],
-          "durationMs": 1178681
+          "durationMs": 1178681,
+          "tokens": {
+            "input": 4898859,
+            "cachedInput": 4739968,
+            "output": 53940
+          }
         },
         {
           "slug": "codex-gpt-5.6-sol-2026-09-02",
@@ -1264,7 +1291,8 @@
             "shots/voidbreaker/codex-gpt-5.6-sol-2026-09-02/00-title.webp",
             "shots/voidbreaker/codex-gpt-5.6-sol-2026-09-02/02-mid.webp"
           ],
-          "durationMs": 698271
+          "durationMs": 698271,
+          "tokens": null
         },
         {
           "slug": "codex-gpt-5.6-sol-2026-07-21",
@@ -1342,7 +1370,8 @@
             "shots/voidbreaker/codex-gpt-5.6-sol-2026-07-21/00-title.webp",
             "shots/voidbreaker/codex-gpt-5.6-sol-2026-07-21/02-mid.webp"
           ],
-          "durationMs": null
+          "durationMs": null,
+          "tokens": null
         },
         {
           "slug": "claude-claude-opus-5-5-1m-2026-09-22",
@@ -1420,7 +1449,12 @@
             "shots/voidbreaker/claude-claude-opus-5-5-1m-2026-09-22/00-title.webp",
             "shots/voidbreaker/claude-claude-opus-5-5-1m-2026-09-22/02-mid.webp"
           ],
-          "durationMs": 1492183
+          "durationMs": 1492183,
+          "tokens": {
+            "input": 11300008,
+            "cachedInput": 11018836,
+            "output": 156845
+          }
         },
         {
           "slug": "openrouter-z-ai-glm-5.3-flash-2026-08-31",
@@ -1498,7 +1532,8 @@
             "shots/voidbreaker/openrouter-z-ai-glm-5.3-flash-2026-08-31/00-title.webp",
             "shots/voidbreaker/openrouter-z-ai-glm-5.3-flash-2026-08-31/02-mid.webp"
           ],
-          "durationMs": 716039
+          "durationMs": 716039,
+          "tokens": null
         },
         {
           "slug": "codex-gpt-5.6-terra-2026-07-21",
@@ -1576,7 +1611,8 @@
             "shots/voidbreaker/codex-gpt-5.6-terra-2026-07-21/00-title.webp",
             "shots/voidbreaker/codex-gpt-5.6-terra-2026-07-21/02-mid.webp"
           ],
-          "durationMs": null
+          "durationMs": null,
+          "tokens": null
         }
       ]
     },
@@ -1665,7 +1701,8 @@
             "shots/cruiser-reloaded/antigravity-gemini-3.7-flash-high-2026-08-14/00-title.webp",
             "shots/cruiser-reloaded/antigravity-gemini-3.7-flash-high-2026-08-14/02-mid.webp"
           ],
-          "durationMs": null
+          "durationMs": null,
+          "tokens": null
         },
         {
           "slug": "claude-claude-sonnet-5-5-2026-09-29",
@@ -1743,7 +1780,12 @@
             "shots/cruiser-reloaded/claude-claude-sonnet-5-5-2026-09-29/00-title.webp",
             "shots/cruiser-reloaded/claude-claude-sonnet-5-5-2026-09-29/02-mid.webp"
           ],
-          "durationMs": 7963886
+          "durationMs": 7963886,
+          "tokens": {
+            "input": 110665707,
+            "cachedInput": 109957969,
+            "output": 500838
+          }
         },
         {
           "slug": "codex-gpt-6.1-sol-2026-09-29",
@@ -1821,7 +1863,12 @@
           "shots": [
             "shots/cruiser-reloaded/codex-gpt-6.1-sol-2026-09-29/00-title.webp",
             "shots/cruiser-reloaded/codex-gpt-6.1-sol-2026-09-29/02-mid.webp"
-          ]
+          ],
+          "tokens": {
+            "input": 4318623,
+            "cachedInput": 4159872,
+            "output": 88712
+          }
         },
         {
           "slug": "claude-claude-fable-5-2026-07-25",
@@ -1899,7 +1946,8 @@
             "shots/cruiser-reloaded/claude-claude-fable-5-2026-07-25/00-title.webp",
             "shots/cruiser-reloaded/claude-claude-fable-5-2026-07-25/02-mid.webp"
           ],
-          "durationMs": 3154200
+          "durationMs": 3154200,
+          "tokens": null
         },
         {
           "slug": "codex-gpt-6-astra-2026-09-04",
@@ -1977,7 +2025,8 @@
             "shots/cruiser-reloaded/codex-gpt-6-astra-2026-09-04/00-title.webp",
             "shots/cruiser-reloaded/codex-gpt-6-astra-2026-09-04/02-mid.webp"
           ],
-          "durationMs": 2448449
+          "durationMs": 2448449,
+          "tokens": null
         },
         {
           "slug": "grok-cli-default-2026-08-12",
@@ -2055,7 +2104,8 @@
             "shots/cruiser-reloaded/grok-cli-default-2026-08-12/00-title.webp",
             "shots/cruiser-reloaded/grok-cli-default-2026-08-12/02-mid.webp"
           ],
-          "durationMs": 1118259
+          "durationMs": 1118259,
+          "tokens": null
         },
         {
           "slug": "grok-grok-4.7-2026-09-21",
@@ -2133,7 +2183,8 @@
             "shots/cruiser-reloaded/grok-grok-4.7-2026-09-21/00-title.webp",
             "shots/cruiser-reloaded/grok-grok-4.7-2026-09-21/02-mid.webp"
           ],
-          "durationMs": 2916716
+          "durationMs": 2916716,
+          "tokens": null
         },
         {
           "slug": "claude-claude-fable-5-1-1m-2026-09-02",
@@ -2211,7 +2262,8 @@
             "shots/cruiser-reloaded/claude-claude-fable-5-1-1m-2026-09-02/00-title.webp",
             "shots/cruiser-reloaded/claude-claude-fable-5-1-1m-2026-09-02/02-mid.webp"
           ],
-          "durationMs": 2605278
+          "durationMs": 2605278,
+          "tokens": null
         },
         {
           "slug": "claude-claude-opus-5-2026-08-04",
@@ -2289,7 +2341,8 @@
             "shots/cruiser-reloaded/claude-claude-opus-5-2026-08-04/00-title.webp",
             "shots/cruiser-reloaded/claude-claude-opus-5-2026-08-04/02-mid.webp"
           ],
-          "durationMs": 4570282
+          "durationMs": 4570282,
+          "tokens": null
         },
         {
           "slug": "openrouter-stealth-union-alpha-2026-09-17",
@@ -2367,7 +2420,12 @@
             "shots/cruiser-reloaded/openrouter-stealth-union-alpha-2026-09-17/00-title.webp",
             "shots/cruiser-reloaded/openrouter-stealth-union-alpha-2026-09-17/02-mid.webp"
           ],
-          "durationMs": 2042152
+          "durationMs": 2042152,
+          "tokens": {
+            "input": 5014227,
+            "cachedInput": 4484146,
+            "output": 65033
+          }
         },
         {
           "slug": "claude-claude-fable-5-2026-07-21",
@@ -2445,7 +2503,8 @@
             "shots/cruiser-reloaded/claude-claude-fable-5-2026-07-21/00-title.webp",
             "shots/cruiser-reloaded/claude-claude-fable-5-2026-07-21/02-mid.webp"
           ],
-          "durationMs": null
+          "durationMs": null,
+          "tokens": null
         },
         {
           "slug": "codex-gpt-5.6-sol-2026-09-02",
@@ -2523,7 +2582,8 @@
             "shots/cruiser-reloaded/codex-gpt-5.6-sol-2026-09-02/00-title.webp",
             "shots/cruiser-reloaded/codex-gpt-5.6-sol-2026-09-02/02-mid.webp"
           ],
-          "durationMs": 630738
+          "durationMs": 630738,
+          "tokens": null
         },
         {
           "slug": "codex-gpt-5.6-terra-2026-07-21",
@@ -2601,7 +2661,8 @@
             "shots/cruiser-reloaded/codex-gpt-5.6-terra-2026-07-21/00-title.webp",
             "shots/cruiser-reloaded/codex-gpt-5.6-terra-2026-07-21/02-mid.webp"
           ],
-          "durationMs": null
+          "durationMs": null,
+          "tokens": null
         },
         {
           "slug": "cursor-muse-spark-1.3-xhigh-2026-09-15",
@@ -2679,7 +2740,8 @@
             "shots/cruiser-reloaded/cursor-muse-spark-1.3-xhigh-2026-09-15/00-title.webp",
             "shots/cruiser-reloaded/cursor-muse-spark-1.3-xhigh-2026-09-15/02-mid.webp"
           ],
-          "durationMs": 560569
+          "durationMs": 560569,
+          "tokens": null
         },
         {
           "slug": "codex-gpt-5.6-sol-2026-07-21",
@@ -2757,7 +2819,8 @@
             "shots/cruiser-reloaded/codex-gpt-5.6-sol-2026-07-21/00-title.webp",
             "shots/cruiser-reloaded/codex-gpt-5.6-sol-2026-07-21/02-mid.webp"
           ],
-          "durationMs": null
+          "durationMs": null,
+          "tokens": null
         },
         {
           "slug": "codex-gpt-6-sol-2026-09-22",
@@ -2835,7 +2898,12 @@
             "shots/cruiser-reloaded/codex-gpt-6-sol-2026-09-22/00-title.webp",
             "shots/cruiser-reloaded/codex-gpt-6-sol-2026-09-22/02-mid.webp"
           ],
-          "durationMs": 955093
+          "durationMs": 955093,
+          "tokens": {
+            "input": 2720495,
+            "cachedInput": 2625024,
+            "output": 43461
+          }
         },
         {
           "slug": "claude-claude-opus-5-5-1m-2026-09-22",
@@ -2913,7 +2981,12 @@
             "shots/cruiser-reloaded/claude-claude-opus-5-5-1m-2026-09-22/00-title.webp",
             "shots/cruiser-reloaded/claude-claude-opus-5-5-1m-2026-09-22/02-mid.webp"
           ],
-          "durationMs": 1917742
+          "durationMs": 1917742,
+          "tokens": {
+            "input": 15274192,
+            "cachedInput": 14992248,
+            "output": 193502
+          }
         },
         {
           "slug": "openrouter-z-ai-glm-5.3-flash-2026-08-28",
@@ -2991,7 +3064,8 @@
             "shots/cruiser-reloaded/openrouter-z-ai-glm-5.3-flash-2026-08-28/00-title.webp",
             "shots/cruiser-reloaded/openrouter-z-ai-glm-5.3-flash-2026-08-28/02-mid.webp"
           ],
-          "durationMs": 985498
+          "durationMs": 985498,
+          "tokens": null
         },
         {
           "slug": "claude-sonnet-2026-07-10",
@@ -3051,7 +3125,8 @@
           "buildBytes": 0,
           "playable": null,
           "shots": [],
-          "durationMs": null
+          "durationMs": null,
+          "tokens": null
         }
       ]
     },
@@ -3140,7 +3215,12 @@
             "shots/void-cruiser-3d/claude-claude-sonnet-5-5-2026-09-29/00-title.webp",
             "shots/void-cruiser-3d/claude-claude-sonnet-5-5-2026-09-29/02-mid.webp"
           ],
-          "durationMs": 11068401
+          "durationMs": 11068401,
+          "tokens": {
+            "input": 249720587,
+            "cachedInput": 247911992,
+            "output": 1008092
+          }
         },
         {
           "slug": "codex-gpt-6-astra-2026-09-09",
@@ -3218,7 +3298,8 @@
             "shots/void-cruiser-3d/codex-gpt-6-astra-2026-09-09/00-title.webp",
             "shots/void-cruiser-3d/codex-gpt-6-astra-2026-09-09/02-mid.webp"
           ],
-          "durationMs": 1816069
+          "durationMs": 1816069,
+          "tokens": null
         },
         {
           "slug": "claude-claude-opus-5-5-1m-2026-09-22",
@@ -3296,7 +3377,12 @@
             "shots/void-cruiser-3d/claude-claude-opus-5-5-1m-2026-09-22/00-title.webp",
             "shots/void-cruiser-3d/claude-claude-opus-5-5-1m-2026-09-22/02-mid.webp"
           ],
-          "durationMs": 3852770
+          "durationMs": 3852770,
+          "tokens": {
+            "input": 30385235,
+            "cachedInput": 29948994,
+            "output": 245869
+          }
         },
         {
           "slug": "codex-gpt-6.1-sol-2026-09-29",
@@ -3374,7 +3460,12 @@
           "shots": [
             "shots/void-cruiser-3d/codex-gpt-6.1-sol-2026-09-29/00-title.webp",
             "shots/void-cruiser-3d/codex-gpt-6.1-sol-2026-09-29/02-mid.webp"
-          ]
+          ],
+          "tokens": {
+            "input": 7440280,
+            "cachedInput": 7060608,
+            "output": 92571
+          }
         },
         {
           "slug": "claude-claude-fable-5-1-1m-2026-09-09",
@@ -3452,7 +3543,8 @@
             "shots/void-cruiser-3d/claude-claude-fable-5-1-1m-2026-09-09/00-title.webp",
             "shots/void-cruiser-3d/claude-claude-fable-5-1-1m-2026-09-09/02-mid.webp"
           ],
-          "durationMs": 2243989
+          "durationMs": 2243989,
+          "tokens": null
         },
         {
           "slug": "codex-gpt-6-sol-2026-09-22",
@@ -3530,7 +3622,12 @@
             "shots/void-cruiser-3d/codex-gpt-6-sol-2026-09-22/00-title.webp",
             "shots/void-cruiser-3d/codex-gpt-6-sol-2026-09-22/02-mid.webp"
           ],
-          "durationMs": 1125735
+          "durationMs": 1125735,
+          "tokens": {
+            "input": 4279017,
+            "cachedInput": 4178944,
+            "output": 50070
+          }
         },
         {
           "slug": "openrouter-stealth-union-alpha-2026-09-17",
@@ -3608,7 +3705,12 @@
             "shots/void-cruiser-3d/openrouter-stealth-union-alpha-2026-09-17/00-title.webp",
             "shots/void-cruiser-3d/openrouter-stealth-union-alpha-2026-09-17/02-mid.webp"
           ],
-          "durationMs": 1767923
+          "durationMs": 1767923,
+          "tokens": {
+            "input": 3728844,
+            "cachedInput": 3150984,
+            "output": 61375
+          }
         },
         {
           "slug": "codex-gpt-6-astra-2026-09-10",
@@ -3686,7 +3788,8 @@
             "shots/void-cruiser-3d/codex-gpt-6-astra-2026-09-10/00-title.webp",
             "shots/void-cruiser-3d/codex-gpt-6-astra-2026-09-10/02-mid.webp"
           ],
-          "durationMs": 2619135
+          "durationMs": 2619135,
+          "tokens": null
         }
       ]
     }
