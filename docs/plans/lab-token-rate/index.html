@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token rate in the Lab: three options</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Fira+Code:wght@400;500&family=Libre+Franklin:wght@500;600;700;800&display=swap');
+:root {
+	color-scheme: dark;
+	--bg-primary: #1a1614; --bg-secondary: #211e1b; --bg-elevated: #2a2622; --bg-card: #252220;
+	--text-primary: #f5f0e8; --text-secondary: #c4b8a8; --text-muted: #8a7e70;
+	--accent-primary: #d4a574; --accent-tertiary: #9b7e5e; --accent-highlight: #e8c496;
+	--glow-warm: rgba(212,165,116,.12); --glow-candle: rgba(232,196,150,.08);
+	--lab-strong: #8fae74; --lab-partial: #d4a574; --lab-thin: #b5705f; --lab-dead: #6b615a;
+	--lab-accent: var(--accent-highlight);
+	--font-display: 'Libre Franklin', system-ui, sans-serif;
+	--font-body: 'Crimson Pro', Georgia, serif;
+	--font-mono: 'Fira Code', 'SF Mono', monospace;
+	--border-subtle: 1px solid rgba(212,165,116,.1);
+	--radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+	--space-md: 1rem; --space-lg: 2rem;
+	/* Chart series, dataviz reference slots 1 to 3 (dark steps).
+	   Validated all-pairs on #252220: CVD dE 9.4, normal-vision dE 20.9, contrast >= 3:1. */
+	--series-codex: #3987e5;
+	--series-claude: #d95926;
+	--series-openrouter: #199e70;
+	--grid: rgba(212,165,116,.1);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); font-size: 1.1rem; line-height: 1.55; }
+main { max-width: 1180px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+h1, h2, h3, h4 { font-family: var(--font-display); margin: 0; }
+h1 { font-size: 2.2rem; font-weight: 800; }
+h2 { font-size: 1.5rem; font-weight: 800; }
+a { color: var(--accent-primary); text-decoration: none; }
+.intro { max-width: 72ch; color: var(--text-secondary); }
+.intro p { margin: .6rem 0; }
+code { font-family: var(--font-mono); font-size: .85em; color: var(--accent-highlight); background: var(--bg-elevated); padding: .05rem .3rem; border-radius: 3px; }
+.eyebrow { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent-primary); }
+.option { margin-top: 3.5rem; padding: 1.75rem; background: var(--bg-secondary); border: var(--border-subtle); border-radius: 8px; }
+.option-head p { margin: .35rem 0 0; color: var(--text-secondary); max-width: 68ch; font-size: 1rem; }
+.where { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); margin-top: .5rem; }
+.stage { margin-top: 1.4rem; padding: 1.5rem; background: var(--bg-primary); border: var(--border-subtle); border-radius: var(--radius-md); }
+.pros { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.25rem; font-size: .95rem; color: var(--text-secondary); }
+.pros b { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); font-weight: 400; display: block; }
+.pros ul { margin: .25rem 0 0; padding-left: 1.1rem; }
+.defs { margin-top: 1.25rem; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .75rem; }
+.def { padding: .8rem 1rem; background: var(--bg-card); border: var(--border-subtle); border-radius: var(--radius-md); font-size: .95rem; color: var(--text-secondary); }
+.def b { display: block; font-family: var(--font-mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); font-weight: 400; margin-bottom: .2rem; }
+
+/* ---------- Copied from the site's lab.css ---------- */
+.crumb { font-family: var(--font-mono); font-size: .7rem; color: var(--text-muted); letter-spacing: .05em; margin: 0 0 .75rem; }
+.runlist { display: flex; flex-direction: column; gap: .75rem; }
+.run { background: var(--bg-card); border: var(--border-subtle); border-radius: var(--radius-md); padding: 1rem 1.25rem; display: grid; grid-template-columns: 48px 1fr auto; gap: 1.25rem; align-items: center; }
+.run.top { border-color: rgba(212,165,116,.35); background: linear-gradient(100deg, rgba(212,165,116,.07), var(--bg-card) 60%); }
+.run .rank { font-family: var(--font-mono); font-size: .95rem; color: var(--text-muted); text-align: center; }
+.run .who { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; color: var(--text-primary); }
+.run .who em { font-style: normal; font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); letter-spacing: .05em; margin-left: .5rem; text-transform: uppercase; }
+.run .facts { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); margin-top: .2rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+.bar { height: 5px; border-radius: 3px; background: rgba(212,165,116,.12); margin-top: .55rem; overflow: hidden; max-width: 420px; }
+.bar i { display: block; height: 100%; border-radius: 3px; }
+.runside { display: flex; flex-direction: column; align-items: flex-end; gap: .5rem; }
+.scorebig { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; line-height: 1; }
+.scorebig small { font-family: var(--font-mono); font-size: .6rem; font-weight: 400; color: var(--text-muted); letter-spacing: .08em; display: block; text-align: right; margin-top: .15rem; }
+.btn { display: inline-block; font-family: var(--font-display); font-weight: 600; background: var(--accent-primary); color: #1a1614; border-radius: var(--radius-sm); }
+.btn-sm { padding: .45rem .9rem; font-size: .78rem; }
+.btn-secondary { background: transparent; color: var(--accent-primary); border: 1px solid rgba(212,165,116,.3); }
+.dualscore { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(212,165,116,.12); border: var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; }
+.dualscore > div { background: var(--bg-card); padding: 1.1rem 1.25rem; }
+.dualscore .k, .panel-k { font-family: var(--font-mono); font-size: .6rem; text-transform: uppercase; letter-spacing: .11em; color: var(--text-muted); }
+.dualscore .v { font-family: var(--font-display); font-size: 2.4rem; font-weight: 700; line-height: 1.05; margin-top: .15rem; }
+.dualscore .v small { font-size: .95rem; font-weight: 400; color: var(--text-muted); }
+.dualscore .sub { font-family: var(--font-mono); font-size: .62rem; color: var(--text-muted); margin-top: .15rem; }
+.dualscore .machine .v { color: var(--accent-primary); }
+.dualscore .human .v { color: var(--lab-accent); }
+.obs h4 { font-family: var(--font-mono); font-size: .62rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text-muted); font-weight: 400; margin-bottom: .4rem; }
+.lab-lede { font-size: 1rem; max-width: 660px; color: var(--text-secondary); margin: .4rem 0 0; }
+
+/* ---------- Option A: token column in the run list ---------- */
+.tok { position: relative; min-width: 150px; text-align: right; font-family: var(--font-mono); border-left: var(--border-subtle); padding-left: 1.1rem; }
+.tok .rate { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; color: var(--text-primary); line-height: 1.1; }
+.tok .rate small { font-family: var(--font-mono); font-weight: 400; font-size: .6rem; color: var(--text-muted); letter-spacing: .06em; margin-left: .2rem; }
+.tok .subline { font-size: .6rem; color: var(--text-muted); margin-top: .2rem; white-space: nowrap; }
+.tok.none .rate { font-family: var(--font-mono); font-weight: 400; font-size: .66rem; color: var(--text-muted); opacity: .7; }
+.tok[tabindex] { cursor: help; outline: none; border-radius: 2px; }
+.tok[tabindex]:focus-visible { box-shadow: 0 0 0 2px var(--accent-tertiary); }
+.tip { position: absolute; right: 0; top: calc(100% + 8px); z-index: 5; width: 240px; padding: .7rem .8rem; text-align: left; background: var(--bg-elevated); border: 1px solid rgba(212,165,116,.25); border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,.45); font-size: .66rem; color: var(--text-secondary); visibility: hidden; opacity: 0; transition: opacity .15s ease; }
+.tok:hover .tip, .tok:focus .tip { visibility: visible; opacity: 1; }
+.tip dl { display: grid; grid-template-columns: 1fr auto; gap: .25rem .75rem; margin: 0; }
+.tip dt { color: var(--text-muted); }
+.tip dd { margin: 0; text-align: right; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.tip p { margin: .5rem 0 0; color: var(--text-muted); font-size: .6rem; line-height: 1.5; }
+.list-note { font-family: var(--font-mono); font-size: .66rem; color: var(--text-muted); margin-top: .85rem; }
+
+/* ---------- Option B: token panel on the run detail page ---------- */
+.b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+.b-col-title { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: .6rem; }
+.tokpanel { margin-top: 1rem; background: var(--bg-card); border: var(--border-subtle); border-radius: var(--radius-lg); padding: 1.25rem 1.35rem; }
+.tokpanel .hero { display: flex; align-items: baseline; gap: .5rem; margin-top: .25rem; }
+.tokpanel .hero b { font-family: var(--font-display); font-weight: 700; font-size: 2.4rem; line-height: 1.05; color: var(--text-primary); }
+.tokpanel .hero span { font-family: var(--font-mono); font-size: .7rem; color: var(--text-muted); }
+.tokpanel .hero-sub { font-family: var(--font-mono); font-size: .62rem; color: var(--text-muted); margin-top: .15rem; }
+.kv { display: grid; grid-template-columns: 1fr auto; gap: .45rem 1rem; margin-top: 1rem; padding-top: .85rem; border-top: var(--border-subtle); font-size: .9rem; }
+.kv dt { font-family: var(--font-display); color: var(--text-secondary); font-size: .86rem; }
+.kv dd { margin: 0; text-align: right; font-family: var(--font-mono); font-size: .8rem; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.kv dd em { font-style: normal; color: var(--text-muted); font-size: .66rem; margin-left: .35rem; }
+.split { margin-top: 1rem; }
+.split-label { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: .62rem; color: var(--text-muted); }
+.split-bar { display: flex; gap: 2px; height: 8px; margin-top: .35rem; }
+.split-bar i { display: block; height: 100%; }
+.split-bar i:first-child { border-radius: 4px 0 0 4px; background: var(--accent-tertiary); }
+.split-bar i:nth-child(2) { background: var(--accent-primary); }
+.split-bar i:last-child { border-radius: 0 4px 4px 0; background: var(--accent-highlight); }
+.split-keys { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: .45rem; font-family: var(--font-mono); font-size: .6rem; color: var(--text-muted); }
+.split-keys i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: .3rem; vertical-align: -1px; }
+.tokpanel .foot { margin-top: .9rem; font-family: var(--font-mono); font-size: .6rem; color: var(--text-muted); line-height: 1.5; }
+.tokpanel.none { border-style: dashed; border-color: rgba(212,165,116,.2); }
+.tokpanel.none p { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); margin: .5rem 0 0; line-height: 1.55; }
+
+/* ---------- Option C: scatter ---------- */
+.viz-card { background: var(--bg-card); border: var(--border-subtle); border-radius: var(--radius-lg); padding: 1.25rem 1.35rem 1rem; }
+.viz-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+.viz-head h3 { font-size: 1.05rem; font-weight: 700; }
+.viz-head p { margin: .2rem 0 0; font-size: .9rem; color: var(--text-secondary); }
+.viz-legend { display: flex; gap: 1rem; font-family: var(--font-mono); font-size: .64rem; color: var(--text-secondary); }
+.viz-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: .35rem; vertical-align: -1px; }
+.viz-wrap { position: relative; margin-top: .75rem; }
+.viz-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+.viz-wrap text { font-family: 'Fira Code', monospace; font-size: 11px; fill: var(--text-muted); font-variant-numeric: tabular-nums; }
+.viz-wrap .axis-title { fill: var(--text-secondary); font-size: 11px; }
+.viz-wrap .dlabel { fill: var(--text-secondary); font-size: 11px; }
+.pt { cursor: default; outline: none; }
+.pt .dot { stroke: var(--bg-card); stroke-width: 2; transition: r .15s ease; }
+.pt:hover .dot, .pt:focus .dot { r: 7; }
+.pt:focus-visible .hit { stroke: var(--accent-tertiary); stroke-width: 1; }
+.viz-tip { position: absolute; pointer-events: none; z-index: 5; min-width: 190px; padding: .6rem .75rem; background: var(--bg-elevated); border: 1px solid rgba(212,165,116,.25); border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,.45); font-family: var(--font-mono); font-size: .66rem; color: var(--text-secondary); visibility: hidden; }
+.viz-tip .v { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--text-primary); }
+.viz-tip .key { display: inline-block; width: 12px; height: 2px; margin-right: .4rem; vertical-align: 3px; }
+.viz-tip .row { display: flex; justify-content: space-between; gap: 1rem; margin-top: .15rem; }
+.viz-tip .row b { color: var(--text-primary); font-weight: 400; }
+.missing { margin-top: 1rem; padding-top: .85rem; border-top: var(--border-subtle); }
+.missing h4 { font-family: var(--font-mono); font-size: .62rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text-muted); font-weight: 400; }
+.missing ul { list-style: none; padding: 0; margin: .5rem 0 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+.missing li { font-family: var(--font-mono); font-size: .62rem; color: var(--text-muted); padding: .3rem .55rem; border: 1px dashed rgba(212,165,116,.2); border-radius: 999px; }
+.missing li b { color: var(--text-secondary); font-weight: 400; }
+details.tableview { margin-top: .85rem; }
+details.tableview summary { cursor: pointer; font-family: var(--font-mono); font-size: .64rem; color: var(--accent-primary); }
+table.data { width: 100%; border-collapse: collapse; margin-top: .6rem; font-family: var(--font-mono); font-size: .66rem; }
+table.data th { text-align: right; font-weight: 400; color: var(--text-muted); padding: .35rem .5rem; border-bottom: var(--border-subtle); }
+table.data td { text-align: right; padding: .35rem .5rem; color: var(--text-secondary); font-variant-numeric: tabular-nums; border-bottom: 1px solid rgba(212,165,116,.05); }
+table.data th:first-child, table.data td:first-child { text-align: left; }
+
+@media (max-width: 820px) {
+	.pros, .b-grid, .defs { grid-template-columns: 1fr; }
+	.run { grid-template-columns: 32px 1fr; row-gap: .75rem; }
+	.tok { grid-column: 2; text-align: left; border-left: 0; padding-left: 0; }
+	.tip { left: 0; right: auto; }
+	.runside { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; }
+}
+</style>
+</head>
+<body>
+<main>
+	<span class="eyebrow">ralphunlimited · The Lab · 2026-09-30</span>
+	<h1>Token rate in the Lab</h1>
+	<div class="intro">
+		<p>Three ways to show the new <code>tokens</code> field. The main number is <strong>output tokens per minute</strong>. It is output tokens divided by the run time.</p>
+		<p>Most of the input is cache reads, often 95% or more. Total tokens per minute would mostly measure the cache, so it is not a main number.</p>
+		<p>All mocks use one benchmark, Void Cruiser 3D. The eight token runs are sample data at a realistic scale. The other runs stand in for older runs and for agents that do not report tokens.</p>
+	</div>
+
+	<div class="defs">
+		<div class="def"><b>Output tok/min</b>output ÷ (durationMs ÷ 60,000). Includes reasoning tokens.</div>
+		<div class="def"><b>Cached share</b>cachedInput ÷ input. Input already includes cached reads.</div>
+		<div class="def"><b>Not reported</b><code>tokens: null</code>. Cursor, Grok, Antigravity, and all older runs.</div>
+	</div>
+
+	<!-- ============ OPTION A ============ -->
+	<section class="option">
+		<div class="option-head">
+			<span class="eyebrow">Option A</span>
+			<h2>A token column in the run list</h2>
+			<p>Each run row on the benchmark page gets a column for output tok/min. A short line under it gives output and cache share. Hover or focus the column to see the full count.</p>
+			<div class="where">/lab/void-cruiser-3d/ · src/pages/lab/[benchmark].astro</div>
+		</div>
+		<div class="stage">
+			<p class="crumb"><a href="#">The Lab</a> / void-cruiser-3d</p>
+			<div class="runlist" id="runlist-a"></div>
+			<p class="list-note">7 more runs below. Output tok/min is output tokens divided by run time. Hover a number for the full count.</p>
+		</div>
+		<div class="pros">
+			<div><b>Good</b><ul><li>Every run can be compared in one scan.</li><li>A small change to a page that already exists.</li></ul></div>
+			<div><b>Weaker</b><ul><li>Until more runs report tokens, most rows say "not reported".</li><li>The run list rows become wider. On a phone, the column moves under the name.</li></ul></div>
+		</div>
+	</section>
+
+	<!-- ============ OPTION B ============ -->
+	<section class="option">
+		<div class="option-head">
+			<span class="eyebrow">Option B</span>
+			<h2>A token panel on the run page</h2>
+			<p>The run detail page gets a panel under the score cards. It shows output tok/min as the main number, then the counts and a bar that splits input into cached and fresh. Runs with no data get one short line.</p>
+			<div class="where">/lab/void-cruiser-3d/&lt;run&gt;/ · src/pages/lab/[benchmark]/[run].astro, inside the aside</div>
+		</div>
+		<div class="stage">
+			<div class="b-grid">
+				<div>
+					<div class="b-col-title">Run with tokens · gpt-6.1-sol</div>
+					<p class="crumb"><a href="#">The Lab</a> / <a href="#">void-cruiser-3d</a> / codex-gpt-6.1-sol-2026-09-30</p>
+					<h3 style="font-size:1.6rem;font-weight:800">gpt-6.1-sol</h3>
+					<p class="lab-lede">Run on 2026-09-30 via the codex CLI at high reasoning. Took 44 min, one shot, unattended.</p>
+					<div class="dualscore" style="margin-top:1rem">
+						<div class="machine"><div class="k">Harness</div><div class="v">76<small> / 100</small></div><div class="sub">measured · game-rubric-v3</div></div>
+						<div class="human"><div class="k">Players</div><div class="v">n/a<small> / 5</small></div><div class="sub">no ratings yet</div></div>
+					</div>
+					<div class="tokpanel" id="panel-b"></div>
+				</div>
+				<div>
+					<div class="b-col-title">Run with no tokens · grok-4.7</div>
+					<p class="crumb"><a href="#">The Lab</a> / <a href="#">void-cruiser-3d</a> / grok-grok-4.7-2026-09-22</p>
+					<h3 style="font-size:1.6rem;font-weight:800">grok-4.7</h3>
+					<p class="lab-lede">Run on 2026-09-22 via the grok CLI at xhigh reasoning. Took 41 min, one shot, unattended.</p>
+					<div class="dualscore" style="margin-top:1rem">
+						<div class="machine"><div class="k">Harness</div><div class="v">69<small> / 100</small></div><div class="sub">measured · game-rubric-v3</div></div>
+						<div class="human"><div class="k">Players</div><div class="v">3.8<small> / 5</small></div><div class="sub">4 ratings · live</div></div>
+					</div>
+					<div class="tokpanel none">
+						<div class="panel-k">Tokens</div>
+						<p>Not reported. The grok CLI does not give token counts, so this run has no token rate.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pros">
+			<div><b>Good</b><ul><li>Room to explain the numbers, including why cached input is large.</li><li>Pages with no data stay quiet. They show one line, not a row of blanks.</li></ul></div>
+			<div><b>Weaker</b><ul><li>You cannot compare runs without opening each page.</li><li>Best used with A or C, not alone.</li></ul></div>
+		</div>
+	</section>
+
+	<!-- ============ OPTION C ============ -->
+	<section class="option">
+		<div class="option-head">
+			<span class="eyebrow">Option C</span>
+			<h2>A speed against score chart</h2>
+			<p>A scatter chart on the benchmark page, under the run list. Each dot is one run: output tok/min across, harness score up. Color shows the agent. Runs with no token data are listed under the chart, not plotted at zero.</p>
+			<div class="where">/lab/void-cruiser-3d/ · new section in src/pages/lab/[benchmark].astro</div>
+		</div>
+		<div class="stage">
+			<div class="viz-card">
+				<div class="viz-head">
+					<div>
+						<h3>Output speed and score</h3>
+						<p>Each dot is one run that reported tokens.</p>
+					</div>
+					<div class="viz-legend" aria-label="Agents">
+						<span><i style="background:var(--series-claude)"></i>claude</span>
+						<span><i style="background:var(--series-codex)"></i>codex</span>
+						<span><i style="background:var(--series-openrouter)"></i>openrouter</span>
+					</div>
+				</div>
+				<div class="viz-wrap" id="viz-c">
+					<div class="viz-tip" id="viz-tip" role="status"></div>
+				</div>
+				<div class="missing">
+					<h4 id="missing-title"></h4>
+					<ul id="missing-list"></ul>
+				</div>
+				<details class="tableview">
+					<summary>Show as a table</summary>
+					<table class="data" id="table-c"></table>
+				</details>
+			</div>
+		</div>
+		<div class="pros">
+			<div><b>Good</b><ul><li>Answers one real question: does a faster model build a worse game?</li><li>Missing runs are named, so no one reads a gap as a slow run.</li></ul></div>
+			<div><b>Weaker</b><ul><li>With few token runs, the chart has few dots. It needs about five before it says much.</li><li>A new chart for a page that has none today.</li></ul></div>
+		</div>
+	</section>
+</main>
+
+<script>
+// Sample runs for one benchmark. Token runs are sample data; null runs mirror the real published runs.
+const runs = [
+	{ model: 'claude-sonnet-5-5', agent: 'claude', reasoning: 'xhigh', ranAt: '2026-10-01', total: 81, band: 'strong', durationMs: 4260000, tokens: { input: 9870512, cachedInput: 9512004, output: 176240 } },
+	{ model: 'gpt-6.1-sol', agent: 'codex', reasoning: 'xhigh', ranAt: '2026-09-30', total: 79, band: 'strong', durationMs: 2100000, tokens: { input: 2764216, cachedInput: 2618624, output: 60358 } },
+	{ model: 'gpt-6.1-sol', agent: 'codex', reasoning: 'high', ranAt: '2026-09-30', total: 76, band: 'strong', durationMs: 2640000, tokens: { input: 4318623, cachedInput: 4159872, output: 88712 } },
+	{ model: 'claude-sonnet-5-5', agent: 'claude', reasoning: 'xhigh', ranAt: '2026-09-29', total: 74, band: 'partial', durationMs: 11068401, tokens: null },
+	{ model: 'claude-opus-5-5', agent: 'claude', reasoning: 'high', ranAt: '2026-10-01', total: 74, band: 'partial', durationMs: 3120000, tokens: { input: 6120400, cachedInput: 5902118, output: 141380 } },
+	{ model: 'gpt-6-astra', agent: 'codex', reasoning: 'high', ranAt: '2026-09-09', total: 72, band: 'partial', durationMs: 1816069, tokens: null },
+	{ model: 'gpt-6.1-sol', agent: 'codex', reasoning: 'high', ranAt: '2026-09-30', total: 71, band: 'partial', durationMs: 3480000, tokens: { input: 7440280, cachedInput: 7060608, output: 92571 } },
+	{ model: 'claude-opus-5-5-1m', agent: 'claude', reasoning: 'high', ranAt: '2026-09-22', total: 71, band: 'partial', durationMs: 3852770, tokens: null },
+	{ model: 'grok-4.7', agent: 'grok', reasoning: 'xhigh', ranAt: '2026-09-22', total: 69, band: 'partial', durationMs: 2460000, tokens: null },
+	{ model: 'claude-fable-5-1-1m', agent: 'claude', reasoning: 'high', ranAt: '2026-10-01', total: 68, band: 'partial', durationMs: 2280000, tokens: { input: 3204881, cachedInput: 3050114, output: 72905 } },
+	{ model: 'claude-fable-5-1-1m', agent: 'claude', reasoning: 'high', ranAt: '2026-09-09', total: 66, band: 'partial', durationMs: 2243989, tokens: null },
+	{ model: 'gpt-6-sol', agent: 'codex', reasoning: 'high', ranAt: '2026-09-22', total: 65, band: 'partial', durationMs: 1125735, tokens: null },
+	{ model: 'stealth-union-alpha', agent: 'openrouter', reasoning: 'high', ranAt: '2026-10-01', total: 64, band: 'partial', durationMs: 1740000, tokens: { input: 1902330, cachedInput: 1688410, output: 41220 } },
+	{ model: 'stealth-union-alpha', agent: 'openrouter', reasoning: 'high', ranAt: '2026-09-17', total: 63, band: 'partial', durationMs: 1767923, tokens: null },
+	{ model: 'gemini-3.7-flash-high', agent: 'antigravity', reasoning: 'high', ranAt: '2026-09-18', total: 60, band: 'partial', durationMs: null, tokens: null },
+	{ model: 'z-ai-glm-5.3-flash', agent: 'openrouter', reasoning: 'high', ranAt: '2026-10-01', total: 52, band: 'partial', durationMs: 1020000, tokens: { input: 1120774, cachedInput: 980332, output: 54610 } },
+];
+
+const band = { exceptional: 'var(--lab-strong)', strong: 'var(--lab-strong)', partial: 'var(--lab-partial)', thin: 'var(--lab-thin)', 'gate-failed': 'var(--lab-dead)' };
+const series = { claude: 'var(--series-claude)', codex: 'var(--series-codex)', openrouter: 'var(--series-openrouter)' };
+const n = (x) => x.toLocaleString('en-US');
+const compact = (x) => x >= 1e6 ? `${(x / 1e6).toFixed(1)}M` : x >= 1e3 ? `${(x / 1e3).toFixed(1)}K` : String(x);
+const pct = (x) => `${Math.round(x * 100)}%`;
+const runTime = (ms) => { if (ms == null) return null; const m = Math.max(1, Math.round(ms / 60000)); return m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${m % 60} min`; };
+// The headline metric. Null when either tokens or run time is missing.
+const outPerMin = (r) => r.tokens && r.durationMs ? Math.round(r.tokens.output / (r.durationMs / 60000)) : null;
+const cachedShare = (t) => t.cachedInput / t.input;
+
+function el(tag, attrs = {}, text) {
+	const node = document.createElement(tag);
+	for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+	if (text != null) node.textContent = text;
+	return node;
+}
+
+// ---------- Option A ----------
+const list = document.getElementById('runlist-a');
+runs.slice(0, 9).forEach((r, i) => {
+	const art = el('article', { class: i === 0 ? 'run top' : 'run' });
+	art.append(el('div', { class: 'rank' }, i === 0 ? '★' : `#${i + 1}`));
+	const mid = el('div');
+	const who = el('div', { class: 'who' }, r.model);
+	who.append(el('em', {}, `${r.agent} · ${r.reasoning}`));
+	const facts = el('div', { class: 'facts' });
+	facts.append(el('span', {}, r.ranAt));
+	if (runTime(r.durationMs)) facts.append(el('span', {}, runTime(r.durationMs)));
+	facts.append(el('span', {}, 'gate passed'));
+	const bar = el('div', { class: 'bar' });
+	bar.append(el('i', { style: `width:${r.total}%;background:${band[r.band]}` }));
+	mid.append(who, facts, bar);
+
+	const rate = outPerMin(r);
+	const tok = el('div', rate ? { class: 'tok', tabindex: '0', 'aria-describedby': `tip-${i}` } : { class: 'tok none' });
+	if (rate) {
+		const big = el('div', { class: 'rate' }, n(rate));
+		big.append(el('small', {}, 'out tok/min'));
+		tok.append(big, el('div', { class: 'subline' }, `${compact(r.tokens.output)} out · ${pct(cachedShare(r.tokens))} cached`));
+		const tip = el('div', { class: 'tip', id: `tip-${i}`, role: 'tooltip' });
+		const dl = el('dl');
+		const t = r.tokens;
+		[['Output', n(t.output)], ['Input', n(t.input)], ['Cached input', `${n(t.cachedInput)} (${pct(cachedShare(t))})`], ['Fresh input', n(t.input - t.cachedInput)], ['Run time', runTime(r.durationMs)]]
+			.forEach(([k, v]) => dl.append(el('dt', {}, k), el('dd', {}, v)));
+		tip.append(dl, el('p', {}, 'Output includes reasoning tokens.'));
+		tok.append(tip);
+	} else {
+		tok.append(el('div', { class: 'rate' }, 'tokens not reported'));
+	}
+
+	const side = el('div', { class: 'runside' });
+	const score = el('div', { class: 'scorebig', style: `color:${band[r.band]}` }, String(r.total));
+	score.append(el('small', {}, '/ 100'));
+	side.append(score, el('a', { class: 'btn btn-sm', href: '#' }, 'Details →'));
+	art.style.gridTemplateColumns = '48px 1fr auto auto';
+	art.append(mid, tok, side);
+	list.append(art);
+});
+// Match the mobile layout rule for the extra column.
+if (matchMedia('(max-width: 820px)').matches) list.querySelectorAll('.run').forEach((a) => (a.style.gridTemplateColumns = ''));
+
+// ---------- Option B ----------
+(() => {
+	const r = runs[2];
+	const t = r.tokens;
+	const p = document.getElementById('panel-b');
+	p.append(el('div', { class: 'panel-k' }, 'Tokens'));
+	const hero = el('div', { class: 'hero' });
+	hero.append(el('b', {}, n(outPerMin(r))), el('span', {}, 'output tokens / min'));
+	p.append(hero, el('div', { class: 'hero-sub' }, `${n(t.output)} output tokens in ${runTime(r.durationMs)}`));
+
+	const kv = el('dl', { class: 'kv' });
+	const rows = [
+		['Output', n(t.output), 'incl. reasoning'],
+		['Input', n(t.input), null],
+		['Total', n(t.input + t.output), null],
+	];
+	rows.forEach(([k, v, note]) => {
+		const dd = el('dd', {}, v);
+		if (note) dd.append(el('em', {}, note));
+		kv.append(el('dt', {}, k), dd);
+	});
+	p.append(kv);
+
+	// One bar, three parts of every token the run used.
+	const all = t.input + t.output;
+	const fresh = t.input - t.cachedInput;
+	const split = el('div', { class: 'split' });
+	const lbl = el('div', { class: 'split-label' });
+	lbl.append(el('span', {}, 'Where the tokens went'), el('span', {}, `${pct(cachedShare(t))} of input was cached`));
+	const sb = el('div', { class: 'split-bar', role: 'img', 'aria-label': `Cached input ${n(t.cachedInput)}, fresh input ${n(fresh)}, output ${n(t.output)}` });
+	// Small parts get a 6px floor so they stay visible next to the cache.
+	[t.cachedInput, fresh, t.output].forEach((v) => sb.append(el('i', { style: `flex:${v} 0 6px` })));
+	const keys = el('div', { class: 'split-keys' });
+	[['var(--accent-tertiary)', `cached input ${compact(t.cachedInput)}`], ['var(--accent-primary)', `fresh input ${compact(fresh)}`], ['var(--accent-highlight)', `output ${compact(t.output)}`]].forEach(([c, label]) => {
+		const s = el('span');
+		s.append(el('i', { style: `background:${c}` }), document.createTextNode(label));
+		keys.append(s);
+	});
+	split.append(lbl, sb, keys);
+	p.append(split, el('div', { class: 'foot' }, 'Cached input is context the model read again from cache. It is cheap and fast, so the rate above counts output only.'));
+})();
+
+// ---------- Option C ----------
+(() => {
+	const W = 960, H = 420, m = { t: 30, r: 24, b: 48, l: 48 };
+	const iw = W - m.l - m.r, ih = H - m.t - m.b;
+	const xMax = 3500, yMin = 40, yMax = 90;
+	const x = (v) => m.l + (v / xMax) * iw;
+	const y = (v) => m.t + ih - ((v - yMin) / (yMax - yMin)) * ih;
+	const NS = 'http://www.w3.org/2000/svg';
+	const s = (tag, attrs = {}, text) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
+
+	const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Scatter chart of output tokens per minute against harness score' });
+	for (let v = 0; v <= xMax; v += 500) {
+		svg.append(s('line', { x1: x(v), x2: x(v), y1: m.t, y2: m.t + ih, stroke: 'var(--grid)' }));
+		svg.append(s('text', { x: x(v), y: m.t + ih + 18, 'text-anchor': 'middle' }, n(v)));
+	}
+	for (let v = yMin; v <= yMax; v += 10) {
+		svg.append(s('line', { x1: m.l, x2: m.l + iw, y1: y(v), y2: y(v), stroke: 'var(--grid)' }));
+		svg.append(s('text', { x: m.l - 10, y: y(v) + 4, 'text-anchor': 'end' }, String(v)));
+	}
+	svg.append(s('text', { class: 'axis-title', x: m.l + iw, y: H - 6, 'text-anchor': 'end' }, 'Output tokens per minute →'));
+	svg.append(s('text', { class: 'axis-title', x: 8, y: 12, 'text-anchor': 'start' }, 'Score ↑'));
+
+	const tip = document.getElementById('viz-tip');
+	const wrap = document.getElementById('viz-c');
+	const plotted = runs.filter((r) => outPerMin(r) != null);
+	// Label only the two ends of the speed range; the tooltip and table carry the rest.
+	const fastest = plotted.reduce((a, b) => (outPerMin(b) > outPerMin(a) ? b : a));
+	const best = plotted.reduce((a, b) => (b.total > a.total ? b : a));
+
+	function show(r, cx, cy) {
+		tip.replaceChildren();
+		const head = el('div');
+		head.append(el('span', { class: 'v' }, n(outPerMin(r))), document.createTextNode(' out tok/min'));
+		const who = el('div', { style: 'margin-top:.2rem' });
+		who.append(el('span', { class: 'key', style: `background:${series[r.agent]}` }), document.createTextNode(`${r.model} · ${r.agent}`));
+		tip.append(head, who);
+		[['Score', `${r.total} / 100`], ['Output', n(r.tokens.output)], ['Cached input', pct(cachedShare(r.tokens))], ['Run time', runTime(r.durationMs)]].forEach(([k, v]) => {
+			const row = el('div', { class: 'row' });
+			row.append(el('span', {}, k), el('b', {}, v));
+			tip.append(row);
+		});
+		const scale = wrap.clientWidth / W;
+		const left = Math.min(cx * scale + 14, wrap.clientWidth - 210);
+		tip.style.left = `${left}px`;
+		tip.style.top = `${cy * scale - 20}px`;
+		tip.style.visibility = 'visible';
+	}
+	const hide = () => (tip.style.visibility = 'hidden');
+
+	plotted.forEach((r) => {
+		const cx = x(outPerMin(r)), cy = y(r.total);
+		const g = s('g', { class: 'pt', tabindex: '0', 'aria-label': `${r.model}, ${n(outPerMin(r))} output tokens per minute, score ${r.total}` });
+		g.append(s('circle', { class: 'hit', cx, cy, r: 13, fill: 'transparent' }));
+		g.append(s('circle', { class: 'dot', cx, cy, r: 5, fill: series[r.agent] }));
+		g.addEventListener('pointerenter', () => show(r, cx, cy));
+		g.addEventListener('pointerleave', hide);
+		g.addEventListener('focus', () => show(r, cx, cy));
+		g.addEventListener('blur', hide);
+		svg.append(g);
+		if (r === fastest || r === best) {
+			svg.append(s('text', { class: 'dlabel', x: cx + (r === fastest ? -10 : 10), y: cy - 10, 'text-anchor': r === fastest ? 'end' : 'start' }, r.model));
+		}
+	});
+	wrap.prepend(svg);
+
+	const missing = runs.filter((r) => outPerMin(r) == null);
+	document.getElementById('missing-title').textContent = `Not in the chart: ${missing.length} of ${runs.length} runs did not report tokens`;
+	const ul = document.getElementById('missing-list');
+	missing.forEach((r) => {
+		const li = el('li');
+		li.append(el('b', {}, r.model), document.createTextNode(` · ${r.agent} · ${r.total}`));
+		ul.append(li);
+	});
+
+	const table = document.getElementById('table-c');
+	const hr = el('tr');
+	['Run', 'Agent', 'Score', 'Out tok/min', 'Output', 'Input', 'Cached', 'Run time'].forEach((h) => hr.append(el('th', {}, h)));
+	table.append(hr);
+	runs.forEach((r) => {
+		const tr = el('tr');
+		const t = r.tokens;
+		const rate = outPerMin(r);
+		[r.model, r.agent, r.total, rate ? n(rate) : 'not reported', t ? n(t.output) : '', t ? n(t.input) : '', t ? pct(cachedShare(t)) : '', runTime(r.durationMs) ?? '']
+			.forEach((v) => tr.append(el('td', {}, String(v))));
+		table.append(tr);
+	});
+})();
+</script>
+</body>
+</html>

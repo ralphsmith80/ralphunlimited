@@ -12,6 +12,9 @@
 	   harness amber so the two instruments stay distinguishable without leaving
 	   the blog's warm palette. */
 	--lab-accent: var(--accent-highlight);
+	/* Output speed fill: one warm hue, where the fill length carries the rate. */
+	--rate-fill: rgba(232, 196, 150, 0.34);
+	--rate-rest: rgba(212, 165, 116, 0.07);
 }
 
 .lab-main {
@@ -238,6 +241,70 @@ a.chip:hover {
 	background: transparent;
 	border: 1px dashed rgba(212, 165, 116, 0.18);
 	color: var(--text-muted);
+}
+
+/* Output speed mode: light text over the rate fill. */
+.chip.rate,
+a.chip.rate:hover {
+	color: var(--text-primary);
+	border-color: rgba(212, 165, 116, 0.18);
+}
+
+.chip.rate small {
+	color: var(--text-secondary);
+	opacity: 0.85;
+}
+
+/* Unrated and no-token chips sit on a faint fill, so their text must be light. */
+.chip.norate,
+a.chip.norate:hover {
+	color: var(--text-muted);
+}
+
+/* Full token count for a chip in output speed mode. */
+.token-tip {
+	position: fixed;
+	z-index: 20;
+	width: 240px;
+	padding: 0.7rem 0.8rem;
+	background: var(--bg-elevated);
+	border: 1px solid rgba(212, 165, 116, 0.25);
+	border-radius: var(--radius-md);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+	font-family: var(--font-mono);
+	font-size: 0.66rem;
+	line-height: 1.5;
+	color: var(--text-secondary);
+	pointer-events: none;
+}
+
+.token-tip .head {
+	color: var(--text-primary);
+	margin-bottom: 0.35rem;
+}
+
+.token-tip dl {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 0.25rem 0.75rem;
+	margin: 0;
+}
+
+.token-tip dt {
+	color: var(--text-muted);
+}
+
+.token-tip dd {
+	margin: 0;
+	text-align: right;
+	color: var(--text-primary);
+	font-variant-numeric: tabular-nums;
+}
+
+.token-tip p {
+	margin: 0.5rem 0 0;
+	color: var(--text-muted);
+	font-size: 0.6rem;
 }
 
 /* Run time under a standings chip; bar widths share the table's slowest run as 100%. */
@@ -567,7 +634,7 @@ a.chip:hover {
 	border-radius: var(--radius-md);
 	padding: 1rem 1.25rem;
 	display: grid;
-	grid-template-columns: 48px 1fr auto;
+	grid-template-columns: 48px 1fr auto auto;
 	gap: 1.25rem;
 	align-items: center;
 	transition: var(--transition-base);
@@ -636,6 +703,106 @@ a.chip:hover {
 	flex-direction: column;
 	align-items: flex-end;
 	gap: 0.5rem;
+}
+
+/* Output token rate beside the score; the tooltip holds the full count. */
+.tok {
+	position: relative;
+	min-width: 150px;
+	text-align: right;
+	font-family: var(--font-mono);
+	border-left: var(--border-subtle);
+	padding-left: 1.1rem;
+}
+
+.tok .rate {
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-size: 1.15rem;
+	color: var(--text-primary);
+	line-height: 1.1;
+}
+
+.tok .rate small {
+	font-family: var(--font-mono);
+	font-weight: 400;
+	font-size: 0.6rem;
+	color: var(--text-muted);
+	letter-spacing: 0.06em;
+	margin-left: 0.2rem;
+}
+
+.tok .subline {
+	font-size: 0.6rem;
+	color: var(--text-muted);
+	margin-top: 0.2rem;
+	white-space: nowrap;
+}
+
+.tok.none {
+	font-size: 0.66rem;
+	color: var(--text-muted);
+	opacity: 0.7;
+}
+
+.tok[tabindex] {
+	cursor: help;
+	outline: none;
+	border-radius: 2px;
+}
+
+.tok[tabindex]:focus-visible {
+	box-shadow: 0 0 0 2px var(--accent-tertiary);
+}
+
+.tok .tip {
+	position: absolute;
+	right: 0;
+	top: calc(100% + 8px);
+	z-index: 5;
+	width: 240px;
+	padding: 0.7rem 0.8rem;
+	text-align: left;
+	background: var(--bg-elevated);
+	border: 1px solid rgba(212, 165, 116, 0.25);
+	border-radius: var(--radius-md);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+	font-size: 0.66rem;
+	color: var(--text-secondary);
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 0.15s ease;
+}
+
+.tok:hover .tip,
+.tok:focus .tip {
+	visibility: visible;
+	opacity: 1;
+}
+
+.tok .tip dl {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 0.25rem 0.75rem;
+	margin: 0;
+}
+
+.tok .tip dt {
+	color: var(--text-muted);
+}
+
+.tok .tip dd {
+	margin: 0;
+	text-align: right;
+	color: var(--text-primary);
+	font-variant-numeric: tabular-nums;
+}
+
+.tok .tip p {
+	margin: 0.5rem 0 0;
+	color: var(--text-muted);
+	font-size: 0.6rem;
+	line-height: 1.5;
 }
 
 .scorebig {
@@ -849,6 +1016,18 @@ a.chip:hover {
 	.run {
 		grid-template-columns: 32px 1fr;
 		row-gap: 0.75rem;
+	}
+
+	.tok {
+		grid-column: 2;
+		text-align: left;
+		border-left: 0;
+		padding-left: 0;
+	}
+
+	.tok .tip {
+		left: 0;
+		right: auto;
 	}
 
 	.runside {
@@ -1102,4 +1281,16 @@ a.chip:hover {
 
 .toggle button.hum[data-on="true"] {
 	background: var(--lab-accent);
+}
+
+.toggle button.spd[data-on="true"] {
+	background: var(--accent-tertiary);
+	color: #f5f0e8;
+}
+
+/* These set display, which would otherwise override the hidden attribute. */
+.toggle[hidden],
+.toggle button[hidden],
+.legend[hidden] {
+	display: none;
 }
