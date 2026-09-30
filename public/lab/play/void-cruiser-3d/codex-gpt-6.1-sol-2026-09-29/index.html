@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0c20" />
+    <meta
+      name="description"
+      content="An arcade escape through a collapsing asteroid belt. Fly a cruiser, burn fuel, and break everything."
+    />
+    <title>Void Cruiser 3D | Break the belt</title>
+    <script type="module" crossorigin src="./assets/index-Bm8eJpj-.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CJ4s_1lJ.css">
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="game" aria-label="Void Cruiser 3D game"></canvas>
+      <canvas id="effects" aria-hidden="true"></canvas>
+      <div id="hud" hidden>
+        <div class="hud-top">
+          <div class="score-block">
+            <span class="label">Run score</span
+            ><strong id="score">000000</strong><span id="combo">×1</span>
+          </div>
+          <div class="route">
+            <span id="sector">01 / SHATTER BELT</span>
+            <div class="route-track"><i id="progress"></i></div>
+            <span id="clock">00:00</span>
+          </div>
+          <div class="hud-actions">
+            <button id="pause" aria-label="Pause game">
+              Pause <kbd>Esc</kbd></button
+            ><button id="mute" aria-label="Mute audio">
+              Sound on <kbd>M</kbd>
+            </button>
+          </div>
+        </div>
+        <div id="boss-hud" hidden>
+          <span>THE WARDEN <small id="shield-status">Core exposed</small></span>
+          <div><i id="boss-health"></i></div>
+        </div>
+        <div id="announcement"><strong></strong><span></span></div>
+        <div class="hud-bottom">
+          <div class="meters">
+            <div class="meter hull">
+              <span>Hull <b id="hull-value">100</b></span>
+              <div><i id="hull-bar"></i></div>
+            </div>
+            <div class="meter fuel">
+              <span>Fuel <b id="fuel-value">100</b></span>
+              <div><i id="fuel-bar"></i></div>
+            </div>
+            <small id="flight-status">CRUISE / Salvage pulls in nearby</small>
+          </div>
+          <div class="weapon-info">
+            <small id="depth-status">Q pulls back / E pushes forward</small
+            ><span class="label">Weapon system</span
+            ><strong id="weapon-name">Twin plasma</strong
+            ><small id="weapon-hint">Hold F to overclock. Costs fuel.</small>
+          </div>
+          <div class="flight-keys">
+            <span><kbd>W A S D</kbd> steer</span
+            ><span><kbd>Shift</kbd> boost & ram</span
+            ><span><kbd>Q / E</kbd> depth</span>
+          </div>
+        </div>
+        <div id="warning"></div>
+      </div>
+      <section id="overlay" class="overlay">
+        <div class="title-content">
+          <div class="edition">
+            <span class="edition-line"></span> ARCADE FLIGHT / 3D
+            <span class="edition-line"></span>
+          </div>
+          <h1>
+            <span>VOID</span><span>CRUISER<span class="three">3D</span></span>
+          </h1>
+          <p class="tagline">Break the belt. Burn the tank. Get out alive.</p>
+          <div class="brief">
+            <p>You stole a cruiser. The belt wants it back.</p>
+            <p>
+              Smash rocks for fuel. Hunt drones for weapons.<br />Destroy the
+              Warden to open the exit.
+            </p>
+          </div>
+          <button id="launch" class="primary">
+            Launch cruiser <kbd>Enter</kbd>
+          </button>
+          <div class="title-controls">
+            <div>
+              <kbd>Mouse / WASD</kbd
+              ><span>Steer. Guns fire automatically.</span>
+            </div>
+            <div>
+              <kbd>Shift</kbd><span>Boost, ram rocks, grab salvage.</span>
+            </div>
+            <div>
+              <kbd>F / Right click</kbd
+              ><span>Overclock. More fire, less fuel.</span>
+            </div>
+          </div>
+          <p id="title-record" class="record">
+            Best run 000000 / Target 50,000
+          </p>
+        </div>
+        <div class="ship-caption">
+          <span>VC-09 / RECLAIMED CRUISER</span>
+          <p>
+            Twin plasma mounts<br />Armored ram bow<br />Very questionable fuel
+            economy
+          </p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
