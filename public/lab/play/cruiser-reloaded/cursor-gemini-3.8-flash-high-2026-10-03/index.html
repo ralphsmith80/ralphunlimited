@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Cruiser Reloaded — Arcade Shmup</title>
+  <link rel="icon" type="image/png" href="./assets/images/ship/tyrian_ship_0.png" />
+
+  <style>@font-face{font-family:RetroLCD;src:url(./assets/fonts/advanced_pixel_lcd-7.ttf)format("truetype")}@font-face{font-family:PressStart2P;src:url(./assets/fonts/PressStart2P.ttf)format("truetype")}@font-face{font-family:Minecraftia;src:url(./assets/fonts/Minecraftia2.ttf)format("truetype")}@font-face{font-family:Paskowy;src:url(./assets/fonts/Paskowy.ttf)format("truetype")}*{box-sizing:border-box;-webkit-user-select:none;user-select:none;margin:0;padding:0}body{color:#e0f0ff;background-color:#030408;background-image:radial-gradient(circle at 50% 30%,#0d122b 0%,#030408 100%);flex-direction:column;justify-content:center;align-items:center;width:100vw;height:100vh;font-family:PressStart2P,Minecraftia,monospace;display:flex;overflow:hidden}#app-container{background:#000;border:2px solid #1a2744;border-radius:6px;justify-content:center;align-items:center;width:100vw;max-width:1280px;height:100vh;max-height:720px;display:flex;position:relative;overflow:hidden;box-shadow:0 0 40px #00b4ff33,0 0 100px #000000e6}#game-canvas{width:100%;height:100%;image-rendering:-moz-crisp-edges;image-rendering:-webkit-crisp-edges;image-rendering:pixelated;image-rendering:crisp-edges;cursor:crosshair;display:block}.crt-overlay{pointer-events:none;z-index:20;background:linear-gradient(#12101000 50%,#00000040 50%) 0 0/100% 4px,linear-gradient(90deg,#ff000008,#00ff0003,#0000ff08) 0 0/6px 100%;width:100%;height:100%;position:absolute;top:0;left:0;box-shadow:inset 0 0 80px #000000bf}#ui-overlay{pointer-events:none;z-index:30;flex-direction:column;justify-content:space-between;width:100%;height:100%;padding:16px;display:flex;position:absolute;top:0;left:0}.hud-dom-bar{text-shadow:0 0 8px #00e5ff;color:#92e0ff;justify-content:space-between;align-items:center;width:100%;font-size:11px;display:flex}.clickable-controls{pointer-events:auto;align-items:center;gap:12px;display:flex}.arcade-btn{color:#0fc;cursor:pointer;text-transform:uppercase;background:linear-gradient(#1f4068 0%,#111e38 100%);border:2px solid #0fc;outline:none;padding:10px 18px;font-family:PressStart2P,monospace;font-size:11px;transition:all .1s;box-shadow:0 0 10px #00ffcc4d,inset 0 0 8px #0fc3}.arcade-btn:hover{color:#030408;background:linear-gradient(#0fc 0%,#097 100%);transform:translateY(-1px);box-shadow:0 0 18px #0fcc}.arcade-btn:active{transform:translateY(1px)}.arcade-btn.secondary{color:#f07;background:linear-gradient(#3d1428 0%,#1a0812 100%);border-color:#f07;box-shadow:0 0 10px #ff00774d}.arcade-btn.secondary:hover{color:#fff;background:linear-gradient(#f07 0%,#aa0050 100%);box-shadow:0 0 18px #f07c}#action-zone{pointer-events:auto;flex-direction:column;align-items:center;gap:16px;display:flex;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}#manual-modal{z-index:50;pointer-events:auto;background:#0a0f1ef5;border:2px solid #00e5ff;border-radius:8px;width:85%;max-width:680px;max-height:80%;padding:24px;display:none;position:absolute;top:50%;left:50%;overflow-y:auto;transform:translate(-50%,-50%);box-shadow:0 0 30px #00e5ff66}#manual-modal h2{color:#0fc;text-align:center;margin-bottom:16px;font-size:16px}#manual-modal p,#manual-modal li{color:#cde;margin-bottom:10px;font-size:10px;line-height:1.8}#manual-modal strong{color:#fd4}#touch-controls{pointer-events:none;z-index:40;justify-content:space-between;width:100%;padding:0 30px;display:none;position:absolute;bottom:20px;left:0}@media (pointer:coarse){#touch-controls{display:flex}}</style>
+  <script type="module" crossorigin src="./assets/index-3bMg_VKL.js"></script>
+</head>
+<body>
+  <!-- Hidden elements to guarantee font availability immediately -->
+  <div style="font-family: 'PressStart2P'; position: absolute; visibility: hidden;">Preload Font</div>
+  <div style="font-family: 'RetroLCD'; position: absolute; visibility: hidden;">Preload Font</div>
+
+  <div id="app-container">
+    <canvas id="game-canvas" width="1280" height="720"></canvas>
+    <div class="crt-overlay"></div>
+
+    <div id="ui-overlay">
+      <div class="hud-dom-bar">
+        <div id="dom-score-indicator">CRUISER RELOADED v2.0</div>
+        <div class="clickable-controls">
+          <button id="btn-audio" class="arcade-btn" style="padding: 6px 12px; font-size: 9px;" title="Toggle Audio">AUDIO: ON</button>
+          <button id="btn-guide" class="arcade-btn secondary" style="padding: 6px 12px; font-size: 9px;" title="View Pilot Manual">MANUAL [H]</button>
+        </div>
+      </div>
+
+      <div id="action-zone">
+        <button id="btn-launch" class="arcade-btn" style="font-size: 14px; padding: 14px 28px;">LAUNCH CRUISER ↗</button>
+      </div>
+
+      <div class="hud-dom-bar" style="justify-content: center; font-size: 9px; opacity: 0.7;">
+        [WASD / ARROWS] FLY &bull; [SPACE / LMB] FIRE &bull; [SHIFT] AFTERBURNER &bull; [E / RMB] OVERDRIVE &bull; [P] PAUSE
+      </div>
+    </div>
+
+    <!-- Field Guide Modal -->
+    <div id="manual-modal">
+      <h2>PILOT FLIGHT MANUAL</h2>
+      <p><strong>1. CORE ENERGETICS:</strong> Your Cruiser consumes <em>Fuel</em> to maintain sub-light propulsion. Afterburners [SHIFT] and weapons consume additional fuel. When fuel hits 0%, engines stall into Emergency Glide!</p>
+      <p><strong>2. SALVAGE & BOOSTS:</strong> Blast asteroids and drones to release Fuel Pods, Nanite Health Kits, and Scrap Pearls. Flying close to debris without hitting triggers <em>Near-Miss Graze</em> for bonus fuel & score!</p>
+      <p><strong>3. OVERDRIVE PROTOCOL:</strong> Press [E] or Right-Click to overclock reactor. Weapon fire rate triples and scrap is drawn by tractor beam, but fuel drains rapidly. High risk, immense score multiplier!</p>
+      <p><strong>4. SECTOR THREATS:</strong> Advance through 4 sectors: Outer Debris Field, Hornet Swarm, Proximity Minefield, and the Void Dreadnought Flagship!</p>
+      <div style="text-align: center; margin-top: 16px;">
+        <button id="btn-close-manual" class="arcade-btn">CLOSE MANUAL</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
