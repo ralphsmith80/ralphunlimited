@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-30T18:15:41.834Z",
+  "generatedAt": "2026-10-03T20:34:47.894Z",
   "benchmarks": [
     {
       "id": "retro-cruiser",
@@ -330,6 +330,85 @@
       "rubricId": "web-arcade-v1",
       "scorerVersion": "2.2.0",
       "runs": [
+        {
+          "slug": "cursor-gemini-3.8-flash-high-2026-10-03",
+          "agent": "cursor",
+          "model": "gemini-3.8-flash-high",
+          "reasoning": "default",
+          "ranAt": "2026-10-03T16:05:05.637Z",
+          "durationMs": 1100905,
+          "tokens": null,
+          "total": 89,
+          "band": "strong",
+          "gatePassed": true,
+          "gateFailedAt": null,
+          "criteria": [
+            {
+              "id": "runtime",
+              "label": "Runtime health",
+              "weight": 2,
+              "score": 5,
+              "rationale": "no console errors, first frame in 65ms, 59fps median"
+            },
+            {
+              "id": "loop",
+              "label": "Playable loop",
+              "weight": 2,
+              "score": 5,
+              "rationale": "input reaches a handler, score changes, reaches game over"
+            },
+            {
+              "id": "depth",
+              "label": "Systems depth",
+              "weight": 4,
+              "score": 3.2,
+              "rationale": "29 distinct sprite sources, 44 distinct screens"
+            },
+            {
+              "id": "assets",
+              "label": "Asset lineage",
+              "weight": 2,
+              "score": 5,
+              "rationale": "21 of 21 original assets reused by name"
+            },
+            {
+              "id": "code",
+              "label": "Code quality",
+              "weight": 2,
+              "score": 5,
+              "rationale": "19 modules, largest file 594 lines, typed, has tests"
+            },
+            {
+              "id": "docs",
+              "label": "Documentation",
+              "weight": 1,
+              "score": 5,
+              "rationale": "11777 byte README, 17 sections"
+            }
+          ],
+          "observations": [
+            {
+              "id": "loop.restartWorks",
+              "label": "Restarts after game over",
+              "value": true,
+              "status": "pass",
+              "detail": null
+            },
+            {
+              "id": "depth.spawnRateDelta",
+              "label": "Late vs early draw calls",
+              "value": 1.16,
+              "status": "info",
+              "detail": "159.7 → 184.9 draws per frame over 25s of one run"
+            }
+          ],
+          "buildBytes": 8658659,
+          "playable": "/lab/play/voidbreaker/cursor-gemini-3.8-flash-high-2026-10-03/index.html",
+          "shots": [
+            "shots/voidbreaker/cursor-gemini-3.8-flash-high-2026-10-03/00-title.webp",
+            "shots/voidbreaker/cursor-gemini-3.8-flash-high-2026-10-03/02-mid.webp"
+          ]
+        },
         {
           "slug": "claude-claude-sonnet-5-5-2026-09-29",
           "agent": "claude",
@@ -1703,6 +1782,85 @@
           ],
           "durationMs": null,
           "tokens": null
+        },
+        {
+          "slug": "cursor-gemini-3.8-flash-high-2026-10-03",
+          "agent": "cursor",
+          "model": "gemini-3.8-flash-high",
+          "reasoning": "default",
+          "ranAt": "2026-10-03T15:23:07.447Z",
+          "durationMs": 1100453,
+          "tokens": null,
+          "total": 98,
+          "band": "exceptional",
+          "gatePassed": true,
+          "gateFailedAt": null,
+          "criteria": [
+            {
+              "id": "runtime",
+              "label": "Runtime health",
+              "weight": 2,
+              "score": 5,
+              "rationale": "no console errors, first frame in 90ms, 59fps median"
+            },
+            {
+              "id": "loop",
+              "label": "Playable loop",
+              "weight": 2,
+              "score": 5,
+              "rationale": "input reaches a handler, score changes, reaches game over"
+            },
+            {
+              "id": "depth",
+              "label": "Systems depth",
+              "weight": 4,
+              "score": 4.6,
+              "rationale": "52 distinct sprite sources, 67 distinct screens"
+            },
+            {
+              "id": "assets",
+              "label": "Asset lineage",
+              "weight": 2,
+              "score": 5,
+              "rationale": "93 of 93 original assets reused by name"
+            },
+            {
+              "id": "code",
+              "label": "Code quality",
+              "weight": 2,
+              "score": 5,
+              "rationale": "18 modules, largest file 541 lines, typed, has tests"
+            },
+            {
+              "id": "docs",
+              "label": "Documentation",
+              "weight": 1,
+              "score": 5,
+              "rationale": "8617 byte README, 13 sections"
+            }
+          ],
+          "observations": [
+            {
+              "id": "loop.restartWorks",
+              "label": "Restarts after game over",
+              "value": true,
+              "status": "pass",
+              "detail": null
+            },
+            {
+              "id": "depth.spawnRateDelta",
+              "label": "Late vs early draw calls",
+              "value": 1.36,
+              "status": "info",
+              "detail": "82.9 → 112.7 draws per frame over 76s of one run"
+            }
+          ],
+          "buildBytes": 62666772,
+          "playable": "/lab/play/cruiser-reloaded/cursor-gemini-3.8-flash-high-2026-10-03/index.html",
+          "shots": [
+            "shots/cruiser-reloaded/cursor-gemini-3.8-flash-high-2026-10-03/00-title.webp",
+            "shots/cruiser-reloaded/cursor-gemini-3.8-flash-high-2026-10-03/02-mid.webp"
+          ]
         },
         {
           "slug": "claude-claude-sonnet-5-5-2026-09-29",
