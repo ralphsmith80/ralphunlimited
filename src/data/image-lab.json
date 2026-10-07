@@ -51,5 +51,176 @@
       }
     ]
   },
-  "runs": []
+  "runs": [
+    {
+      "model": "google/gemini-nano-banana-2.1",
+      "provider": "OpenRouter",
+      "ranAt": "2026-10-07T19:20:45.267Z",
+      "suiteVersion": "image-quality-v1",
+      "settings": "One request per prompt; n=1; requested sizes: watch-repairer: 2368x1776, night-market: 1776x2368, paper-observatory: 2048x2048, same-kettle: 2368x1776, mara-triptych: 3544x1184; other settings use provider defaults.",
+      "notes": "First outputs, no edits or automatic retries.",
+      "durationMs": 156005,
+      "costUsd": 0,
+      "slug": "image-2a971eca9a7cb260dac7d34e",
+      "scorerVersion": "image-checks-v1",
+      "total": 100,
+      "images": [
+        {
+          "promptId": "watch-repairer",
+          "file": "/lab/images/46c0f10ba1ad8156750f93a808dcec2d1e1039748f8f71fdc387dcfc85eebef2.jpg",
+          "sha256": "46c0f10ba1ad8156750f93a808dcec2d1e1039748f8f71fdc387dcfc85eebef2",
+          "width": 4800,
+          "height": 3584,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": true
+          },
+          "total": 100,
+          "error": null
+        },
+        {
+          "promptId": "night-market",
+          "file": "/lab/images/af393504556def77509f67ed99e99c8dafb9ce1c0aecfa3b0645c941c5484916.jpg",
+          "sha256": "af393504556def77509f67ed99e99c8dafb9ce1c0aecfa3b0645c941c5484916",
+          "width": 3584,
+          "height": 4800,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": true
+          },
+          "total": 100,
+          "error": null
+        },
+        {
+          "promptId": "paper-observatory",
+          "file": "/lab/images/d9860cf1472b37f907ee1c97ced080deec2fd71ac3af310d8f56625bc26a6ccd.jpg",
+          "sha256": "d9860cf1472b37f907ee1c97ced080deec2fd71ac3af310d8f56625bc26a6ccd",
+          "width": 2048,
+          "height": 2048,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": true
+          },
+          "total": 100,
+          "error": null
+        },
+        {
+          "promptId": "same-kettle",
+          "file": "/lab/images/d99491cb74684cb74bcaad22ce20f374d10a3274290ec227349a1fbf8cfff782.jpg",
+          "sha256": "d99491cb74684cb74bcaad22ce20f374d10a3274290ec227349a1fbf8cfff782",
+          "width": 4800,
+          "height": 3584,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": true
+          },
+          "total": 100,
+          "error": null
+        },
+        {
+          "promptId": "mara-triptych",
+          "file": "/lab/images/f919c7e18ad860b423604cea0528aa2f0a393b947bc244411cc9d5cfe2bddd84.jpg",
+          "sha256": "f919c7e18ad860b423604cea0528aa2f0a393b947bc244411cc9d5cfe2bddd84",
+          "width": 7168,
+          "height": 2368,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": true
+          },
+          "total": 100,
+          "error": null
+        }
+      ]
+    },
+    {
+      "model": "google/gemini-3-pro-image",
+      "provider": "OpenRouter",
+      "ranAt": "2026-10-07T18:55:51.295Z",
+      "suiteVersion": "image-quality-v1",
+      "settings": "One request per prompt; n=1; requested sizes: watch-repairer: 2368x1776, night-market: 1776x2368, paper-observatory: 2048x2048, same-kettle: 2368x1776, mara-triptych: 3544x1184; other settings use provider defaults.",
+      "notes": "First outputs, no edits or automatic retries.",
+      "durationMs": 225263,
+      "costUsd": 1.098156,
+      "slug": "image-468da7fb2a2458e3eea6767b",
+      "scorerVersion": "image-checks-v1",
+      "total": 100,
+      "images": [
+        {
+          "promptId": "watch-repairer",
+          "file": "/lab/images/bdd7eb47963dfe540f73736f71671c438a49b1742f1cca6200d47f633d6f069e.png",
+          "sha256": "bdd7eb47963dfe540f73736f71671c438a49b1742f1cca6200d47f633d6f069e",
+          "width": 4800,
+          "height": 3584,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": true
+          },
+          "total": 100,
+          "error": null
+        },
+        {
+          "promptId": "night-market",
+          "file": "/lab/images/631b63cc755b6515cdac330b73d19785b6716ec6ec3bfa999bbf986bb4b9abf5.png",
+          "sha256": "631b63cc755b6515cdac330b73d19785b6716ec6ec3bfa999bbf986bb4b9abf5",
+          "width": 3584,
+          "height": 4800,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": true
+          },
+          "total": 100,
+          "error": null
+        },
+        {
+          "promptId": "paper-observatory",
+          "file": "/lab/images/d8dc039f6bf757258e746dbc306dc57906543488346411ec3bb2b399faad08c4.png",
+          "sha256": "d8dc039f6bf757258e746dbc306dc57906543488346411ec3bb2b399faad08c4",
+          "width": 2048,
+          "height": 2048,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": true
+          },
+          "total": 100,
+          "error": null
+        },
+        {
+          "promptId": "same-kettle",
+          "file": "/lab/images/ed40bb697b265a108a58110b8c1b43b0d0b63a5ea601be63108b83c785a9918b.png",
+          "sha256": "ed40bb697b265a108a58110b8c1b43b0d0b63a5ea601be63108b83c785a9918b",
+          "width": 4800,
+          "height": 3584,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": true
+          },
+          "total": 100,
+          "error": null
+        },
+        {
+          "promptId": "mara-triptych",
+          "file": "/lab/images/78cfd9f605287d694e2231d42e18b2228db1257184ef54e6ce22a8635719c8af.png",
+          "sha256": "78cfd9f605287d694e2231d42e18b2228db1257184ef54e6ce22a8635719c8af",
+          "width": 7168,
+          "height": 2368,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": true
+          },
+          "total": 100,
+          "error": null
+        }
+      ]
+    }
+  ]
 }
