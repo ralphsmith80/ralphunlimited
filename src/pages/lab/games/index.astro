@@ -1,0 +1,456 @@
+---
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import LabTabs from '../../../components/lab/LabTabs.astro';
+import { SITE_TITLE } from '../../../consts';
+import {
+	benchmarks,
+	bandColour,
+	outputPerMinute,
+	runLabel,
+	runTime,
+	standings,
+	stats,
+} from '../../../lib/lab';
+import '../../../styles/lab.css';
+
+const rows = standings();
+// Every time bar shares one scale, the slowest run in the table, so any two cells compare directly.
+const slowestMs = Math.max(
+	0,
+	...rows.flatMap((row) => [...row.byBenchmark.values()].map((run) => run.durationMs ?? 0)),
+);
+// Data published before run times existed has none; show no time bars rather than "no time" everywhere.
+const showTimes = slowestMs > 0;
+// Output speed fills share one scale too, the fastest cell in the table. The mode only
+// appears once some cell has a rate.
+const fastestRate = Math.max(
+	0,
+	...rows.flatMap((row) => [...row.byBenchmark.values()].map((run) => outputPerMinute(run) ?? 0)),
+);
+const showRates = fastestRate > 0;
+// Keep the chosen play-first story order independent of the benchmark publish order.
+const playOrder = new Map(
+	['voidbreaker', 'cruiser-reloaded', 'retro-cruiser'].map((id, index) => [id, index] as const),
+);
+const playBenchmarks = [...benchmarks].sort(
+	(a, b) => (playOrder.get(a.id) ?? playOrder.size) - (playOrder.get(b.id) ?? playOrder.size),
+);
+const playableGames = playBenchmarks.flatMap((benchmark) =>
+	benchmark.runs.flatMap((run) => {
+		if (!run.playable) return [];
+		return [
+			{
+				benchmarkId: benchmark.id,
+				benchmarkName: benchmark.name.split(' — ')[0],
+				label: runLabel(run),
+				agent: run.agent,
+				href: run.playable,
+				shot: run.shots[1] ?? run.shots[0] ?? null,
+			},
+		];
+	}),
+);
+const description =
+	'AI coding models rebuild my old games. Play every build in your browser and decide which versions work best.';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Game benchmarks | The Lab | ${SITE_TITLE}`} description={description} />
+	</head>
+	<body>
+		<Header />
+		<main class="lab-main">
+			<LabTabs active="games" />
+			<div class="lab-header">
+				<p class="crumb"><a href="/lab/">The Lab</a> / Games</p>
+				<span class="lab-eyebrow">Game benchmarks</span>
+				<h1>AI Game Benchmarks</h1>
+				<p class="lab-lede">
+					I hand coding models an old game of mine and a goal. They get one shot, no hints, no
+					follow-up. Everything they build is scored by the same harness and playable below.
+				</p>
+				<aside class="lab-score-callout">
+					<span class="lab-score-callout-icon" aria-hidden="true">▶</span>
+					<div>
+						<strong>We have numbers. You decide the score.</strong>
+						<p>
+							The automated harness checks technical details, but it cannot judge fun. Play any
+							build and score it yourself.
+						</p>
+					</div>
+					<a href="#play-the-builds">Play the games ↓</a>
+				</aside>
+				<div class="lab-stats">
+					<div class="lab-stat"><b>{stats.benchmarks}</b><span>Benchmarks</span></div>
+					<div class="lab-stat"><b>{stats.runs}</b><span>Runs</span></div>
+					<div class="lab-stat"><b>{stats.playable}</b><span>Playable</span></div>
+					<div class="lab-stat"><b>{stats.models}</b><span>Models</span></div>
+				</div>
+			</div>
+
+			<section class="lab-section" aria-labelledby="benchmarks-heading">
+				<div class="lab-section-head">
+					<div>
+						<span class="lab-section-eyebrow">Three experiments</span>
+						<h2 id="benchmarks-heading">The benchmarks</h2>
+					</div>
+					<p>See the brief each model received, then compare what the models built.</p>
+				</div>
+				<div class="bench-grid">
+					{
+						playBenchmarks.map((benchmark) => {
+							const playable = benchmark.runs.filter((run) => run.playable).length;
+							return (
+								<a class="bench-card" href={`/lab/${benchmark.id}/`}>
+									<span class="flavor">{benchmark.category}</span>
+									<h3>{benchmark.name.split(' — ')[0]}</h3>
+									<p>{benchmark.summary}</p>
+									<div class="bench-foot">
+										<span class="playable-count">{playable} playable builds</span>
+										<span class="bench-link">Explore →</span>
+									</div>
+								</a>
+							);
+						})
+					}
+				</div>
+			</section>
+
+			<section class="playable-section" id="play-the-builds" aria-labelledby="play-heading">
+				<div class="playable-heading">
+					<span class="lab-section-eyebrow">{stats.playable} builds, ready now</span>
+					<h2 id="play-heading">Play the builds</h2>
+					<p>Pick a model and jump straight into its game.</p>
+				</div>
+				<div class="game-filters" role="group" aria-label="Filter playable builds">
+					<button type="button" data-game-filter="all" aria-pressed="true">All builds</button>
+					{
+						playBenchmarks.map((benchmark) => (
+							<button type="button" data-game-filter={benchmark.id} aria-pressed="false">
+								{benchmark.name.split(' — ')[0]}
+							</button>
+						))
+					}
+				</div>
+				<div class="game-rail-shell">
+					<div class="game-rail" data-game-rail tabindex="0">
+						{
+							playableGames.map((game) => (
+								<a
+									class="game-card"
+									data-game-card
+									data-benchmark={game.benchmarkId}
+									href={game.href}
+								>
+									<span class="game-thumb">
+										{game.shot && (
+											<img
+												src={`/lab/${game.shot}`}
+												alt={`${game.benchmarkName} built by ${game.label}`}
+												width="960"
+												height="600"
+												loading="lazy"
+											/>
+										)}
+										<span class="game-play-icon" aria-hidden="true">▶</span>
+									</span>
+									<span class="game-card-body">
+										<span class="game-benchmark">{game.benchmarkName}</span>
+										<strong>{game.label}</strong>
+										<span class="game-meta">
+											<span>via {game.agent}</span>
+											<span>Play now →</span>
+										</span>
+									</span>
+								</a>
+							))
+						}
+					</div>
+					<button class="game-rail-next" type="button" data-game-rail-next aria-label="Show more games">
+						<span aria-hidden="true">›</span>
+					</button>
+				</div>
+			</section>
+
+			<section class="standings-section" aria-labelledby="standings-heading">
+				<div class="rowhead">
+					<div>
+						<span class="lab-section-eyebrow">Secondary evidence</span>
+						<h2 id="standings-heading">Automated standings</h2>
+					</div>
+					<div class="toggle" id="standings-toggle" hidden>
+						<button type="button" data-mode="harness" data-on="true">Harness score</button>
+						<button type="button" data-mode="players" class="hum" data-on="false" hidden>
+							Player rating
+						</button>
+						{showRates && (
+							<button type="button" data-mode="speed" class="spd" data-on="false">
+								Output speed
+							</button>
+						)}
+					</div>
+				</div>
+				<p class="standings-intro">
+					Harness scores describe technical checks. They are useful for comparison, but they are
+					not a final judgment of the game.
+				</p>
+				<div class="matrix-wrap">
+					<table class="matrix">
+						<tr>
+							<th class="rowh"></th>
+							{benchmarks.map((benchmark) => <th>{benchmark.name.split(' — ')[0]}</th>)}
+						</tr>
+						{
+							rows.map((row) => (
+								<tr>
+									<th class="rowh">
+										{row.label}
+										<small>{row.agent}</small>
+									</th>
+									{benchmarks.map((benchmark) => {
+										const run = row.byBenchmark.get(benchmark.id);
+										if (!run) {
+											return (
+												<td>
+													<span class="chip empty">—</span>
+												</td>
+											);
+										}
+										const took = runTime(run);
+										const rate = outputPerMinute(run);
+										return (
+											<td>
+												<a
+													class="chip"
+													style={`background:${bandColour(run.band)}`}
+													data-chip
+													data-key={`${benchmark.id}/${run.slug}`}
+													data-total={run.total}
+													data-colour={bandColour(run.band)}
+													data-label={run.gatePassed ? 'view' : 'gate'}
+													data-rate={rate ?? undefined}
+													data-rate-fill={rate === null ? undefined : Math.round((rate / fastestRate) * 100)}
+													data-tip-title={`${row.label} · ${benchmark.name.split(' — ')[0]}`}
+													data-tokens={run.tokens ? JSON.stringify(run.tokens) : undefined}
+													data-time={took ?? undefined}
+													href={`/lab/${benchmark.id}/${run.slug}/`}
+												>
+													{run.total}
+													<small>{run.gatePassed ? 'view' : 'gate'}</small>
+												</a>
+												{showTimes && (took ? (
+													<span class="time-line">
+														<span class="track">
+															<i style={`width:${((run.durationMs ?? 0) / slowestMs) * 100}%`} />
+														</span>
+														{took}
+													</span>
+												) : (
+													<span class="time-line none">no time</span>
+												))}
+											</td>
+										);
+									})}
+								</tr>
+							))
+						}
+					</table>
+				</div>
+				<div class="legend" data-legend="score">
+					<span><i style="background:var(--lab-strong)"></i>75–100 strong</span>
+					<span><i style="background:var(--lab-partial)"></i>50–74 partial</span>
+					<span><i style="background:var(--lab-thin)"></i>1–49 thin</span>
+					<span><i style="background:var(--lab-dead)"></i>0 gate failed</span>
+					<span><i style="border:1px dashed rgba(212,165,116,.4);background:transparent"></i>not attempted</span>
+					{showTimes && <span><i style="height:3px;vertical-align:2px;background:var(--accent-tertiary)"></i>run time (full bar is the slowest run)</span>}
+				</div>
+				{showRates && (
+					<div class="legend" data-legend="speed" hidden>
+						<span>
+							<i style="background:linear-gradient(to right, var(--rate-fill) 60%, var(--rate-rest) 60%);border:1px solid rgba(212,165,116,.18)"></i>
+							{`out tok/min: output tokens per minute of run time (a full chip is the fastest run, ${fastestRate.toLocaleString('en-US')})`}
+						</span>
+						<span><i style="background:rgba(212,165,116,.14)"></i>no tokens reported</span>
+						<span><i style="border:1px dashed rgba(212,165,116,.4);background:transparent"></i>not attempted</span>
+					</div>
+				)}
+				<div class="token-tip" id="token-tip" role="tooltip" hidden></div>
+			</section>
+		</main>
+		<Footer />
+		<script>
+			import { ConvexClient } from "convex/browser";
+			import { api } from "../../../../convex/_generated/api";
+
+			const gameRail = document.querySelector<HTMLElement>("[data-game-rail]");
+			const gameFilters = document.querySelectorAll<HTMLButtonElement>("[data-game-filter]");
+			const gameCards = document.querySelectorAll<HTMLElement>("[data-game-card]");
+			const gameRailNext = document.querySelector<HTMLButtonElement>("[data-game-rail-next]");
+
+			for (const filterButton of gameFilters) {
+				filterButton.addEventListener("click", () => {
+					const filter = filterButton.dataset.gameFilter;
+					for (const button of gameFilters) {
+						button.setAttribute("aria-pressed", String(button === filterButton));
+					}
+					for (const card of gameCards) {
+						card.hidden = filter !== "all" && card.dataset.benchmark !== filter;
+					}
+					gameRail?.scrollTo({ left: 0, behavior: "smooth" });
+				});
+			}
+
+			gameRailNext?.addEventListener("click", () => {
+				if (!gameRail) return;
+				const atEnd = gameRail.scrollLeft + gameRail.clientWidth >= gameRail.scrollWidth - 8;
+				gameRail.scrollTo({
+					left: atEnd ? 0 : gameRail.scrollLeft + gameRail.clientWidth * 0.8,
+					behavior: "smooth",
+				});
+			});
+
+			type Mode = "harness" | "players" | "speed";
+			type Tokens = { input: number; cachedInput: number; output: number };
+
+			const url = import.meta.env.PUBLIC_CONVEX_URL;
+			const toggle = document.getElementById("standings-toggle");
+			const tip = document.getElementById("token-tip");
+			const count = (value: number) => value.toLocaleString("en-US");
+			const percent = (part: number, whole: number) => `${whole ? Math.round((part / whole) * 100) : 0}%`;
+			let ratings: Record<string, { count: number; overall: number }> = {};
+
+			const paint = (mode: Mode) => {
+				if (!toggle) return;
+				for (const button of toggle.querySelectorAll("button")) {
+					button.dataset.on = String(button.dataset.mode === mode);
+				}
+				for (const legend of document.querySelectorAll<HTMLElement>("[data-legend]")) {
+					legend.hidden = (legend.dataset.legend === "speed") !== (mode === "speed");
+				}
+				for (const chip of document.querySelectorAll<HTMLElement>("[data-chip]")) {
+					chip.classList.remove("rate", "norate");
+					chip.removeAttribute("aria-describedby");
+					if (mode === "harness") {
+						chip.style.background = chip.dataset.colour!;
+						chip.innerHTML = `${chip.dataset.total}<small>${chip.dataset.label}</small>`;
+					} else if (mode === "players") {
+						const rating = ratings[chip.dataset.key!];
+						if (rating?.count) {
+							// The human number stays in the blog's warm palette; the star
+							// glyph and vote count are what mark it as the other instrument.
+							const hue =
+								rating.overall >= 4 ? "#e8c496" : rating.overall >= 3 ? "#d4a574" : "#9b7e5e";
+							chip.style.background = hue;
+							chip.innerHTML = `${rating.overall.toFixed(1)}★<small>${rating.count} vote${rating.count === 1 ? "" : "s"}</small>`;
+						} else {
+							chip.classList.add("norate");
+							chip.style.background = "rgba(212,165,116,.14)";
+							chip.innerHTML = `–<small>unrated</small>`;
+						}
+					} else if (chip.dataset.rate) {
+						// The fill length is the rate against the fastest cell in the table.
+						const fill = chip.dataset.rateFill;
+						chip.classList.add("rate");
+						chip.setAttribute("aria-describedby", "token-tip");
+						chip.style.background = `linear-gradient(to right, var(--rate-fill) ${fill}%, var(--rate-rest) ${fill}%)`;
+						chip.innerHTML = `${count(Number(chip.dataset.rate))}<small>out tok/min</small>`;
+					} else {
+						chip.classList.add("norate");
+						chip.style.background = "rgba(212,165,116,.14)";
+						chip.innerHTML = `–<small>no tokens</small>`;
+					}
+				}
+			};
+
+			// One shared card for the full token count. It is fixed to the viewport,
+			// so the sideways-scrolling table cannot clip it.
+			const showTip = (chip: HTMLElement) => {
+				if (!tip || !chip.dataset.tokens) return;
+				const tokens = JSON.parse(chip.dataset.tokens) as Tokens;
+				const rows: [string, string][] = [
+					["Output", count(tokens.output)],
+					["Input", count(tokens.input)],
+					["Cached input", `${count(tokens.cachedInput)} (${percent(tokens.cachedInput, tokens.input)})`],
+					["Fresh input", count(tokens.input - tokens.cachedInput)],
+					["Run time", chip.dataset.time ?? ""],
+				];
+				const head = document.createElement("div");
+				head.className = "head";
+				head.textContent = chip.dataset.tipTitle ?? "";
+				const list = document.createElement("dl");
+				for (const [term, value] of rows) {
+					const dt = document.createElement("dt");
+					const dd = document.createElement("dd");
+					dt.textContent = term;
+					dd.textContent = value;
+					list.append(dt, dd);
+				}
+				const note = document.createElement("p");
+				note.textContent = "Output includes reasoning tokens.";
+				tip.replaceChildren(head, list, note);
+				tip.hidden = false;
+				const box = chip.getBoundingClientRect();
+				const left = Math.min(Math.max(8, box.right - tip.offsetWidth), innerWidth - tip.offsetWidth - 8);
+				const below = box.bottom + 8 + tip.offsetHeight < innerHeight;
+				tip.style.left = `${left}px`;
+				tip.style.top = `${below ? box.bottom + 8 : box.top - tip.offsetHeight - 8}px`;
+			};
+			const hideTip = () => {
+				if (tip) tip.hidden = true;
+			};
+			const rateChip = (target: EventTarget | null) =>
+				target instanceof Element ? target.closest<HTMLElement>("[data-chip].rate") : null;
+			// A keyboard-focused chip keeps its card: when a hover card closes or the page
+			// scrolls, the card returns to (or follows) the focused chip.
+			const settleTip = () => {
+				const focused = rateChip(document.activeElement);
+				if (focused) showTip(focused);
+				else hideTip();
+			};
+			document.addEventListener("pointerover", (event) => {
+				const chip = rateChip(event.target);
+				if (chip) showTip(chip);
+			});
+			document.addEventListener("pointerout", (event) => {
+				const chip = rateChip(event.target);
+				if (chip && !chip.contains(event.relatedTarget as Node | null)) settleTip();
+			});
+			document.addEventListener("focusin", (event) => {
+				const chip = rateChip(event.target);
+				if (chip) showTip(chip);
+			});
+			document.addEventListener("focusout", hideTip);
+			// Capture also catches the table's own sideways scroll, which does not bubble.
+			document.addEventListener("scroll", settleTip, { passive: true, capture: true });
+
+			if (toggle) {
+				const current = () =>
+					((toggle.querySelector('[data-on="true"]') as HTMLElement | null)?.dataset.mode as Mode) ??
+					"harness";
+				for (const button of toggle.querySelectorAll("button")) {
+					button.addEventListener("click", () => {
+						hideTip();
+						paint(button.dataset.mode as Mode);
+					});
+				}
+				// Output speed needs no server, so its button shows the toggle at once.
+				// Player rating waits for the ratings to load.
+				if (toggle.querySelector('[data-mode="speed"]')) toggle.hidden = false;
+				if (url) {
+					const client = new ConvexClient(url);
+					const players = toggle.querySelector<HTMLElement>('[data-mode="players"]');
+					client.onUpdate(api.votes.allRatings, {}, (all) => {
+						ratings = all as typeof ratings;
+						toggle.hidden = false;
+						if (players) players.hidden = false;
+						paint(current());
+					});
+				}
+			}
+		</script>
+	</body>
+</html>

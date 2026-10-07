@@ -1,0 +1,31 @@
+---
+/**
+ * The machine score beside the people's score. Game and image pages both use
+ * it, so the two benchmark types read the same way.
+ *
+ * The people's side usually loads from Convex after the page renders. Scripts
+ * fill it through `[data-human-value]` and `[data-human-sub]` inside the pair.
+ */
+interface Props {
+	machine: { label: string; value: string | number; max: number; sub?: string; colour?: string };
+	human: { label: string; value?: string; max: number; sub?: string };
+	compact?: boolean;
+}
+
+const { machine, human, compact = false } = Astro.props;
+---
+
+<div class:list={['dualscore', { compact }]}>
+	<div class="machine">
+		<div class="k">{machine.label}</div>
+		<div class="v" style={machine.colour ? `color:${machine.colour}` : undefined}>
+			{machine.value}<small> / {machine.max}</small>
+		</div>
+		{machine.sub && <div class="sub">{machine.sub}</div>}
+	</div>
+	<div class="human">
+		<div class="k">{human.label}</div>
+		<div class="v"><span data-human-value>{human.value ?? '–'}</span><small> / {human.max}</small></div>
+		<div class="sub" data-human-sub>{human.sub ?? 'no ratings yet'}</div>
+	</div>
+</div>
