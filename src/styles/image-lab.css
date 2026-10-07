@@ -19,8 +19,9 @@
 .image-lab details { padding: 1rem 0; border-bottom: var(--border-subtle); }
 .image-lab summary { cursor: pointer; font-weight: bold; }
 .image-lab fieldset { border: 0; padding: 0; }
-.image-lab label { display: grid; grid-template-columns: 1fr auto; gap: .5rem; margin: 1rem 0; }
-.image-lab label span { grid-column: 1 / -1; color: var(--text-muted); font-size: .85rem; }
+.image-lab legend { padding: 0; }
+.image-axis { display: grid; grid-template-columns: 1fr auto; gap: .5rem; margin: 1rem 0; }
+.image-axis span { grid-column: 1 / -1; color: var(--text-muted); font-size: .85rem; }
 .image-lab select { color: var(--text-primary); background: var(--bg-secondary); padding: .5rem; border: var(--border-subtle); }
 .image-lab :focus-visible { outline: 2px solid var(--text-primary); outline-offset: 4px; }
 .image-lab dd { margin: .2rem 0 1rem; }

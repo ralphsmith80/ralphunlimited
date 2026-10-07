@@ -18,6 +18,8 @@ as for game votes. Deployments and production data changes are separate from
 this PR. Later image runs arrive through the existing lab-data PR workflow.
 
 Image votes intentionally use the same anonymous per-browser guestbook policy
-as games. They are not authenticated ballots. The server validates the run ID
-format, prompt ID, browser ID, and all three 1-to-5 scores. Re-rating updates
-the existing vote. Game ratings and image ratings use separate tables.
+as games. They are not authenticated ballots. The server accepts votes only
+for published images that have a file. It also validates the browser ID and
+all three 1-to-5 scores. Re-rating updates the existing vote. Each vote also
+updates a per-image totals row, and the ratings query reads only those rows.
+Game ratings and image ratings use separate tables.

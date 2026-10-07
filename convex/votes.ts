@@ -1,6 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import imageLab from "../src/data/image-lab.json";
+import { imageLab } from "../src/lib/image-lab";
 
 const SLUG = /^[a-z0-9][a-z0-9.-]{0,80}$/;
 
@@ -93,7 +93,9 @@ export const allRatings = query({
 	},
 });
 
-const IMAGE_PROMPTS = new Set(imageLab.suite.prompts.map(prompt => prompt.id));
+// Images that exist and can be rated, keyed "runSlug/promptId". Data comes from the published catalog.
+const RATEABLE_IMAGES = new Set(imageLab.runs.flatMap(run =>
+  run.images.filter(image => image.file !== null).map(image => `${run.slug}/${image.promptId}`)));
 
 /** Same anonymous guestbook policy as games. A repeat vote updates one image. */
 export const castImageVote = mutation({
@@ -102,7 +104,7 @@ export const castImageVote = mutation({
     quality: v.number(), adherence: v.number(), fidelity: v.number(),
   },
   handler: async (ctx, args) => {
-    if (!/^image-[a-f0-9]{24}$/.test(args.runSlug) || !IMAGE_PROMPTS.has(args.promptId)) throw new Error("Unknown image");
+    if (!/^image-[a-f0-9]{24}$/.test(args.runSlug) || !RATEABLE_IMAGES.has(`${args.runSlug}/${args.promptId}`)) throw new Error("Unknown image");
     if (!/^[a-f0-9-]{16,64}$/.test(args.voterId)) throw new Error("Bad voter id");
     assertStars(args.quality, "quality"); assertStars(args.adherence, "adherence"); assertStars(args.fidelity, "fidelity");
     const existing = await ctx.db.query("imageVotes").withIndex("by_image_voter", (q) =>
@@ -110,23 +112,32 @@ export const castImageVote = mutation({
     const row = { ...args, updatedAt: Date.now() };
     if (existing) await ctx.db.patch(existing._id, row);
     else await ctx.db.insert("imageVotes", row);
+
+    // A changed vote swaps its old scores for the new ones; a first vote adds one to the count.
+    const totals = await ctx.db.query("imageRatingTotals").withIndex("by_image", (q) =>
+      q.eq("runSlug", args.runSlug).eq("promptId", args.promptId)).unique();
+    const before = totals ?? { count: 0, quality: 0, adherence: 0, fidelity: 0 };
+    const next = {
+      runSlug: args.runSlug, promptId: args.promptId,
+      count: before.count + (existing ? 0 : 1),
+      quality: before.quality - (existing?.quality ?? 0) + args.quality,
+      adherence: before.adherence - (existing?.adherence ?? 0) + args.adherence,
+      fidelity: before.fidelity - (existing?.fidelity ?? 0) + args.fidelity,
+    };
+    if (totals) await ctx.db.patch(totals._id, next);
+    else await ctx.db.insert("imageRatingTotals", next);
   },
 });
 
+/** Mean scores for every rated image, keyed "runSlug/promptId". Reads one totals row per image. */
 export const imageRatings = query({
   args: {},
   handler: async (ctx) => {
-    const rows = await ctx.db.query("imageVotes").collect();
-    const totals: Record<string, { count: number; quality: number; adherence: number; fidelity: number; overall: number }> = {};
-    for (const row of rows) {
-      const key = `${row.runSlug}/${row.promptId}`;
-      const total = totals[key] ??= { count: 0, quality: 0, adherence: 0, fidelity: 0, overall: 0 };
-      total.count++; total.quality += row.quality; total.adherence += row.adherence; total.fidelity += row.fidelity;
-    }
-    for (const total of Object.values(totals)) {
-      total.quality /= total.count; total.adherence /= total.count; total.fidelity /= total.count;
-      total.overall = (total.quality + total.adherence + total.fidelity) / 3;
-    }
-    return totals;
+    const rows = await ctx.db.query("imageRatingTotals").collect();
+    return Object.fromEntries(rows.map(row => {
+      const { count } = row;
+      const quality = row.quality / count, adherence = row.adherence / count, fidelity = row.fidelity / count;
+      return [`${row.runSlug}/${row.promptId}`, { count, quality, adherence, fidelity, overall: (quality + adherence + fidelity) / 3 }];
+    }));
   },
 });

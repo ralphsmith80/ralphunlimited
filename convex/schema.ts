@@ -12,6 +12,11 @@ export default defineSchema({
     runSlug: v.string(), promptId: v.string(), voterId: v.string(),
     quality: v.number(), adherence: v.number(), fidelity: v.number(), updatedAt: v.number(),
   }).index("by_image_voter", ["runSlug", "promptId", "voterId"]),
+  /** Running sums per image, kept in step with imageVotes so reads never scan every vote. */
+  imageRatingTotals: defineTable({
+    runSlug: v.string(), promptId: v.string(), count: v.number(),
+    quality: v.number(), adherence: v.number(), fidelity: v.number(),
+  }).index("by_image", ["runSlug", "promptId"]),
 	votes: defineTable({
 		benchId: v.string(),
 		runSlug: v.string(),

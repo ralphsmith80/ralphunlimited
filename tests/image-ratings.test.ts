@@ -9,7 +9,7 @@ vi.mock('convex/browser',()=>({ConvexClient:class {
 }}));
 beforeEach(()=>{
   vi.resetModules();vi.stubEnv('PUBLIC_CONVEX_URL','https://fixture.convex.cloud');mocks.mutation.mockReset();mocks.close.mockClear();localStorage.clear();
-  document.body.innerHTML=`<span data-image-rating="image-0123456789abcdef01234567/same-kettle"></span><span data-run-rating="image-0123456789abcdef01234567"></span><form data-image-vote data-run="image-0123456789abcdef01234567" data-prompt="same-kettle"><fieldset disabled>${['quality','adherence','fidelity'].map(axis=>`<label>${axis}<select name="${axis}"><option value="4">4</option></select><span data-axis-average="${axis}"></span></label>`).join('')}<button>Save</button></fieldset><p data-vote-status>Connecting to ratings</p></form>`;
+  document.body.innerHTML=`<span data-image-rating="image-0123456789abcdef01234567/same-kettle"></span><span data-run-rating="image-0123456789abcdef01234567" data-rated-prompts="same-kettle night-market"></span><form data-image-vote data-run="image-0123456789abcdef01234567" data-prompt="same-kettle"><fieldset disabled>${['quality','adherence','fidelity'].map(axis=>`<label>${axis}<select name="${axis}"><option value="4">4</option></select><span data-axis-average="${axis}"></span></label>`).join('')}<button>Save</button></fieldset><p data-vote-status>Connecting to ratings</p></form>`;
 });
 it('submits the chosen axes, blocks double submits, and lets a failed save retry',async()=>{
   await import('../src/scripts/image-ratings');mocks.update!({});
@@ -25,7 +25,7 @@ it('submits the chosen axes, blocks double submits, and lets a failed save retry
 });
 it('keeps partial run ratings unscored and handles unavailable ratings',async()=>{
   await import('../src/scripts/image-ratings');mocks.update!({'image-0123456789abcdef01234567/same-kettle':{count:2,quality:4,adherence:4,fidelity:4,overall:4}});
-  expect(document.querySelector('[data-run-rating]')!.textContent).toBe('Unscored · 1/5 images rated');
+  expect(document.querySelector('[data-run-rating]')!.textContent).toBe('Unscored · 1/2 images rated');
   expect(document.querySelector('[data-image-rating]')!.textContent).toContain('4.0 / 5 · 2 votes');
   mocks.failure!();expect(document.querySelector('fieldset')!.disabled).toBe(true);
   expect(document.querySelector('[data-image-rating]')!.textContent).toBe('Ratings unavailable');
@@ -37,4 +37,11 @@ it('keeps its client alive when browser Back can restore the cached page', async
   Object.defineProperty(event, 'persisted', { value: true });
   window.dispatchEvent(event);
   expect(mocks.close).not.toHaveBeenCalled();
+});
+
+it('scores a run over the images it produced when one output is missing', async () => {
+  await import('../src/scripts/image-ratings');
+  const rating = (overall: number) => ({count: 1, quality: overall, adherence: overall, fidelity: overall, overall});
+  mocks.update!({'image-0123456789abcdef01234567/same-kettle': rating(4), 'image-0123456789abcdef01234567/night-market': rating(3)});
+  expect(document.querySelector('[data-run-rating]')!.textContent).toBe('3.5 / 5');
 });

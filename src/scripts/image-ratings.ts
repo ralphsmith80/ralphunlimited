@@ -1,6 +1,5 @@
 import { ConvexClient } from 'convex/browser';
 import { api } from '../../convex/_generated/api';
-import { imageLab } from '../lib/image-lab';
 
 const forms = [...document.querySelectorAll<HTMLFormElement>('[data-image-vote]')];
 const cells = [...document.querySelectorAll<HTMLElement>('[data-image-rating]')];
@@ -19,11 +18,14 @@ else {
       const rating = ratings[cell.dataset.imageRating!];
       cell.textContent = rating?.count ? `${rating.overall.toFixed(1)} / 5 · ${rating.count} votes` : 'No ratings yet';
     }
+    // Missing outputs have no vote form, so a run's visitor mean covers the images it produced.
+    // The objective score already gives a missing output 0 / 100.
     for (const cell of runCells) {
-      const scores = imageLab.suite.prompts.map(p => ratings[`${cell.dataset.runRating}/${p.id}`]).filter(r => r?.count);
-      cell.textContent = scores.length === imageLab.suite.prompts.length
-        ? `${(scores.reduce((sum, r) => sum + r.overall, 0) / scores.length).toFixed(1)} / 5`
-        : `Unscored · ${scores.length}/${imageLab.suite.prompts.length} images rated`;
+      const prompts = cell.dataset.ratedPrompts!.split(' ').filter(Boolean);
+      const scores = prompts.map(id => ratings[`${cell.dataset.runRating}/${id}`]).filter(r => r?.count);
+      cell.textContent = !prompts.length ? 'No images to rate'
+        : scores.length === prompts.length ? `${(scores.reduce((sum, r) => sum + r.overall, 0) / scores.length).toFixed(1)} / 5`
+        : `Unscored · ${scores.length}/${prompts.length} images rated`;
     }
     for (const form of forms) {
       const rating = ratings[`${form.dataset.run}/${form.dataset.prompt}`];

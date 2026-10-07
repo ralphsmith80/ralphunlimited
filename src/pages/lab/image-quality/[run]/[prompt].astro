@@ -25,8 +25,8 @@ const axes = [['quality', 'Visual quality'], ['adherence', 'Prompt adherence'], 
     <ul><li>Decodes as a single raster: {image?.checks.decodes ? '40 / 40' : '0 / 40'}</li><li>At least 1024 pixels on the short edge: {image?.checks.resolution ? '30 / 30' : '0 / 30'}</li><li>Requested aspect ratio within 2%: {image?.checks.aspectRatio ? '30 / 30' : '0 / 30'}</li></ul>
     <h2>Visitor scores</h2><p data-image-rating={`${run.slug}/${prompt.id}`}>Loading ratings</p>
     {image?.file && <form data-image-vote data-run={run.slug} data-prompt={prompt.id}>
-      <h3>Rate this image</h3><p>1 means major failure. 3 means mixed. 5 means fully meets the brief. One rating per browser; submit again to update it.</p>
-      <fieldset disabled>{axes.map(([axis,label]) => <label>{label}<select name={axis} required><option value="">Choose a score</option>{[1,2,3,4,5].map(value => <option value={value}>{value}</option>)}</select><span data-axis-average={axis}></span></label>)}<button type="submit" class="btn btn-sm">Save rating</button></fieldset>
+      <fieldset disabled><legend><h3>Rate this image</h3></legend><p>1 means major failure. 3 means mixed. 5 means fully meets the brief. One rating per browser; submit again to update it.</p>
+        {axes.map(([axis,label]) => <div class="image-axis"><label for={`axis-${axis}`}>{label}</label><select id={`axis-${axis}`} name={axis} required aria-describedby={`axis-${axis}-average`}><option value="">Choose a score</option>{[1,2,3,4,5].map(value => <option value={value}>{value}</option>)}</select><span id={`axis-${axis}-average`} data-axis-average={axis}></span></div>)}<button type="submit" class="btn btn-sm">Save rating</button></fieldset>
       <p data-vote-status role="status">Connecting to ratings</p>
     </form>}
     {!image?.file && <p data-ratings-status aria-live="polite"></p>}
