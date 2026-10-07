@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import imageLab from "../src/data/image-lab.json";
 
 const SLUG = /^[a-z0-9][a-z0-9.-]{0,80}$/;
 
@@ -90,4 +91,42 @@ export const allRatings = query({
 		}
 		return Object.fromEntries([...byRun.entries()].map(([key, bucket]) => [key, aggregate(bucket)]));
 	},
+});
+
+const IMAGE_PROMPTS = new Set(imageLab.suite.prompts.map(prompt => prompt.id));
+
+/** Same anonymous guestbook policy as games. A repeat vote updates one image. */
+export const castImageVote = mutation({
+  args: {
+    runSlug: v.string(), promptId: v.string(), voterId: v.string(),
+    quality: v.number(), adherence: v.number(), fidelity: v.number(),
+  },
+  handler: async (ctx, args) => {
+    if (!/^image-[a-f0-9]{24}$/.test(args.runSlug) || !IMAGE_PROMPTS.has(args.promptId)) throw new Error("Unknown image");
+    if (!/^[a-f0-9-]{16,64}$/.test(args.voterId)) throw new Error("Bad voter id");
+    assertStars(args.quality, "quality"); assertStars(args.adherence, "adherence"); assertStars(args.fidelity, "fidelity");
+    const existing = await ctx.db.query("imageVotes").withIndex("by_image_voter", (q) =>
+      q.eq("runSlug", args.runSlug).eq("promptId", args.promptId).eq("voterId", args.voterId)).unique();
+    const row = { ...args, updatedAt: Date.now() };
+    if (existing) await ctx.db.patch(existing._id, row);
+    else await ctx.db.insert("imageVotes", row);
+  },
+});
+
+export const imageRatings = query({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db.query("imageVotes").collect();
+    const totals: Record<string, { count: number; quality: number; adherence: number; fidelity: number; overall: number }> = {};
+    for (const row of rows) {
+      const key = `${row.runSlug}/${row.promptId}`;
+      const total = totals[key] ??= { count: 0, quality: 0, adherence: 0, fidelity: 0, overall: 0 };
+      total.count++; total.quality += row.quality; total.adherence += row.adherence; total.fidelity += row.fidelity;
+    }
+    for (const total of Object.values(totals)) {
+      total.quality /= total.count; total.adherence /= total.count; total.fidelity /= total.count;
+      total.overall = (total.quality + total.adherence + total.fidelity) / 3;
+    }
+    return totals;
+  },
 });

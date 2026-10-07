@@ -8,6 +8,10 @@ import { v } from "convex/values";
  * This table holds the half of judgment machines cannot do.
  */
 export default defineSchema({
+  imageVotes: defineTable({
+    runSlug: v.string(), promptId: v.string(), voterId: v.string(),
+    quality: v.number(), adherence: v.number(), fidelity: v.number(), updatedAt: v.number(),
+  }).index("by_image_voter", ["runSlug", "promptId", "voterId"]),
 	votes: defineTable({
 		benchId: v.string(),
 		runSlug: v.string(),
