@@ -152,19 +152,39 @@ table.matrix th.rowh small { display: block; font-family: var(--font-mono); font
 .leader { display: flex; justify-content: space-between; align-items: center; gap: .75rem; font-family: var(--font-mono); font-size: .7rem; color: var(--text-muted); padding: .55rem .7rem; border: var(--border-subtle); border-radius: var(--radius-md); }
 .leader b { font-family: var(--font-display); font-size: .9rem; color: var(--text-primary); font-weight: 600; }
 
-/* Option A: side by side */
-.prow { display: grid; grid-template-columns: 250px 1fr 1fr; gap: 1rem; padding: 1.25rem 0; border-top: var(--border-subtle); align-items: start; }
-.prow h3 { font-size: 1.1rem; }
-.prow .focus { font-size: .9rem; margin: .35rem 0 .6rem; }
-.prow details summary { font-family: var(--font-mono); font-size: .66rem; color: var(--accent-primary); cursor: pointer; text-transform: uppercase; letter-spacing: .06em; }
-.prow details p { font-size: .88rem; margin: .5rem 0 0; }
-.prow .ref { margin-top: .75rem; }
-.prow .ref img { border-radius: var(--radius-sm); border: var(--border-subtle); max-height: 110px; }
-.prow .ref span { font-family: var(--font-mono); font-size: .58rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; display: block; margin-bottom: .3rem; }
-.colhead { display: grid; grid-template-columns: 250px 1fr 1fr; gap: 1rem; align-items: end; position: sticky; top: 0; background: var(--bg-primary); padding: .75rem 0; z-index: 2; }
-.colhead .who { font-family: var(--font-display); color: var(--text-primary); font-weight: 600; }
-.colhead .who small { display: block; font-family: var(--font-mono); font-size: .6rem; color: var(--text-muted); font-weight: 400; }
-.colhead .modelcard { display: grid; grid-template-columns: 1fr auto; gap: .75rem; align-items: center; }
+/* Option A: side by side, one synced carousel */
+.controls { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; padding: .85rem 1rem; background: var(--bg-secondary); border: var(--border-subtle); border-radius: var(--radius-md); margin-bottom: 1rem; }
+.controls .grp { display: flex; align-items: center; gap: .5rem; }
+.controls .lbl { font-family: var(--font-mono); font-size: .6rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text-muted); }
+.controls .toggle { margin-left: 0; }
+.controls .pills { margin: 0; }
+.controls .pills button { padding: .3rem .65rem; }
+.nav { margin-left: auto; display: flex; align-items: center; gap: .5rem; font-family: var(--font-mono); font-size: .64rem; color: var(--text-muted); }
+.nav button { width: 32px; height: 32px; border-radius: 50%; border: var(--border-accent); background: var(--bg-card); color: var(--accent-primary); cursor: pointer; font-size: 1.1rem; line-height: 1; }
+.nav button:disabled { opacity: .35; cursor: default; }
+.cmp-row { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 1rem; padding: 1.1rem 0; border-top: var(--border-subtle); align-items: start; }
+.cmp-row.head { border-top: 0; padding: .25rem 0 .75rem; align-items: end; }
+.cmp-row h3 { font-size: 1.1rem; }
+.cmp-row .focus { font-size: .9rem; margin: .35rem 0 .6rem; }
+.cmp-row details summary { font-family: var(--font-mono); font-size: .66rem; color: var(--accent-primary); cursor: pointer; text-transform: uppercase; letter-spacing: .06em; }
+.cmp-row details p { font-size: .88rem; margin: .5rem 0 0; }
+.cmp-row .ref { margin-top: .75rem; }
+.cmp-row .ref img { border-radius: var(--radius-sm); border: var(--border-subtle); max-height: 110px; }
+.cmp-row .ref span { font-family: var(--font-mono); font-size: .58rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; display: block; margin-bottom: .3rem; }
+.track { display: flex; gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.track::-webkit-scrollbar { display: none; }
+.track > * { flex: 0 0 calc((100% - 1rem) / 2); scroll-snap-align: start; min-width: 0; }
+.modelcard { display: flex; flex-direction: column; gap: .5rem; }
+.modelcard .who { font-family: var(--font-display); color: var(--text-primary); font-weight: 600; }
+.modelcard .who small { display: block; font-family: var(--font-mono); font-size: .6rem; color: var(--text-muted); font-weight: 400; }
+.tile .owner { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; }
+.tile .owner b { font-family: var(--font-display); font-size: .85rem; color: var(--text-primary); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile .owner span { font-family: var(--font-mono); font-size: .6rem; color: var(--lab-accent); }
+.tile.winner { border-color: rgba(232,196,150,.55); box-shadow: 0 0 0 1px rgba(232,196,150,.25); }
+.crown { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .08em; text-transform: uppercase; color: #1a1614; background: var(--lab-accent); padding: .1rem .4rem; border-radius: 3px; }
+.sample { color: #cdb9d2; }
+.pills button.sample { border-style: dashed; }
+.pills button.sample[aria-pressed="true"] { color: #1a1614; background: #cdb9d2; border-color: #cdb9d2; }
 .tile.winner { border-color: rgba(232,196,150,.55); box-shadow: 0 0 0 1px rgba(232,196,150,.25); }
 .crown { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .08em; text-transform: uppercase; color: #1a1614; background: var(--lab-accent); padding: .1rem .4rem; border-radius: 3px; }
 
@@ -239,8 +259,9 @@ table.matrix th.rowh small { display: block; font-family: var(--font-mono); font
 [hidden] { display: none !important; }
 @media (max-width: 900px) {
   .wings, .duo, .parts, .detail, .brief { grid-template-columns: 1fr; }
-  .prow, .colhead { grid-template-columns: 1fr 1fr; }
-  .prow > :first-child, .colhead > :first-child { grid-column: 1 / -1; }
+  .cmp-row { grid-template-columns: 1fr; }
+  .cmp-row.head > :first-child { display: none; }
+  .track > * { flex-basis: 85%; }
   .run { grid-template-columns: 1fr; }
   .rail { grid-template-columns: 1fr 1fr; }
   .site-head nav { display: none; }
@@ -253,7 +274,7 @@ table.matrix th.rowh small { display: block; font-family: var(--font-mono); font
   <p>Static mocks with the real images. Pick one gallery option (A, B, or C). The Lab home, the tabs, the score pair, and the detail page are shared by all three. Visitor ratings here are sample numbers. Live ratings come from Convex.</p>
   <div class="mock-tabs" role="tablist">
     <button data-view="home" aria-pressed="true">1. Lab home</button>
-    <button data-view="a" aria-pressed="false">A. Side by side</button>
+    <button data-view="a" aria-pressed="false">A. Side by side (picked)</button>
     <button data-view="b" aria-pressed="false">B. One brief at a time</button>
     <button data-view="c" aria-pressed="false">C. Leaderboard</button>
     <button data-view="detail" aria-pressed="false">Shared: image page</button>
@@ -296,7 +317,7 @@ const imageHeader = () => `
   <span class="eyebrow">Image benchmark</span>
   <h1 style="font-size:2.6rem;margin-top:.4rem">Image quality</h1>
   <p class="lede">Five briefs. Each model gets one try per brief, with the same reference images. Look at the work and score it yourself.</p>`;
-const callout = (title, text, cta) => `<aside class="callout"><span class="ic">★</span><div><strong>${title}</strong><p>${text}</p></div><a class="btn">${cta}</a></aside>`;
+const callout = (title, text, cta, wide = false) => `<aside class="callout"${wide ? ' style="max-width:none;grid-template-columns:42px minmax(0,1fr);margin-top:1.25rem"' : ''}><span class="ic">★</span><div><strong>${title}</strong><p>${text}</p></div>${cta ? `<a class="btn">${cta}</a>` : ''}</aside>`;
 const imageStats = () => `<div class="stats"><div><b>${prompts.length}</b><span>Briefs</span></div><div><b>${runs.length}</b><span>Models</span></div><div><b>${runs.length * prompts.length}</b><span>Images</span></div><div><b>${runs.reduce((n, r) => n + r.votes, 0)}</b><span>Visitor ratings</span></div></div>`;
 
 const matrix = mode => `
@@ -321,14 +342,121 @@ const standings = (mode, eyebrow = 'Both scores', title = 'Standings') => `
       : '<span><i style="background:#e8c496"></i>4.0 and up</span><span><i style="background:#d4a574"></i>3.0 to 3.9</span><span><i style="background:#9b7e5e"></i>below 3.0</span>'}</div>
   </section>`;
 
+
+// Option A state. Columns are models unless "best first" sorts each brief on its own.
+const SORTS_KEYS = { visitors: 1, checks: 1, newest: 1, name: 1 };
+const SAMPLE_NAMES = ['sample-model-c', 'sample-model-d', 'sample-model-e', 'sample-model-f'];
+const samples = SAMPLE_NAMES.map((model, i) => {
+  const base = DATA.runs[i % 2];
+  const ratings = Object.fromEntries(prompts.map((p, j) => [p.id, [3.2 + ((i * 7 + j * 3) % 13) / 10, 3 + ((i + j) % 6)]]));
+  const scores = prompts.map(p => ratings[p.id][0]);
+  return { ...base, model, provider: 'Sample', sample: true, ranAt: `2026-09-${String(20 + i).padStart(2, '0')}T00:00:00Z`, ratings,
+    visitors: scores.reduce((a, b) => a + b, 0) / scores.length, votes: prompts.reduce((n, p) => n + ratings[p.id][1], 0), checks: 100 };
+});
+const A = { sort: 'visitors', lineup: 'model', more: false, hidden: new Set() };
+// ?sort=checks&lineup=best&more=1 opens option A in that state.
+const q = new URLSearchParams(location.search);
+if (q.get('sort') in SORTS_KEYS) A.sort = q.get('sort');
+if (q.get('lineup') === 'best') A.lineup = 'best';
+if (q.get('more') === '1') A.more = true;
+const pool = () => A.more ? [...runs, ...samples] : runs;
+const SORTS = {
+  visitors: (run, p) => -(p ? run.ratings[p.id][0] : run.visitors),
+  checks: (run, p) => -(p ? run.images[p.id].total : run.checks),
+  newest: run => -Date.parse(run.ranAt),
+  name: run => run.model,
+};
+const sortRuns = (list, p) => [...list].sort((a, b) => {
+  const x = SORTS[A.sort](a, p), y = SORTS[A.sort](b, p);
+  return x < y ? -1 : x > y ? 1 : 0;
+});
+const compareA = () => {
+  const shown = pool().filter(run => !A.hidden.has(run.model));
+  const byModel = sortRuns(shown);
+  const seg = (key, value, label, cls = '') => `<button data-a="${key}" data-v="${value}" class="${cls}" data-on="${A[key] === value}">${label}</button>`;
+  const controls = `<div class="controls">
+    <div class="grp"><span class="lbl">Sort by</span><div class="toggle">${seg('sort', 'visitors', 'Visitor rating', 'hum')}${seg('sort', 'checks', 'Checks')}${seg('sort', 'newest', 'Newest')}${seg('sort', 'name', 'Name')}</div></div>
+    <div class="grp"><span class="lbl">Columns</span><div class="toggle">${seg('lineup', 'model', 'One model each')}${seg('lineup', 'best', 'Best first in each brief', 'hum')}</div></div>
+    <div class="grp"><span class="lbl">Models</span><div class="pills">${pool().map(run => `<button data-model="${run.model}" aria-pressed="${!A.hidden.has(run.model)}"${run.sample ? ' class="sample"' : ''}>${run.model}</button>`).join('')}</div></div>
+    <label class="grp sample" style="font-family:var(--font-mono);font-size:.62rem;cursor:pointer"><input type="checkbox" data-more ${A.more ? 'checked' : ''}> Preview 6 models</label>
+    <div class="nav"><span data-pos></span><button data-step="-1" aria-label="Previous models">‹</button><button data-step="1" aria-label="Next models">›</button></div>
+  </div>`;
+  const tile = (run, p, rank) => {
+    const image = run.images[p.id];
+    const [v, n] = run.ratings[p.id];
+    const best = rank === 0 && A.sort === 'visitors';
+    return `<a class="tile${best ? ' winner' : ''}"><div class="img"><img src="${image.src}" alt="" loading="lazy"></div>
+      <div class="body"><div class="owner"><b>${run.model}</b>${A.lineup === 'best' ? `<span>#${rank + 1}</span>` : ''}</div>
+        <div class="scoreline"><span class="badge human${best ? ' lead' : ''}">★ ${v.toFixed(1)} · ${n} votes</span><span class="badge machine">✓ ${image.total}</span><span style="margin-left:auto;color:var(--accent-primary)">Rate →</span></div></div></a>`;
+  };
+  const head = A.lineup === 'model'
+    ? `<div class="cmp-row head"><div></div><div class="track">${byModel.map((run, i) => `<div class="modelcard"><span class="who">${i === 0 && A.sort === 'visitors' ? '<span class="crown">Leads</span> ' : ''}${run.model}<small>${run.provider} · ${date(run.ranAt)}</small></span>${pair({ mv: run.checks.toFixed(0), hv: run.visitors.toFixed(1), compact: true })}</div>`).join('')}</div></div>`
+    : '';
+  const rows = prompts.map(p => {
+    const order = A.lineup === 'best' ? sortRuns(shown, p) : byModel;
+    return `<div class="cmp-row">
+      <div><h3>${p.title}</h3><p class="focus">${p.focus}</p><details><summary>Read the prompt</summary><p>${p.prompt}</p></details>
+        ${p.reference ? `<div class="ref"><span>Fixed reference</span><img src="${p.reference}" alt=""></div>` : ''}</div>
+      <div class="track">${order.map((run, i) => tile(run, p, i)).join('')}</div></div>`;
+  }).join('');
+  return controls + head + rows;
+};
+// All tracks share one scroll position, so the columns stay lined up.
+const syncTracks = root => {
+  const tracks = [...root.querySelectorAll('.track')];
+  const pos = root.querySelector('[data-pos]');
+  const [prev, next] = root.querySelectorAll('[data-step]');
+  const update = () => {
+    const t = tracks[0]; if (!t) return;
+    const per = Math.max(1, Math.round(t.clientWidth / t.firstElementChild.getBoundingClientRect().width));
+    const total = t.children.length;
+    const first = Math.round(t.scrollLeft / (t.scrollWidth / total)) + 1;
+    pos.textContent = total > per ? `${first} to ${Math.min(total, first + per - 1)} of ${total}` : `${total} of ${total}`;
+    prev.disabled = t.scrollLeft <= 2;
+    next.disabled = t.scrollLeft + t.clientWidth >= t.scrollWidth - 2;
+  };
+  let lead = null;
+  for (const t of tracks) t.addEventListener('scroll', () => {
+    if (lead && lead !== t) return;
+    lead = t;
+    for (const o of tracks) if (o !== t) o.scrollLeft = t.scrollLeft;
+    update();
+    clearTimeout(t._idle); t._idle = setTimeout(() => { lead = null; }, 120);
+  }, { passive: true });
+  for (const b of [prev, next]) b.addEventListener('click', () => {
+    const t = tracks[0];
+    t.scrollBy({ left: Number(b.dataset.step) * (t.firstElementChild.getBoundingClientRect().width + 16), behavior: 'smooth' });
+  });
+  update();
+};
+const rerenderA = () => {
+  const root = document.querySelector('[data-compare]');
+  root.innerHTML = compareA();
+  syncTracks(root);
+};
+document.addEventListener('click', e => {
+  const seg = e.target.closest('[data-compare] [data-a]');
+  if (seg) { A[seg.dataset.a] = seg.dataset.v; rerenderA(); return; }
+  const chip = e.target.closest('[data-compare] [data-model]');
+  if (chip) {
+    const name = chip.dataset.model;
+    if (A.hidden.has(name)) A.hidden.delete(name);
+    else if (pool().length - A.hidden.size > 1) A.hidden.add(name);
+    rerenderA();
+  }
+});
+document.addEventListener('change', e => {
+  if (e.target.matches('[data-more]')) { A.more = e.target.checked; A.hidden.clear(); rerenderA(); }
+});
+
 const VIEWS = {
   home: {
-    note: '<b>Navigation.</b> /lab/ becomes a short front door with one card per benchmark type. Game content moves to /lab/games/. Benchmark and run URLs stay the same. Every lab page gets the same Overview / Games / Images tab strip under the crumb, so you can always switch types.',
+    note: '<b>Navigation.</b> /lab/ becomes a short front door with one card per benchmark type. Game content moves to /lab/games/. Benchmark and run URLs stay the same. Every lab page gets the same Overview / Games / Images tab strip at the top, so you can always switch types. The callout now spans the full width under the cards, with its edges lined up with them.',
     html: () => `
+      ${labtabs('home')}
       <span class="eyebrow">The Lab</span>
       <h1 style="font-size:2.8rem;margin-top:.4rem">AI benchmarks you can judge</h1>
-      <p class="lede" style="margin-bottom:1.75rem">I give AI models the same task and one try. A script scores what it can measure. You score the rest.</p>
-      ${labtabs('home')}
+      <p class="lede">I give AI models the same task and one try. A script scores what it can measure. You score the rest.</p>
       <div class="wings">
         <article class="wing">
           <div class="art"><img src="${DATA.shots.game}" alt=""></div>
@@ -351,31 +479,19 @@ const VIEWS = {
           </div>
         </article>
       </div>
-      ${callout('We have numbers. You decide the score.', 'Scripts check the technical details. They cannot tell if a game is fun or a picture is good. Your ratings sit next to the machine score on every page.', 'How scoring works')}`,
+      ${callout('We have numbers. You decide the score.', 'Scripts check the technical details. They cannot tell if a game is fun or a picture is good. Your ratings sit next to the machine score on every page.', null, true)}`,
   },
   a: {
-    note: '<b>A. Side by side.</b> One row per brief, one column per model. You compare the same brief across models without scrolling between galleries. The model with the higher visitor rating on each brief gets a lead mark. The prompt and reference stay in the left column. This grows to about four models before the columns get too narrow; after that, the column header becomes a model picker.',
+    note: '<b>A. Side by side (picked).</b> One row per brief, one column per model. All rows scroll together as one carousel, like the game builds rail, so a column stays one model. Use the model chips to put any two models next to each other. "Sort by" orders the columns. "Best first in each brief" sorts every row on its own, so the top image for each brief is always in the first column; tiles keep the model name, so you still know whose image it is. Turn on "Preview 6 models" in the controls to see the carousel with more columns (extra models are samples).',
     html: () => `
       ${labtabs('images')}
       ${imageHeader()}
       ${imageStats()}
-      ${callout('Every model passes the checks. The pictures are not equal.', 'All images open, meet the size, and match the shape. Only people can judge the craft. Open any image to rate it.', 'Start rating')}
+      ${callout('Every model passes the checks. The pictures are not equal.', 'All images open, meet the size, and match the shape. Only people can judge the craft. Open any image to rate it.', null)}
       <section class="section">
-        <div class="section-head"><div><span class="eyebrow">Compare</span><h2>Brief by brief</h2></div>
-          <div class="toggle"><button class="hum" data-on="true">Visitor rating</button><button data-on="false">Checks</button></div></div>
-        <div class="colhead"><div></div>${runs.map((run, i) => `<div class="modelcard"><span class="who">${i === 0 ? '<span class="crown">Leads</span> ' : ''}${run.model}<small>${run.provider} · ${date(run.ranAt)}</small></span>${pair({ mv: run.checks.toFixed(0), hv: run.visitors.toFixed(1), compact: true }).replace('class="pair compact"', 'class="pair compact" style="min-width:190px"')}</div>`).join('')}</div>
-        ${prompts.map(p => {
-          const lead = leadFor(p.id);
-          return `<div class="prow">
-            <div><h3>${p.title}</h3><p class="focus">${p.focus}</p><details><summary>Read the prompt</summary><p>${p.prompt}</p></details>
-              ${p.reference ? `<div class="ref"><span>Fixed reference</span><img src="${p.reference}" alt=""></div>` : ''}</div>
-            ${runs.map(run => {
-              const [v, n] = run.ratings[p.id];
-              return `<a class="tile${run === lead ? ' winner' : ''}"><div class="img"><img src="${run.images[p.id].src}" alt=""></div>
-                <div class="body"><div class="scoreline"><span class="badge human${run === lead ? ' lead' : ''}">★ ${v.toFixed(1)} · ${n} votes</span><span class="badge machine">✓ ${run.images[p.id].total}</span><span style="margin-left:auto;color:var(--accent-primary)">Rate →</span></div></div></a>`;
-            }).join('')}
-          </div>`;
-        }).join('')}
+        <div class="section-head"><div><span class="eyebrow">Compare</span><h2>Brief by brief</h2></div><p>Rows are briefs. Columns are models. Click an image to see it full size and rate it.</p></div>
+        <div data-compare>${compareA()}</div>
+        <p class="crumb" style="margin-top:1.5rem">Suite image-quality-v1 · minimum short edge 1024 px · aspect ratio within 2% · first output only, no edits or retries.</p>
       </section>`,
   },
   b: {
@@ -499,6 +615,7 @@ const show = id => {
   viewEl.innerHTML = VIEWS[id].html();
   noteEl.innerHTML = VIEWS[id].note;
   history.replaceState(null, '', `#${id}`);
+  if (id === 'a') syncTracks(document.querySelector('[data-compare]'));
 };
 document.querySelectorAll('.mock-tabs button').forEach(b => b.addEventListener('click', () => show(b.dataset.view)));
 // The standings toggle in option B swaps the matrix, like the games page.
