@@ -16,6 +16,9 @@ Deploy the new Convex schema and vote functions to the site's configured
 backend before enabling this page in production. Configure PUBLIC_CONVEX_URL
 as for game votes. Deployments and production data changes are separate from
 this PR. Later image runs arrive through the existing lab-data PR workflow.
+The vote functions read the bundled catalog to decide which images accept
+votes. After each publish that adds image runs, deploy the Convex functions
+again. Until then, votes on the new run fail and the page asks to try again.
 
 Image votes intentionally use the same anonymous per-browser guestbook policy
 as games. They are not authenticated ballots. The server accepts votes only
