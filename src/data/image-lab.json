@@ -221,6 +221,91 @@
           "error": null
         }
       ]
+    },
+    {
+      "model": "krea/krea-2-large",
+      "provider": "OpenRouter",
+      "ranAt": "2026-10-07T19:35:44.778Z",
+      "suiteVersion": "image-quality-v1",
+      "settings": "One request per prompt; n=1; requested sizes: watch-repairer: 2368x1776, night-market: 1776x2368, paper-observatory: 2048x2048, same-kettle: 2368x1776, mara-triptych: 3544x1184; other settings use provider defaults.",
+      "notes": "First outputs, no edits or automatic retries.",
+      "durationMs": 221245,
+      "costUsd": 0.3,
+      "slug": "image-a0eea2b8a87f20bf31be2b40",
+      "scorerVersion": "image-checks-v1",
+      "total": 76,
+      "images": [
+        {
+          "promptId": "watch-repairer",
+          "file": "/lab/images/f275423947890bfe10b569b2d1c1a77f795ca2eb67809ac3ad0917827c357ed5.png",
+          "sha256": "f275423947890bfe10b569b2d1c1a77f795ca2eb67809ac3ad0917827c357ed5",
+          "width": 1024,
+          "height": 1024,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": false
+          },
+          "total": 70,
+          "error": null
+        },
+        {
+          "promptId": "night-market",
+          "file": "/lab/images/73d2069bf481b9c229f86f17784e5eec8b1d1b2b4d32b5a601532bf9ff92a66a.png",
+          "sha256": "73d2069bf481b9c229f86f17784e5eec8b1d1b2b4d32b5a601532bf9ff92a66a",
+          "width": 1024,
+          "height": 1024,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": false
+          },
+          "total": 70,
+          "error": null
+        },
+        {
+          "promptId": "paper-observatory",
+          "file": "/lab/images/04741d813c1c5bc83eab3a00ce26c48319af5c2e1a6e9c612043f7034f828041.png",
+          "sha256": "04741d813c1c5bc83eab3a00ce26c48319af5c2e1a6e9c612043f7034f828041",
+          "width": 1024,
+          "height": 1024,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": true
+          },
+          "total": 100,
+          "error": null
+        },
+        {
+          "promptId": "same-kettle",
+          "file": "/lab/images/a3b73c77782aa005107b70d76e05dcf86624733ba89afed008d59b5b7f5c3ec7.png",
+          "sha256": "a3b73c77782aa005107b70d76e05dcf86624733ba89afed008d59b5b7f5c3ec7",
+          "width": 1024,
+          "height": 1024,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": false
+          },
+          "total": 70,
+          "error": null
+        },
+        {
+          "promptId": "mara-triptych",
+          "file": "/lab/images/ec5c8e738fbd4ce37b65d9453bf1eec958eabd6083354968cebe537e0e655253.png",
+          "sha256": "ec5c8e738fbd4ce37b65d9453bf1eec958eabd6083354968cebe537e0e655253",
+          "width": 1024,
+          "height": 1024,
+          "checks": {
+            "decodes": true,
+            "resolution": true,
+            "aspectRatio": false
+          },
+          "total": 70,
+          "error": null
+        }
+      ]
     }
   ]
 }
