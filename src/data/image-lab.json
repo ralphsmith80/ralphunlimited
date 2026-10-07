@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "suite": {
+    "version": "image-quality-v1",
+    "minimumShortEdge": 1024,
+    "aspectRatioTolerance": 0.02,
+    "references": {
+      "kettle-reference.png": "63efdd67a3f093124f1d342d4e238494996fe28be858bd4aa55316d9ec263858",
+      "mara-character-sheet.png": "17c5250e338cdf069ed29b6464368ccd47fe7ceed418d3938879b4d49282b5e0"
+    },
+    "prompts": [
+      {
+        "id": "watch-repairer",
+        "title": "The watch repairer",
+        "prompt": "Create a single documentary photograph of an elderly watch repairer working at a small wooden bench beside a north-facing window on an overcast morning. Show both hands clearly: the left hand holds an open pocket watch and the right hand uses fine tweezers to place a gear. Include exactly three loose brass gears on a dark felt mat, one magnifying loupe, and a glass of water behind the mat. Use a waist-up, three-quarter view with the face and hands in focus. Show natural skin texture, worn wood, fine metal detail, and soft window light. Keep the room believable and unstyled. No lettering, watermark, split panels, or added people. Landscape 4:3.",
+        "focus": "Anatomy, small objects, material realism, coherent light.",
+        "aspectRatio": 1.3333333333333333,
+        "reference": null
+      },
+      {
+        "id": "night-market",
+        "title": "Night market",
+        "prompt": "Design a finished portrait poster for a night market using bold geometric screen-print shapes and only midnight blue, warm ivory, and coral red. The text must read exactly: NIGHT MARKET / SATURDAY 18 JULY / 6 PM TO MIDNIGHT / RIVER YARD / FREE ENTRY. The slash marks indicate line breaks and must not appear. Make NIGHT MARKET the largest text and FREE ENTRY the smallest. Include a stylized crescent moon above three food stalls, with a clear walking path between the stalls. Make all lettering readable and keep a generous outer margin. Use subtle print texture and a flat, front-facing layout. No mockup, extra words, logos, or watermark. Portrait 3:4.",
+        "focus": "Exact lettering, hierarchy, spacing, limited palette.",
+        "aspectRatio": 0.75,
+        "reference": null
+      },
+      {
+        "id": "paper-observatory",
+        "title": "The paper observatory",
+        "prompt": "Create a photographed cut-paper diorama of a tiny observatory on a floating island at dusk. Every object must look hand-cut from layered matte paper with visible edges and soft contact shadows. Put a cream observatory with a copper dome in the upper right. A winding staircase starts at the lower left and ends at its open door. Put exactly two teal cypress trees to the left of the stairs, one small red fox on the third step from the bottom, and a crescent moon in the upper left. Use a side-on three-quarter view so the layers remain visible. Keep the background plain muted lavender. No lettering, realistic fur, glossy plastic, or digital interface. Square 1:1.",
+        "focus": "Material control, composition, counts, relative positions.",
+        "aspectRatio": 1,
+        "reference": null
+      },
+      {
+        "id": "same-kettle",
+        "title": "Same kettle, new setting",
+        "prompt": "Use the attached kettle-reference.png as the sole product reference. Create a premium product photograph of this exact kettle on wet dark slate beside a rain-streaked window. Preserve its silhouette, proportions, handle shape, spout, lid, enamel color, and all distinctive markings from the reference. Change the setting, lighting, and camera angle to a low three-quarter view from the spout side. Show fine water droplets on the enamel, a faint plume of steam from the spout, and one folded ivory linen cloth behind the kettle. Use cool daylight with a narrow warm reflection along the metal rim. Do not redesign the kettle, invent branding, or add another kettle. Landscape 4:3.",
+        "focus": "Identity under viewpoint and lighting changes; reflections and detail.",
+        "aspectRatio": 1.3333333333333333,
+        "reference": "kettle-reference.png"
+      },
+      {
+        "id": "mara-triptych",
+        "title": "Mara, across three scenes",
+        "prompt": "Use the attached mara-character-sheet.png as the only character identity reference. Create one horizontal triptych with three equally sized panels and narrow neutral gutters. Each panel shows the same adult courier, Mara, in the same hand-painted animation style as the sheet. Left: a waist-up frontal view at a sunny station, holding a folded map with both hands. Middle: a full-body left-profile view jumping over a puddle in a rainy alley. Right: a close three-quarter view in a warm cafe, smiling while removing her goggles. Preserve her facial structure, skin tone, hair shape, white forelock, round amber goggles, mustard jacket, teal cross-body satchel, and cheek freckle pattern across all panels. Keep the satchel strap and costume construction consistent with the sheet. Change only pose, expression, camera distance, and scene lighting. No other characters, text, labels, or watermark. Landscape 3:1.",
+        "focus": "Face and costume identity across views, poses, expressions, and light.",
+        "aspectRatio": 3,
+        "reference": "mara-character-sheet.png"
+      }
+    ]
+  },
+  "runs": []
+}

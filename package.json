@@ -5,8 +5,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:vercel": "if [ \"$VERCEL_ENV\" = production ]; then convex deploy --cmd 'astro build'; else astro build; fi",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run",
+    "typecheck:images": "tsc --noEmit --project tsconfig.image-lab.json"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.1",
@@ -18,5 +21,11 @@
     "sharp": "^0.34.3",
     "turndown": "^7.2.2",
     "yaml": "^2.8.2"
+  },
+  "devDependencies": {
+    "convex-test": "^0.0.60",
+    "happy-dom": "^20.14.5",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.3"
   }
 }
