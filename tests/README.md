@@ -12,9 +12,10 @@ TypeScript check currently includes unrelated legacy scripts and bundled games.
 ai-benchmark publisher. The initial catalog contains prompts and reference
 assets only. No synthetic test results belong in this catalog.
 
-Production Vercel builds run `convex deploy` before `astro build`, using the
-CONVEX_DEPLOY_KEY secret (Production only). This deploys the schema and vote
-functions with each site deploy. Preview and local builds skip the Convex
+Production Vercel builds run `convex deploy --cmd 'astro build'`, using the
+CONVEX_DEPLOY_KEY secret (Production only). The CLI builds Astro first, then
+pushes the schema and vote functions. A failed Astro build prevents the
+backend push. Both steps must succeed before Vercel publishes the site. Preview and local builds skip the Convex
 deploy and never touch production. Later image runs arrive through the
 existing lab-data PR workflow. The vote functions read the bundled catalog to
 decide which images accept votes, so a new run accepts votes once its
