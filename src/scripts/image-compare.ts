@@ -35,23 +35,30 @@ export function startCompare() {
   };
 
   // Moves the tiles in DOM order, so keyboard order matches what is on screen.
+  // Moving a focused tile drops its focus, so put focus back afterwards.
   const arrange = (track: HTMLElement, slugs: string[]) => {
+    const cells = [...track.querySelectorAll<HTMLElement>(':scope > [data-run]')];
+    for (const cell of cells) cell.hidden = state.hidden.has(cell.dataset.run!);
+    const visible = cells.filter(cell => !cell.hidden).map(cell => cell.dataset.run);
+    if (visible.join(' ') === slugs.join(' ')) return;
+    const focused = document.activeElement instanceof HTMLElement && track.contains(document.activeElement)
+      ? document.activeElement : null;
     for (const slug of slugs) {
       const cell = track.querySelector<HTMLElement>(`:scope > [data-run="${slug}"]`);
       if (cell) track.append(cell);
     }
-    for (const cell of track.querySelectorAll<HTMLElement>(':scope > [data-run]')) {
-      cell.hidden = state.hidden.has(cell.dataset.run!);
-    }
+    focused?.focus({ preventScroll: true });
   };
 
-  // Control changes start the carousel at the first column. Live rating updates keep the place.
-  const render = (fromStart = false) => {
+  // Reordering moves columns, so only a visitor's own action or the first ratings
+  // load does it. Later live updates refresh the scores and marks in place, so a
+  // column never changes under someone who is looking at it.
+  const render = ({ reorder = true, fromStart = false } = {}) => {
     const shown = data.runs.filter(run => !state.hidden.has(run.slug));
     const byModel = orderEntries(shown.map(runEntry), state.sort).map(entry => entry.slug);
     const leader = state.sort === 'visitors' ? orderEntries(data.runs.map(runEntry), 'visitors')[0] : null;
     head.hidden = state.columns === 'best';
-    arrange(head.querySelector('[data-track]')!, byModel);
+    if (reorder) arrange(head.querySelector('[data-track]')!, byModel);
     for (const crown of head.querySelectorAll<HTMLElement>('[data-crown]')) {
       crown.hidden = !leader?.visitors || crown.closest<HTMLElement>('[data-run]')!.dataset.run !== leader.slug;
     }
@@ -63,11 +70,14 @@ export function startCompare() {
       const order = state.columns === 'best'
         ? orderEntries(shown.map(run => imageEntry(run, promptId)), state.sort).map(entry => entry.slug)
         : byModel;
-      arrange(track, order);
       // The best-rated image in each brief gets a mark, whatever the column order.
       const best = orderEntries(shown.map(run => imageEntry(run, promptId)), 'visitors')[0];
       for (const tile of track.querySelectorAll<HTMLElement>('[data-run]')) {
         tile.classList.toggle('is-lead', !!best?.visitors && tile.dataset.run === best.slug);
+      }
+      if (!reorder) continue;
+      arrange(track, order);
+      for (const tile of track.querySelectorAll<HTMLElement>('[data-run]')) {
         tile.querySelector<HTMLElement>('[data-rank]')!.textContent =
           state.columns === 'best' ? `#${order.indexOf(tile.dataset.run!) + 1}` : '';
       }
@@ -86,7 +96,7 @@ export function startCompare() {
       const { score, rated, total, votes } = visitorScore(ratings, run.slug, run.produced);
       card.querySelector('[data-human-value]')!.textContent = score === null ? '–' : one(score);
       card.querySelector('[data-human-sub]')!.textContent =
-        score === null ? `${rated} of ${total} images rated` : plural(votes, 'vote');
+        !total ? 'no images to rate' : score === null ? `${rated} of ${total} images rated` : plural(votes, 'vote');
     }
     const votes = Object.values(ratings).reduce((sum, rating) => sum + (rating?.count ?? 0), 0);
     const total = document.querySelector('[data-vote-total]');
@@ -147,14 +157,14 @@ export function startCompare() {
     button.addEventListener('click', () => {
       state.sort = button.dataset.sort as CompareSort;
       pick('[data-sort]', 'sort', state.sort);
-      render(true);
+      render({ fromStart: true });
     });
   }
   for (const button of root.querySelectorAll<HTMLElement>('[data-columns]')) {
     button.addEventListener('click', () => {
       state.columns = button.dataset.columns as Columns;
       pick('[data-columns]', 'columns', state.columns);
-      render(true);
+      render({ fromStart: true });
     });
   }
   for (const chip of root.querySelectorAll<HTMLElement>('[data-model]')) {
@@ -164,15 +174,17 @@ export function startCompare() {
       if (state.hidden.has(slug)) state.hidden.delete(slug);
       else if (state.hidden.size < data.runs.length - 1) state.hidden.add(slug);
       chip.setAttribute('aria-pressed', String(!state.hidden.has(slug)));
-      render(true);
+      render({ fromStart: true });
     });
   }
 
   render();
+  let loaded = false;
   watchImageRatings(update => {
     ratings = update;
     paintRatings();
-    render();
+    render({ reorder: !loaded });
+    loaded = true;
   }, () => {
     for (const badge of root.querySelectorAll<HTMLElement>('[data-image-rating]')) badge.textContent = '★ unavailable';
     for (const sub of head.querySelectorAll<HTMLElement>('[data-human-sub]')) sub.textContent = 'ratings unavailable';

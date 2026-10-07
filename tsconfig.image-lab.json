@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src/lib/image-lab.ts", "src/lib/image-scores.ts", "src/scripts/image-*.ts", "convex/**/*.ts", "tests/*.test.ts"],
+  "include": ["src/lib/image-lab.ts", "src/lib/image-scores.ts", "src/lib/leaders.ts", "src/scripts/image-*.ts", "convex/**/*.ts", "tests/*.test.ts"],
   "compilerOptions": { "types": ["astro/client", "vitest/importMeta"] }
 }

@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
 import { orderEntries, visitorScore, type CompareEntry } from '../src/lib/image-scores';
+import { leader } from '../src/lib/leaders';
 
 const rating = (overall: number, count = 1) => ({ count, quality: overall, adherence: overall, fidelity: overall, overall });
 
@@ -18,4 +19,11 @@ it('orders by visitor score with unscored entries last, and by the other keys', 
   expect(orderEntries(entries, 'checks').map(e => e.slug)).toEqual(['a', 'b', 'c']);
   expect(orderEntries(entries, 'newest').map(e => e.slug)).toEqual(['b', 'a', 'c']);
   expect(orderEntries(entries, 'name').map(e => e.slug)).toEqual(['a', 'b', 'c']);
+});
+
+it('names a single leader, or says how many tie at one decimal', () => {
+  expect(leader([])).toBeNull();
+  expect(leader([{ label: 'a', score: 4.2 }, { label: 'b', score: 3.9 }])).toEqual({ score: 4.2, label: 'a' });
+  expect(leader([{ label: 'a', score: 100 }, { label: 'b', score: 100 }, { label: 'c', score: 76 }])).toEqual({ score: 100, label: '2 tied' });
+  expect(leader([{ label: 'a', score: 4.21 }, { label: 'b', score: 4.19 }])).toEqual({ score: 4.2, label: '2 tied' });
 });

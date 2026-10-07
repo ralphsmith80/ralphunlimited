@@ -19,7 +19,14 @@ export function startImageVote() {
   const status = root.querySelector('[data-vote-status]');
   const picks: Partial<Record<Axis, number>> = {};
   let saving = false;
-  const ready = () => AXES.every(axis => picks[axis]);
+  let unavailable = false;
+  const ready = () => !unavailable && AXES.every(axis => picks[axis]);
+  // The stars stay still while a save is in flight, so "saved" always describes them.
+  const setBusy = (busy: boolean) => {
+    saving = busy;
+    for (const star of root.querySelectorAll<HTMLButtonElement>('.star')) star.disabled = busy;
+    if (submit) submit.disabled = busy || !ready();
+  };
 
   watchImageRatings(ratings => {
     const rating = ratings[imageKey(runSlug, promptId)];
@@ -30,6 +37,7 @@ export function startImageVote() {
       if (cell) cell.innerHTML = rating?.count ? `avg <b>${rating[axis].toFixed(1)}</b>` : '–';
     }
   }, () => {
+    unavailable = true;
     sub.textContent = 'ratings unavailable';
     if (submit) submit.disabled = true;
     if (status) status.textContent = 'Ratings are unavailable right now. Please try again later.';
@@ -50,8 +58,7 @@ export function startImageVote() {
   }
   submit.addEventListener('click', async () => {
     if (saving || !ready()) return;
-    saving = true;
-    submit.disabled = true;
+    setBusy(true);
     status.textContent = 'Saving your rating';
     try {
       await saveImageVote({ runSlug, promptId, quality: picks.quality!, adherence: picks.adherence!, fidelity: picks.fidelity! });
@@ -59,8 +66,7 @@ export function startImageVote() {
     } catch {
       status.textContent = 'Could not save your rating. Your choices are still here; try again.';
     } finally {
-      saving = false;
-      submit.disabled = !ready();
+      setBusy(false);
     }
   });
 }

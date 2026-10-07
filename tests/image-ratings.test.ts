@@ -40,6 +40,8 @@ it('saves all three axes, blocks double saves, and lets a failed save retry', as
   mocks.mutation.mockImplementationOnce(() => new Promise((_resolve, reject) => { rejectSave = reject; }));
   submit.click(); submit.click();
   expect(mocks.mutation).toHaveBeenCalledTimes(1);
+  // Stars cannot change while the save is in flight.
+  expect(document.querySelector<HTMLButtonElement>('.star')!.disabled).toBe(true);
   expect(mocks.mutation.mock.calls[0][1]).toMatchObject({ runSlug: run, promptId: 'same-kettle', quality: 4, adherence: 4, fidelity: 3 });
   rejectSave(new Error('offline'));
   await vi.waitFor(() => expect(submit.disabled).toBe(false));
@@ -50,13 +52,14 @@ it('saves all three axes, blocks double saves, and lets a failed save retry', as
   await vi.waitFor(() => expect(document.body.textContent).toContain('Rating saved'));
 });
 
-it('shows live averages, and disables saving when ratings are unavailable', async () => {
+it('shows live averages, and keeps saving off when ratings are unavailable', async () => {
   voteFixture();
   (await import('../src/scripts/image-vote')).startImageVote();
   mocks.update!({ [`${run}/same-kettle`]: rating(4.25, 2) });
   expect(document.querySelector('[data-human-value]')!.textContent).toBe('4.3');
   expect(document.querySelector('[data-human-sub]')!.textContent).toBe('2 visitor ratings · live');
   mocks.failure!();
+  pick('quality', 4); pick('adherence', 4); pick('fidelity', 4);
   expect(document.querySelector<HTMLButtonElement>('[data-submit]')!.disabled).toBe(true);
   expect(document.body.textContent).toContain('unavailable');
 });
@@ -90,6 +93,13 @@ it('puts the best image first in each brief, and hides models the visitor turns 
   expect(order()).toEqual([other, run]);
   expect(document.querySelector(`[data-prompt] [data-run="${other}"] [data-rank]`)!.textContent).toBe('#1');
   expect(document.querySelector(`[data-prompt] [data-run="${other}"] [data-image-rating]`)!.textContent).toBe('★ 4.5 · 3 votes');
+
+  // A later live update changes the scores in place. Only the visitor's own action reorders.
+  mocks.update!({ [`${run}/same-kettle`]: rating(5, 2), [`${other}/same-kettle`]: rating(4.5, 3) });
+  expect(order()).toEqual([other, run]);
+  expect(document.querySelector(`[data-prompt] [data-run="${run}"] [data-image-rating]`)!.textContent).toBe('★ 5.0 · 2 votes');
+  document.querySelector<HTMLElement>('[data-columns="best"]')!.click();
+  expect(order()).toEqual([run, other]);
 
   document.querySelector<HTMLElement>(`[data-model="${other}"]`)!.click();
   expect(order()).toEqual([run]);

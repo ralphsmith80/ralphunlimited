@@ -7,14 +7,12 @@ import ScorePair from '../../components/lab/ScorePair.astro';
 import { SITE_TITLE } from '../../consts';
 import { benchmarks, runLabel, stats } from '../../lib/lab';
 import { imageLab, preview, producedPrompts } from '../../lib/image-lab';
+import { leader } from '../../lib/leaders';
 import labCollage from '../../assets/images/lab-collage.webp';
 import '../../styles/lab.css';
 
 const gameRuns = benchmarks.flatMap((benchmark) => benchmark.runs.map((run) => ({ benchmark, run })));
-const bestHarness = gameRuns.reduce<(typeof gameRuns)[number] | null>(
-	(best, entry) => (!best || entry.run.total > best.run.total ? entry : best),
-	null,
-);
+const bestHarness = leader(gameRuns.map(({ run }) => ({ label: runLabel(run), score: run.total })));
 // Player ratings arrive from Convex keyed "benchId/runSlug"; this names the winner.
 const gameLabels = Object.fromEntries(
 	gameRuns.map(({ benchmark, run }) => [`${benchmark.id}/${run.slug}`, runLabel(run)]),
@@ -22,10 +20,7 @@ const gameLabels = Object.fromEntries(
 
 const { suite, runs: imageRuns } = imageLab;
 const imageCount = imageRuns.reduce((sum, run) => sum + run.images.filter((image) => image.file).length, 0);
-const bestChecks = imageRuns.reduce<(typeof imageRuns)[number] | null>(
-	(best, run) => (!best || run.total > best.total ? run : best),
-	null,
-);
+const bestChecks = leader(imageRuns.map((run) => ({ label: run.model, score: run.total })));
 const allPass = imageRuns.length > 0 && imageRuns.every((run) => run.total === 100);
 const imageRunsForScript = imageRuns.map((run) => ({ slug: run.slug, model: run.model, produced: producedPrompts(run) }));
 // The image card shows the first three outputs; before any run is published, the fixed references.
@@ -73,9 +68,9 @@ const description =
 								compact
 								machine={{
 									label: 'Harness',
-									value: bestHarness?.run.total ?? '–',
+									value: bestHarness?.score ?? '–',
 									max: 100,
-									sub: bestHarness ? `best · ${runLabel(bestHarness.run)}` : 'no runs yet',
+									sub: bestHarness ? `best · ${bestHarness.label}` : 'no runs yet',
 								}}
 								human={{ label: 'Players', max: 5 }}
 							/>
@@ -111,9 +106,9 @@ const description =
 								compact
 								machine={{
 									label: 'Checks',
-									value: bestChecks?.total.toFixed(0) ?? '–',
+									value: bestChecks?.score ?? '–',
 									max: 100,
-									sub: !bestChecks ? 'no runs yet' : allPass ? 'every model passes' : `best · ${bestChecks.model}`,
+									sub: !bestChecks ? 'no runs yet' : allPass ? 'every model passes' : `best · ${bestChecks.label}`,
 								}}
 								human={{ label: 'Visitors', max: 5 }}
 							/>
@@ -142,15 +137,17 @@ const description =
 			import { ConvexClient } from 'convex/browser';
 			import { api } from '../../../convex/_generated/api';
 			import { visitorScore } from '../../lib/image-scores';
+			import { leader, MIN_VOTES_FOR_BEST } from '../../lib/leaders';
 
-			// Fills the people's half of each card with the best live rating.
+			// Fills the people's half of each card with the best live rating. A run needs
+			// MIN_VOTES_FOR_BEST ratings first, so one early vote cannot crown it.
 			const url = import.meta.env.PUBLIC_CONVEX_URL;
 			const gamePair = document.querySelector<HTMLElement>('[data-game-pair]');
 			const imagePair = document.querySelector<HTMLElement>('[data-image-pair]');
-			const show = (pair: HTMLElement | null, best: { score: number; label: string } | null) => {
+			const show = (pair: HTMLElement | null, best: ReturnType<typeof leader>) => {
 				if (!pair) return;
 				pair.querySelector('[data-human-value]')!.textContent = best ? best.score.toFixed(1) : '–';
-				pair.querySelector('[data-human-sub]')!.textContent = best ? `best · ${best.label}` : 'no ratings yet';
+				pair.querySelector('[data-human-sub]')!.textContent = best ? `best · ${best.label}` : 'not enough ratings yet';
 			};
 			const unavailable = (pair: HTMLElement | null) => {
 				if (pair) pair.querySelector('[data-human-sub]')!.textContent = 'ratings unavailable';
@@ -163,20 +160,18 @@ const description =
 				const client = new ConvexClient(url);
 				const labels = JSON.parse(gamePair?.dataset.labels ?? '{}') as Record<string, string>;
 				client.onUpdate(api.votes.allRatings, {}, (ratings) => {
-					const best = Object.entries(ratings)
-						.filter(([key, rating]) => rating.count && labels[key])
-						.sort(([, a], [, b]) => b.overall - a.overall)[0];
-					show(gamePair, best ? { score: best[1].overall, label: labels[best[0]] } : null);
+					show(gamePair, leader(Object.entries(ratings)
+						.filter(([key, rating]) => rating.count >= MIN_VOTES_FOR_BEST && labels[key])
+						.map(([key, rating]) => ({ label: labels[key], score: rating.overall }))));
 				}, () => unavailable(gamePair));
 
 				type Run = { slug: string; model: string; produced: string[] };
 				const runs = JSON.parse(imagePair?.dataset.runs ?? '[]') as Run[];
 				client.onUpdate(api.votes.imageRatings, {}, (ratings) => {
-					const best = runs
-						.map((run) => ({ label: run.model, score: visitorScore(ratings, run.slug, run.produced).score }))
-						.filter((run): run is { label: string; score: number } => run.score !== null)
-						.sort((a, b) => b.score - a.score)[0];
-					show(imagePair, best ?? null);
+					show(imagePair, leader(runs.flatMap((run) => {
+						const { score, votes } = visitorScore(ratings, run.slug, run.produced);
+						return score !== null && votes >= MIN_VOTES_FOR_BEST ? [{ label: run.model, score }] : [];
+					})));
 				}, () => unavailable(imagePair));
 
 				window.addEventListener('pagehide', (event) => {
