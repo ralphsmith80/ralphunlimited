@@ -94,8 +94,8 @@ export const allRatings = query({
 });
 
 // Images that exist and can be rated, keyed "runSlug/promptId".
-// Intentional: the catalog is bundled at Convex deploy time, so publishing a new run
-// needs a Convex deploy before its votes are accepted. Until then votes fail with "Unknown image".
+// The catalog is bundled at Convex deploy time. Production Vercel builds run
+// `convex deploy`, so each published run is accepted once its site deploy finishes.
 const RATEABLE_IMAGES = new Set(imageLab.runs.flatMap(run =>
   run.images.filter(image => image.file !== null).map(image => `${run.slug}/${image.promptId}`)));
 

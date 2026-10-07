@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:vercel": "if [ \"$VERCEL_ENV\" = production ]; then convex deploy --cmd 'astro build'; else astro build; fi",
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
