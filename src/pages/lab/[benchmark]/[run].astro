@@ -2,6 +2,9 @@
 import BaseHead from '../../../components/BaseHead.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
+import LabTabs from '../../../components/lab/LabTabs.astro';
+import RatingRows from '../../../components/lab/RatingRows.astro';
+import ScorePair from '../../../components/lab/ScorePair.astro';
 import { benchmarks, bandColour, runLabel, runTime, type LabBenchmark, type LabRun } from '../../../lib/lab';
 import '../../../styles/lab.css';
 
@@ -31,9 +34,11 @@ const description = `${runLabel(run)} scored ${run.total}/100 on ${benchmark.nam
 	<body>
 		<Header />
 		<main class="lab-main">
+			<LabTabs active="games" />
 			<div class="lab-header" style="padding-bottom:var(--space-md)">
 				<p class="crumb">
-					<a href="/lab/">The Lab</a> / <a href={`/lab/${benchmark.id}/`}>{benchmark.id}</a> /
+					<a href="/lab/">The Lab</a> / <a href="/lab/games/">Games</a> /
+					<a href={`/lab/${benchmark.id}/`}>{benchmark.id}</a> /
 					{run.slug}
 				</p>
 				<h1 style="font-size:2.2rem">{runLabel(run)}</h1>
@@ -95,18 +100,10 @@ const description = `${runLabel(run)} scored ${run.total}/100 on ${benchmark.nam
 					data-slug={run.slug}
 					data-playable={run.playable ? "true" : "false"}
 				>
-					<div class="dualscore">
-						<div class="machine">
-							<div class="k">Harness</div>
-							<div class="v">{run.total}<small> / 100</small></div>
-							<div class="sub">measured · {benchmark.rubricId}</div>
-						</div>
-						<div class="human">
-							<div class="k">Players</div>
-							<div class="v" data-players-value>–<small> / 5</small></div>
-							<div class="sub" data-players-count>no ratings yet</div>
-						</div>
-					</div>
+					<ScorePair
+						machine={{ label: 'Harness', value: run.total, max: 100, sub: `measured · ${benchmark.rubricId}` }}
+						human={{ label: 'Players', max: 5 }}
+					/>
 
 					{
 						run.playable && (
@@ -120,30 +117,13 @@ const description = `${runLabel(run)} scored ${run.total}/100 on ${benchmark.nam
 									Play for a minute to unlock rating. No account; one vote per browser.
 								</div>
 								<div class="vrows" data-locked="true">
-									{
-										[
-											["fun", "Fun", "one more run?"],
-											["depth", "Depth", "systems"],
-											["polish", "Polish", "juice and feel"],
-										].map(([key, label, hint]) => (
-											<div class="vrow" data-axis={key}>
-												<span class="vlabel">
-													{label}
-													<em>{hint}</em>
-												</span>
-												<span class="stars">
-													{[1, 2, 3, 4, 5].map((value) => (
-														<button type="button" class="star" data-value={value}>
-															{value}
-														</button>
-													))}
-												</span>
-												<span class="vavg" data-avg>
-													–
-												</span>
-											</div>
-										))
-									}
+									<RatingRows
+										axes={[
+											['fun', 'Fun', 'one more run?'],
+											['depth', 'Depth', 'systems'],
+											['polish', 'Polish', 'juice and feel'],
+										]}
+									/>
 									<button type="button" class="btn btn-sm vsubmit" data-submit disabled>
 										Submit rating
 									</button>
@@ -228,12 +208,10 @@ const description = `${runLabel(run)} scored ${run.total}/100 on ${benchmark.nam
 				const client = new ConvexClient(url);
 
 				// --- live averages --------------------------------------------------
-				const valueEl = root.querySelector("[data-players-value]")!;
-				const countEl = root.querySelector("[data-players-count]")!;
+				const valueEl = root.querySelector("[data-human-value]")!;
+				const countEl = root.querySelector("[data-human-sub]")!;
 				client.onUpdate(api.votes.runRatings, { benchId, runSlug }, (ratings) => {
-					valueEl.innerHTML = ratings.count
-						? `${ratings.overall}<small> / 5</small>`
-						: `–<small> / 5</small>`;
+					valueEl.textContent = ratings.count ? String(ratings.overall) : "–";
 					countEl.textContent = ratings.count
 						? `${ratings.count} rating${ratings.count === 1 ? "" : "s"} · live`
 						: "no ratings yet";

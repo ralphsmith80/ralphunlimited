@@ -2,6 +2,7 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import LabTabs from '../../components/lab/LabTabs.astro';
 import {
 	benchmarks,
 	bandColour,
@@ -37,8 +38,9 @@ const runs = benchmark.runs.map((run) => ({ run, rate: outputPerMinute(run) }));
 	<body>
 		<Header />
 		<main class="lab-main">
+			<LabTabs active="games" />
 			<div class="lab-header">
-				<p class="crumb"><a href="/lab/">The Lab</a> / {benchmark.id}</p>
+				<p class="crumb"><a href="/lab/">The Lab</a> / <a href="/lab/games/">Games</a> / {benchmark.id}</p>
 				<h1>{benchmark.name.split(' — ')[0]}</h1>
 				<p class="lab-lede">{benchmark.summary}</p>
 				<div class="lab-stats">

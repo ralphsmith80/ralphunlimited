@@ -1,0 +1,29 @@
+---
+/**
+ * The tab strip at the top of every Lab page. It is the one way to move
+ * between the Lab home, the game benchmarks, and the image benchmark.
+ */
+import { benchmarks } from '../../lib/lab';
+
+interface Props {
+	active: 'overview' | 'games' | 'images';
+}
+
+const { active } = Astro.props;
+const tabs = [
+	{ id: 'overview', label: 'Overview', href: '/lab/' },
+	{ id: 'games', label: 'Games', href: '/lab/games/', count: benchmarks.length },
+	{ id: 'images', label: 'Images', href: '/lab/image-quality/', count: 1 },
+] as const;
+---
+
+<nav class="lab-tabs" aria-label="The Lab">
+	{
+		tabs.map((tab) => (
+			<a href={tab.href} aria-current={tab.id === active ? 'page' : undefined}>
+				{tab.label}
+				{'count' in tab && <small>{tab.count}</small>}
+			</a>
+		))
+	}
+</nav>

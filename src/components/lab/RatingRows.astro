@@ -1,0 +1,33 @@
+---
+/**
+ * One row of 1 to 5 buttons per rating axis. Games and images share the
+ * markup; each page's script handles picking, the live `[data-avg]` cells,
+ * and saving.
+ */
+interface Props {
+	axes: readonly (readonly [key: string, label: string, hint: string])[];
+}
+
+const { axes } = Astro.props;
+---
+
+{
+	axes.map(([key, label, hint]) => (
+		<div class="vrow" data-axis={key} role="group" aria-label={label}>
+			<span class="vlabel">
+				{label}
+				<em>{hint}</em>
+			</span>
+			<span class="stars">
+				{[1, 2, 3, 4, 5].map((value) => (
+					<button type="button" class="star" data-value={value} aria-label={`${label} ${value} of 5`}>
+						{value}
+					</button>
+				))}
+			</span>
+			<span class="vavg" data-avg>
+				–
+			</span>
+		</div>
+	))
+}
